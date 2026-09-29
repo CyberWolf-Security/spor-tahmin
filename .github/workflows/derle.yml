@@ -51,6 +51,12 @@ jobs:
               Write-Host ("SAHA_BASLA: " + ($ic -match "function sahaBasla"))
               Write-Host ("GOL_ANIM: " + ($ic -match "gol-patlama"))
               Write-Host ("ABORT: " + ($ic -match "AbortController"))
+              Write-Host ("SKOR_KARTI: " + ($ic -match "En Olas"))
+              Write-Host ("ULKE_GRUP: " + ($ic -match "ulke-bas"))
+              Write-Host ("BAYRAK: " + ($ic -match "ULKE_BAYRAK"))
+              Write-Host ("GERI_BUTON: " + ($ic -match "analizKapat"))
+              Write-Host ("KAYAN_TIKLA: " + ($ic -match "canliMaciAc"))
+              Write-Host ("SAHA_MOTOR: " + ($ic -match "oyuncuyaGit"))
               Write-Host ("HTML_KAPANIS: " + $ic.TrimEnd().EndsWith("</html>"))
               break
             } catch { Write-Host ("Deneme " + $i + " basarisiz"); Start-Sleep -Seconds 5 }
@@ -60,14 +66,31 @@ jobs:
         shell: powershell
         run: |
           try {
-            $body = '{"ev":"Galatasaray","dep":"Fenerbahce","lig":"Super Lig (Arsiv)"}'
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 90 -UseBasicParsing
+            # Once lig listesinden gercek bir lig + takim cifti sec
+            $dd = (Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/durum" -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
+            $lig = $dd.ligler[0].ad
+            Write-Host ("SECILEN_LIG: " + $lig)
+            $mm = (Invoke-WebRequest -Uri ("http://127.0.0.1:8090/api/maclar/" + [uri]::EscapeDataString($lig)) -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
+            $ev = $mm[0].ev; $dep = $mm[0].dep
+            Write-Host ("MAC: " + $ev + " vs " + $dep)
+            $govde = @{ ev = $ev; dep = $dep; lig = $lig } | ConvertTo-Json -Compress
+            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $govde -ContentType "application/json" -TimeoutSec 120 -UseBasicParsing
             Write-Host ("TAHMIN_KOD: " + $r.StatusCode)
             $d = $r.Content | ConvertFrom-Json
+            Write-Host ("MOTOR: " + $d.motor)
+            Write-Host ("SIMULASYON: " + $d.simulasyon)
             Write-Host ("EV_KAZANMA: " + $d.ev_kazanma)
+            Write-Host ("BERABERLIK: " + $d.beraberlik)
+            Write-Host ("DEP_KAZANMA: " + $d.dep_kazanma)
             Write-Host ("GUVEN_SKORU: " + $d.ajan.guven_skoru)
-            Write-Host ("SENARYO: " + $d.ajan.senaryolar.Count)
-            Write-Host ("KOMBI: " + ($null -ne $d.ajan.kombi))
+            Write-Host ("GUVEN_SEVIYE: " + $d.ajan.guven)
+            Write-Host ("ANA_TAHMIN: " + $d.ajan.ana_tahmin)
+            Write-Host ("TAVSIYE_SAYI: " + $d.ajan.tavsiyeler.Count)
+            Write-Host ("BER_risk: " + $d.ajan.ber_risk)
+            Write-Host ("SKOR_SAYI: " + $d.en_skorlar.Count)
+            Write-Host ("EN_IYI_SKOR: " + $d.en_skorlar[0].skor)
+            Write-Host ("KG_VAR: " + $d.kg_var)
+            Write-Host ("UST25: " + $d.ust_25)
           } catch { Write-Host ("TAHMIN_HATA: " + $_.Exception.Message) }
 
       - name: CANLI SAYFA
