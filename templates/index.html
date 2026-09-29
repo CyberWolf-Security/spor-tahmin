@@ -13,13 +13,22 @@
   --sari:#eab308;--kirmizi:#ef4444;--mor:#8b5cf6;--turkuaz:#06b6d4;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--yazi);
-     -webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh}
+html{font-size:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#3a4655}
+body{font-family:'Inter','Segoe UI Variable','Segoe UI',-apple-system,Roboto,Arial,sans-serif;
+     background:var(--bg);color:var(--yazi);
+     -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+     line-height:1.5;min-height:100vh;overflow-x:hidden}
 
 /* ═══ UST BAR ═══ */
 header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px solid var(--cizgi);
-       padding:0 22px;height:62px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;
-       box-shadow:0 1px 3px rgba(0,0,0,.4)}
+       padding:0 18px;height:60px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;
+       box-shadow:0 1px 3px rgba(0,0,0,.4);flex-wrap:nowrap;min-width:0}
+#durum{margin-left:auto;display:flex;align-items:center;gap:11px;font-size:12px;color:var(--yazi2);
+       flex-shrink:0;white-space:nowrap}
 .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:16.5px;letter-spacing:-.3px}
 .logo .simge{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--yesil),var(--turkuaz));
              display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 10px rgba(34,197,94,.28)}
@@ -58,7 +67,19 @@ header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px soli
 .cip .sk{color:var(--yesil);font-weight:700;font-family:'SF Mono',monospace}
 
 /* ═══ ANA DUZEN ═══ */
-main{display:grid;grid-template-columns:262px 1fr;height:calc(100vh - 114px)}
+main{display:grid;grid-template-columns:minmax(200px,240px) 1fr;height:calc(100vh - 112px)}
+@media (max-width:1100px){
+  main{grid-template-columns:190px 1fr}
+  .logo{font-size:15px}
+  .kutu-bas h2{font-size:13px}
+  .mac-satir{padding:10px 13px}
+  .takim{font-size:13px}
+}
+@media (max-width:900px){
+  main{grid-template-columns:1fr}
+  aside{display:none}
+  section{padding:14px}
+}
 aside{background:var(--bg2);border-right:1px solid var(--cizgi);overflow-y:auto;padding:14px 11px}
 aside::-webkit-scrollbar{width:7px}
 aside::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:4px}
@@ -187,12 +208,16 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .k-o{font-family:'SF Mono',monospace;font-weight:700;color:var(--mavi);font-size:12px}
 
 /* 1X2 KARTLARI */
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px 19px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;padding:16px 19px}
+.analiz{max-width:100%;overflow:hidden}
+.blk .cipler{display:flex;flex-wrap:wrap;gap:7px;max-width:100%}
+.cip2{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .olas{background:var(--bg3);border:1px solid var(--cizgi2);border-radius:10px;padding:15px 11px;text-align:center;
       transition:.15s;position:relative;overflow:hidden}
 .olas::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:var(--mavi)}
 .olas.ev::before{background:var(--yesil)}.olas.ber::before{background:var(--sari)}.olas.dep::before{background:var(--kirmizi)}
-.olas .yuzde{font-size:26px;font-weight:800;letter-spacing:-1px;font-family:'SF Mono',monospace;margin-bottom:3px}
+.olas .yuzde{font-size:clamp(19px,2.2vw,26px);font-weight:800;letter-spacing:-.5px;
+                     font-family:'SF Mono',ui-monospace,monospace;margin-bottom:3px;line-height:1.1}
 .olas.ev .yuzde{color:var(--yesil)}.olas.ber .yuzde{color:var(--sari)}.olas.dep .yuzde{color:var(--kirmizi)}
 .olas .etiket{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
 .olas .bar{height:4px;background:var(--bg);border-radius:2px;margin-top:9px;overflow:hidden}
@@ -243,7 +268,13 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
                   border-radius:50%;margin:0 auto 18px;animation:don 1s linear infinite}
 @keyframes don{to{transform:rotate(360deg)}}
 .yukleyici p{color:var(--yazi2);font-size:13.5px;margin-bottom:5px}
-.yukleyici small{color:var(--yazi3);font-size:11.5px}
+.yukleyici small{color:var(--yazi3);font-size:11.5px;display:block;margin-bottom:14px}
+.yuk-bar{width:230px;height:5px;background:var(--cizgi);border-radius:3px;margin:0 auto;overflow:hidden}
+.yuk-bar div{height:100%;width:0;background:linear-gradient(90deg,var(--yesil),var(--turkuaz));
+             border-radius:3px;transition:width .4s ease}
+.yuk-adim{display:flex;justify-content:center;gap:7px;margin-top:14px;flex-wrap:wrap}
+.yuk-adim span{font-size:10.5px;color:var(--yazi3);padding:3px 9px;border-radius:5px;background:var(--bg3)}
+.yuk-adim span.aktif{background:rgba(34,197,94,.15);color:var(--yesil)}
 
 .bos{text-align:center;padding:50px 20px;color:var(--yazi3);font-size:13px}
 .hata2{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fca5a5;
@@ -255,7 +286,7 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 <header>
   <div class="logo">
     <div class="simge">⚽</div>
-    <div>Spor Tahmin<small>Monte Carlo Simülasyon</small></div>
+    <div>Spor Tahmin<small>Canlı Maç Analiz & Tahmin</small></div>
   </div>
   <div id="durum">
     <span><span class="nokta"></span> <span id="durum-yazi">Veri hazırlanıyor…</span></span>
@@ -573,8 +604,46 @@ async function canliYukle(){
   }catch(e){}
 }
 
+// Yukleme ilerleme animasyonu
+let YUK_N=0;
+function yukGuncelle(mesaj, alt, yuzde){
+  const y=document.getElementById('yuk-yazi');
+  const a=document.getElementById('yuk-alt');
+  const i=document.getElementById('yuk-ilr');
+  if(y) y.textContent=mesaj;
+  if(a) a.textContent=alt;
+  if(i) i.style.width=yuzde+'%';
+}
+
 // Baslat
 (async function(){
+  yukGuncelle('Maç verileri çekiliyor…', 'Dünya geneli ligler taranıyor', 8);
   let hazir=await durumKontrol();
   let deneme=0;
-  while(!hazir && deneme<60){
+  while(!hazir && deneme<90){
+    await new Promise(r=>setTimeout(r,2500));
+    // Ilerleme guncelle
+    const yz = Math.min(88, 8 + deneme*1.4);
+    yukGuncelle(deneme<8 ? 'Maç verileri çekiliyor…' :
+                deneme<20 ? 'Ligler analiz ediliyor…' :
+                deneme<40 ? 'Takım verileri işleniyor…' :
+                'Neredeyse hazır…',
+                'Dünya geneli ligler taranıyor',
+                yz);
+    hazir=await durumKontrol();
+    deneme++;
+  }
+  yukGuncelle('Hazır!', d_toplam(), 100);
+  if(!hazir){
+    document.getElementById('icerik').innerHTML='<div class="hata2">Veri çekilemedi — internet bağlantısını kontrol edip "Yenile" butonuna basın.</div>';
+  }
+  canliYukle();
+  setInterval(canliYukle, 30000);
+})();
+
+function d_toplam(){
+  try { return document.getElementById('durum-yazi').textContent; } catch(e){ return ''; }
+}
+</script>
+</body>
+</html>

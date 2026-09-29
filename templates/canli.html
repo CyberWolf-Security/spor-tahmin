@@ -124,15 +124,16 @@ async function ligleriYukle(){
   document.getElementById('lig').innerHTML='<option value="">-- lig seç --</option>'+
     d.ligler.map(l=>`<option>${l.ad}</option>`).join('');
 }
-let AYARLANAN=false;
-async function ayarla(){
-  if(AYARLANAN) return; AYARLANAN=true;
+async function ligDoldur(){
   const lig=document.getElementById('lig');
   const r=await fetch('/api/durum'); const d=await r.json();
-  if(d.ligler){
+  if(d.hazir && d.ligler && d.ligler.length){
     lig.innerHTML='<option value="">-- lig seç --</option>'+
-      d.ligler.map(l=>`<option>${l.ad}</option>`).join('');
+      d.ligler.map(l=>`<option value="${l.ad}">${l.bayrak||'⚽'} ${l.ad} (${l.oynanmis} maç)</option>`).join('');
+    return true;
   }
+  lig.innerHTML='<option value="">⏳ Veri yükleniyor…</option>';
+  return false;
 }
 
 async function takimYukle(){
@@ -311,10 +312,18 @@ async function basla(){
   }, HIZ_MS);
 }
 
-// Başlat
+// Başlat — veri hazır olana kadar bekle
 (async function(){
-  await ayarla();
-  setInterval(()=>{}, 60000);
+  let n=0;
+  while(n<120){
+    if(await ligDoldur()) break;
+    await new Promise(r=>setTimeout(r,2500));
+    n++;
+  }
+  // Veri yoksa yenilemeyi tetikle
+  if(n>=120){
+    document.getElementById('lig').innerHTML='<option value="">Veri yüklenemedi — "Yenile" bas</option>';
+  }
 })();
 </script>
 </body>
