@@ -66,8 +66,14 @@ jobs:
         shell: powershell
         run: |
           try {
-            # Once lig listesinden gercek bir lig + takim cifti sec
-            $dd = (Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/durum" -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
+            # Veri hazir olana kadar bekle (max 60 sn)
+            $dd = $null
+            for ($w = 0; $w -lt 12; $w++) {
+              $dd = (Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/durum" -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
+              if ($dd.hazir -and $dd.ligler -and $dd.ligler.Count -gt 0) { break }
+              Write-Host ("VERI_BEKLE: " + $w)
+              Start-Sleep -Seconds 5
+            }
             $lig = $dd.ligler[0].ad
             Write-Host ("SECILEN_LIG: " + $lig)
             $mm = (Invoke-WebRequest -Uri ("http://127.0.0.1:8090/api/maclar/" + [uri]::EscapeDataString($lig)) -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
