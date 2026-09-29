@@ -1,4 +1,4 @@
-name: Derle
+name: D
 
 on:
   push:
@@ -6,27 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  b:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Kur
-        shell: cmd
-        run: |
-          python -m pip install --upgrade pip
-          pip install flask requests pyinstaller
-      - name: Derle
-        shell: cmd
-        run: |
-          pyinstaller --onefile --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=itsdangerous --hidden-import=click --hidden-import=blinker --noconsole app.py
-      - name: Kontrol
-        shell: cmd
-        run: dir dist
+      - run: pip install flask requests pyinstaller
+      - run: pyinstaller --onefile --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" app.py
       - uses: actions/upload-artifact@v4
         with:
-          name: SporTahmin-Windows
+          name: SporTahmin
           path: dist/SporTahmin.exe
-          retention-days: 30
