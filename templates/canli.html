@@ -43,11 +43,71 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 .kayan-bos{color:var(--yazi3);font-size:11.5px}
 
 /* SAHA */
-.saha{background:linear-gradient(180deg,#0d3320,#08210f);border:2px solid #1a5c30;border-radius:12px;
-      padding:20px 18px;position:relative;margin-bottom:14px;min-height:200px;overflow:hidden}
-.saha::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:#1a5c30;opacity:.45}
-.saha::after{content:'';position:absolute;left:50%;top:50%;width:78px;height:78px;border:2px solid #1a5c30;
-             border-radius:50%;transform:translate(-50%,-50%);opacity:.45}
+/* ═══ GERCEK FUTBOL SAHASI ═══ */
+.saha{position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;height:300px;
+      background:repeating-linear-gradient(90deg,#0e4a24 0 8%,#0c4020 8% 16%);
+      border:3px solid #1d6b38;box-shadow:inset 0 0 60px rgba(0,0,0,.45)}
+/* Saha cizgileri */
+.cizgi{position:absolute;background:rgba(255,255,255,.42);pointer-events:none}
+.cizgi.orta-dikey{left:50%;top:0;bottom:0;width:2px;transform:translateX(-1px)}
+.cizgi.orta-yuvarlak{left:50%;top:50%;width:110px;height:110px;border:2px solid rgba(255,255,255,.42);
+                     border-radius:50%;background:none;transform:translate(-50%,-50%)}
+.cizgi.orta-nokta{left:50%;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%)}
+.cizgi.ceza-sol{left:0;top:50%;width:16%;height:52%;border:2px solid rgba(255,255,255,.42);
+                border-left:0;transform:translateY(-50%)}
+.cizgi.ceza-sag{right:0;top:50%;width:16%;height:52%;border:2px solid rgba(255,255,255,.42);
+                border-right:0;transform:translateY(-50%)}
+.cizgi.kale-sol{left:0;top:50%;width:6%;height:26%;border:2px solid rgba(255,255,255,.42);
+                border-left:0;transform:translateY(-50%)}
+.cizgi.kale-sag{right:0;top:50%;width:6%;height:26%;border:2px solid rgba(255,255,255,.42);
+                border-right:0;transform:translateY(-50%)}
+.cizgi.ust{left:0;right:0;top:14px;height:2px}
+.cizgi.alt{left:0;right:0;bottom:14px;height:2px}
+
+/* ═══ OYUNCULAR ═══ */
+.oyuncu{position:absolute;width:15px;height:15px;border-radius:50%;transition:all 1.1s cubic-bezier(.4,0,.2,1);
+        box-shadow:0 2px 6px rgba(0,0,0,.6);z-index:4;border:2px solid rgba(255,255,255,.75)}
+.oyuncu.ev{background:radial-gradient(circle at 35% 30%,#4ade80,#15803d)}
+.oyuncu.dep{background:radial-gradient(circle at 35% 30%,#f87171,#b91c1c)}
+.oyuncu.kaleci{width:17px;height:17px;border-color:#fbbf24}
+.oyuncu .no{position:absolute;top:-5px;left:50%;transform:translateX(-50%);font-size:7px;
+            color:#fff;font-weight:800;text-shadow:0 1px 2px #000;font-family:'SF Mono',monospace}
+
+/* ═══ TOP ═══ */
+.top{position:absolute;width:13px;height:13px;border-radius:50%;z-index:6;
+     background:radial-gradient(circle at 32% 28%,#fff,#cbd5e1 60%,#64748b);
+     box-shadow:0 2px 7px rgba(0,0,0,.75),0 0 12px rgba(255,255,255,.3);
+     transition:all .75s cubic-bezier(.3,-0.4,.5,1.3)}
+.top.vurus{box-shadow:0 2px 7px rgba(0,0,0,.75),0 0 22px rgba(34,197,94,.85);
+           animation:topDon .6s linear}
+
+/* ═══ SKOR TABELASI (ustte overlay) ═══ */
+.tabela{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:10;
+        background:rgba(6,14,10,.93);border:2px solid #1d6b38;border-radius:9px;
+        padding:7px 16px;display:flex;align-items:center;gap:13px;
+        box-shadow:0 4px 18px rgba(0,0,0,.65);backdrop-filter:blur(7px);max-width:94%}
+.tabela .tak{font-size:11.5px;font-weight:600;color:#e8eef7;white-space:nowrap;overflow:hidden;
+             text-overflow:ellipsis;max-width:110px;display:flex;align-items:center;gap:6px}
+.tabela .sk{font-size:22px;font-weight:800;font-family:'SF Mono',monospace;letter-spacing:1px;
+            color:#fff;white-space:nowrap}
+.tabela .sk .e{color:#4ade80}.tabela .sk .d{color:#f87171}.tabela .sk .t{color:#64748b}
+.tabela .dk{background:#dc2626;color:#fff;font-size:11px;font-weight:800;padding:3px 9px;
+            border-radius:6px;font-family:'SF Mono',monospace;min-width:38px;text-align:center}
+.tabela .dk.bekle{background:#475569}
+.tabela .dk.iy{background:#eab308;color:#000}
+.tabela .tl{width:22px;height:22px;object-fit:contain}
+
+/* GOL PATLAMASI */
+.gol-patlama{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+             z-index:20;pointer-events:none;font-size:72px;font-weight:900;letter-spacing:6px;
+             color:#fff;text-shadow:0 0 30px #22c55e,0 6px 24px rgba(0,0,0,.9);
+             animation:patlama 1.7s ease-out forwards;font-family:'SF Mono',monospace}
+@keyframes patlama{0%{transform:scale(.3);opacity:0}
+  18%{transform:scale(1.18);opacity:1}
+  32%{transform:scale(1)}
+  75%{opacity:1}
+  100%{transform:scale(1.5);opacity:0}}
+@keyframes topDon{0%{transform:scale(1)}50%{transform:scale(1.5) rotate(180deg)}100%{transform:scale(1) rotate(360deg)}}
 .skor{text-align:center;font-size:50px;font-weight:800;letter-spacing:4px;position:relative;z-index:2;
       font-family:'SF Mono',monospace;margin-bottom:4px}
 .skor .e{color:var(--yesil)}.skor .d{color:var(--kirmizi)}.skor .t{color:#3a4553}
@@ -176,6 +236,7 @@ async function takimYukle(){
 
 function durdur(){
   if(ZAMAN){clearInterval(ZAMAN); ZAMAN=null;}
+  if(typeof TOP_ZAMAN!=='undefined' && TOP_ZAMAN){clearInterval(TOP_ZAMAN); TOP_ZAMAN=null;}
   const b=document.getElementById('btn');
   if(b){b.textContent='▶ TEKRAR BAŞLAT'; b.className='btn';}
 }
@@ -201,13 +262,34 @@ async function basla(){
   // Şablon
   c.innerHTML=`
   <div class="kart">
-    <div class="saha">
-      <div class="skor" id="skor"><span class="e" id="se">0</span><span class="t"> - </span><span class="d" id="sd">0</span></div>
-      <div class="adlar">
-        <span style="display:flex;align-items:center;gap:8px"><img id="evlogo" class="logo" src="" onerror="this.style.display='none'">${ev}</span>
-        <span style="display:flex;align-items:center;gap:8px">${dep}<img id="deplogo" class="logo" src="" onerror="this.style.display='none'"></span>
+    <div class="saha" id="saha">
+      <!-- Saha cizgileri -->
+      <div class="cizgi orta-dikey"></div>
+      <div class="cizgi orta-yuvarlak"></div>
+      <div class="cizgi orta-nokta"></div>
+      <div class="cizgi ceza-sol"></div>
+      <div class="cizgi ceza-sag"></div>
+      <div class="cizgi kale-sol"></div>
+      <div class="cizgi kale-sag"></div>
+      <div class="cizgi ust"></div>
+      <div class="cizgi alt"></div>
+
+      <!-- Skor tabelasi -->
+      <div class="tabela">
+        <span class="tak"><img id="evlogo" class="tl" src="" onerror="this.style.display='none'"><span id="ev-ad">${ev}</span></span>
+        <span class="sk"><span class="e" id="se">0</span><span class="t">-</span><span class="d" id="sd">0</span></span>
+        <span class="tak"><span id="dep-ad">${dep}</span><img id="deplogo" class="tl" src="" onerror="this.style.display='none'"></span>
+        <span class="dk bekle" id="dkb">0'</span>
       </div>
-      <div class="dk"><b id="dkb">0'</b></div>
+
+      <!-- Oyuncular (JS dolduracak) -->
+      <div id="oyuncular"></div>
+
+      <!-- Top -->
+      <div class="top" id="top"></div>
+
+      <!-- Gol animasyonu -->
+      <div id="gol-kat"></div>
     </div>
     <div class="zaman"><div class="ye" id="ze" style="width:${t.ev_kazanma}%">${t.ev_kazanma}%</div>
       <div class="yb" id="zb" style="width:${t.beraberlik}%">${t.beraberlik}%</div>
@@ -234,6 +316,66 @@ async function basla(){
   // Logolari yerlestir
   if(logoData.ev){ const el=document.getElementById('evlogo'); if(el){el.src=logoData.ev; el.style.display='';} }
   if(logoData.dep){ const el=document.getElementById('deplogo'); if(el){el.src=logoData.dep; el.style.display='';} }
+
+  // ═══ SAHA MOTORU: oyuncular + top hareketi ═══
+  const saha = document.getElementById('saha');
+  const W = () => saha.clientWidth, H = () => saha.clientHeight;
+
+  // Oyuncu yerlesimi (4-4-2 ev, 4-3-3 dep)
+  let OYUNCULAR = [];
+  function oyuncuKur(){
+    const w = W(), h = H();
+    OYUNCULAR = [];
+    // EV (sol taraf) 11 oyuncu
+    const evY = [[0.06,0.5],[0.14,0.2],[0.14,0.4],[0.14,0.6],[0.14,0.8],
+                 [0.28,0.25],[0.28,0.5],[0.28,0.75],[0.40,0.3],[0.40,0.5],[0.40,0.7]];
+    // DEP (sag taraf) 11 oyuncu
+    const depY = [[0.94,0.5],[0.86,0.2],[0.86,0.4],[0.86,0.6],[0.86,0.8],
+                  [0.72,0.25],[0.72,0.5],[0.72,0.75],[0.60,0.3],[0.60,0.5],[0.60,0.7]];
+    evY.forEach((c,i)=>{ OYUNCULAR.push({x:c[0]*w, y:c[1]*h, tak:'ev', no:i===0?'GK':i}); });
+    depY.forEach((c,i)=>{ OYUNCULAR.push({x:c[0]*w, y:c[1]*h, tak:'dep', no:i===0?'GK':i}); });
+
+    const kap = document.getElementById('oyuncular');
+    kap.innerHTML = OYUNCULAR.map((o,i)=>
+      `<div class="oyuncu ${o.tak}${o.no==='GK'?' kaleci':''}" id="oy${i}" style="left:${o.x}px;top:${o.y}px">
+         <span class="no">${o.no}</span></div>`).join('');
+
+    // Top orta yuvarlakta
+    const t = document.getElementById('top');
+    if(t){ t.style.left = (w/2-6)+'px'; t.style.top = (h/2-6)+'px'; }
+  }
+  oyuncuKur();
+  // Pencere boyutu degisirse yeniden kur
+  window.addEventListener('resize',()=>{ if(document.getElementById('saha')) oyuncuKur(); });
+
+  // TOP HAREKETI (her 1.6 sn)
+  const topEl = () => document.getElementById('top');
+  let topX = 0.5, topY = 0.5;
+  let TOP_ZAMAN = setInterval(()=>{
+    if(!document.getElementById('saha')){ clearInterval(TOP_ZAMAN); return; }
+    const w = W(), h = H();
+    // Top saha icinde takilsin
+    topX = Math.max(0.06, Math.min(0.94, topX + (Math.random()-0.5)*0.22));
+    topY = Math.max(0.12, Math.min(0.88, topY + (Math.random()-0.5)*0.20));
+    const t = topEl();
+    if(t){ t.style.left = (topX*w-6)+'px'; t.style.top = (topY*h-6)+'px'; }
+
+    // En yakin 2 oyuncu topa dogru kaysin (canlilik)
+    const yakin = OYUNCULAR.map((o,i)=>{
+      const d = Math.hypot(o.x-topX*w, o.y-topY*h);
+      return {o,i,d};
+    }).sort((a,b)=>a.d-b.d).slice(0,3);
+    yakin.forEach(({o,i})=>{
+      const el = document.getElementById('oy'+i);
+      if(!el) return;
+      const hedefX = topX*w + (o.tak==='ev'? -18: 18);
+      const hedefY = topY*h + (Math.random()-0.5)*24;
+      el.style.left = Math.max(6, Math.min(w-24, hedefX))+'px';
+      el.style.top  = Math.max(30, Math.min(h-30, hedefY))+'px';
+      o.x = Math.max(6, Math.min(w-24, hedefX));
+      o.y = Math.max(30, Math.min(h-30, hedefY));
+    });
+  }, 1600);
 
   // Olayları üret (beklenen gollere göre)
   const eg=parseFloat(t.ev_beklenen_gol)||1.3, dg=parseFloat(t.dep_beklenen_gol)||1.1;
@@ -267,10 +409,10 @@ async function basla(){
       return;
     }
     const dkb=document.getElementById('dkb');
-    dkb.textContent=dk+"'";
-    if(dk>=45 && dk<=47){ dkb.textContent='İY'; }
-    if(dk>45) { dkb.textContent=(dk)+"'"; }
-    dkb.className='canli';
+    if(!dkb) return;
+    if(dk===45){ dkb.textContent='İY'; dkb.className='dk iy'; }
+    else if(dk===90){ dkb.textContent='MS'; dkb.className='dk bekle'; }
+    else { dkb.textContent=dk+"'"; dkb.className='dk'; }
 
     // Bu dakikadaki olaylar
     while(idx<olaylar.length && olaylar[idx].dk===dk){
@@ -280,13 +422,31 @@ async function basla(){
       if(o.tip==='gol'){
         if(o.taraf==='ev'){ se++;
           const el=document.getElementById('se'); el.textContent=se;
-          document.getElementById('skor').classList.add('gol-e');
-          setTimeout(()=>document.getElementById('skor').classList.remove('gol-e'),900);
         } else { sd++;
           const el=document.getElementById('sd'); el.textContent=sd;
-          document.getElementById('skor').classList.add('gol-d');
-          setTimeout(()=>document.getElementById('skor').classList.remove('gol-d'),900);
         }
+        // ⚽ SAHA ICINDE GOL PATLAMASI
+        const gk = document.getElementById('gol-kat');
+        if(gk){
+          const p2 = document.createElement('div');
+          p2.className = 'gol-patlama';
+          p2.textContent = 'GOL!';
+          p2.style.color = o.taraf==='ev' ? '#4ade80' : '#f87171';
+          gk.appendChild(p2);
+          setTimeout(()=>p2.remove(), 1800);
+        }
+        // Top kaleye gitsin
+        const w2 = W(), h2 = H();
+        const t2 = topEl();
+        if(t2){
+          t2.classList.add('vurus');
+          topX = o.taraf==='ev' ? 0.93 : 0.07;
+          topY = 0.5;
+          t2.style.left = (topX*w2-6)+'px';
+          t2.style.top = (topY*h2-6)+'px';
+          setTimeout(()=>t2.classList.remove('vurus'), 700);
+        }
+        // Kaleci topu alamasin (gol!) - kutlama
         ikon='⚽'; metin='GOL! '+(o.taraf==='ev'?ev:dep);
       } else if(o.tip==='Şut'){
         ikon='🎯'; metin=(o.taraf==='ev'?ev:dep)+' şut çekti';
