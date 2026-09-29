@@ -1,70 +1,52 @@
-"""
-Spor Tahmin - Masaustu Program (WebView2 gomulu penceresi)
-Flask arka planda calisir, pywebview ile gercek program penceresi acilir.
-"""
-import sys, os, threading, time, socket, json
+"""Spor Tahmin - Masaustu (gomulu pencere)"""
+import sys, os, threading, time, socket
 
-# ── PyInstaller icin yol cozumu ──
-def kaynak_yolu(rel):
-    if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, rel)
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), rel)
+if hasattr(sys, "_MEIPASS"):
+    BASE = sys._MEIPASS
+else:
+    BASE = os.path.dirname(os.path.abspath(__file__))
+os.chdir(BASE)
+sys.path.insert(0, BASE)
 
-# Flask app'i import et
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])) if not hasattr(sys,"_MEIPASS") else sys._MEIPASS)
+os.environ["FLASK_ENV"] = "production"
+import logging
+logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
 from app import app
 
-PORT = 8090
-
-def port_bos(p):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.bind(("127.0.0.1", p)); s.close(); return True
-    except OSError:
-        s.close(); return False
-
 def port_bul(bas=8090):
     p = bas
-    while not port_bos(p) and p < bas + 50:
-        p += 1
-    return p
-
-def sunucu_calistir(port):
-    app.run(host="127.0.0.1", port=port, debug=False, use_reloader=False, threaded=True)
+    while p < bas + 60:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.bind(("127.0.0.1", p)); s.close(); return p
+        except OSError:
+            s.close(); p += 1
+    return bas
 
 def main():
-    global PORT
-    PORT = port_bul(8090)
-
-    t = threading.Thread(target=sunucu_calistir, args=(PORT,), daemon=True)
+    p = port_bul(8090)
+    t = threading.Thread(target=lambda: app.run(host="127.0.0.1", port=p, debug=False,
+                                                use_reloader=False, threaded=True), daemon=True)
     t.start()
 
-    # Sunucu hazir olana kadar bekle
-    for _ in range(60):
+    for _ in range(80):
         try:
-            s = socket.create_connection(("127.0.0.1", PORT), timeout=1)
-            s.close(); break
-        except OSError:
-            time.sleep(0.3)
+            s = socket.create_connection(("127.0.0.1", p), timeout=1); s.close(); break
+        except OSError: time.sleep(0.25)
 
-    url = f"http://127.0.0.1:{PORT}"
-
+    url = f"http://127.0.0.1:{p}"
     try:
         import webview
-        webview.create_window("Spor Tahmin", url, width=1280, height=860,
-                              min_size=(900, 600), background_color="#0d1117")
+        webview.create_window("Spor Tahmin — Mac Analiz", url, width=1400, height=900,
+                              min_size=(1000, 650), background_color="#0a0e14")
         webview.start()
-    except Exception as e:
-        # WebView2 yoksa tarayiciya dus
+    except Exception:
         import webbrowser
         webbrowser.open(url)
-        print(f"WebView acilamadi ({e}); tarayicida acildi: {url}")
         try:
             while True: time.sleep(60)
-        except KeyboardInterrupt:
-            pass
+        except KeyboardInterrupt: pass
 
 if __name__ == "__main__":
     main()

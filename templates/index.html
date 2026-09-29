@@ -5,139 +5,423 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Spor Tahmin</title>
 <style>
+:root{
+  --bg:#0a0e14;--bg2:#111721;--bg3:#161d29;--kart:#131a24;
+  --cizgi:#1f2937;--cizgi2:#2a3543;
+  --yazi:#e8eef7;--yazi2:#8b98a9;--yazi3:#5a6675;
+  --yesil:#22c55e;--yesil2:#16a34a;--mavi:#3b82f6;--mavi2:#2563eb;
+  --sari:#eab308;--kirmizi:#ef4444;--mor:#8b5cf6;--turkuaz:#06b6d4;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0d1117;color:#e6edf3;padding:16px}
-.wrap{max-width:1020px;margin:0 auto}
-h1{font-size:22px;color:#58a6ff;margin-bottom:3px}
-.sub{color:#7d8590;font-size:12px;margin-bottom:14px}
-h2{font-size:13px;color:#7d8590;text-transform:uppercase;margin:16px 0 8px}
-.kart{background:#161b22;border:1px solid #30363d;border-radius:11px;padding:12px 14px;margin-bottom:8px}
-.mac{display:flex;align-items:center;gap:11px}
-.mac .tarih{color:#7d8590;font-size:11px;min-width:80px;font-family:monospace}
-.mac .takimlar{flex:1;font-size:14px}
-.mac .vs{color:#484f58;margin:0 6px;font-size:11px}
-.mac .lig{color:#7d8590;font-size:10.5px;margin-left:7px}
-.btn{padding:7px 14px;background:#238636;border:0;border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
-.btn:hover{background:#2ea043}.btn:disabled{background:#21262d;color:#484f58}
-.sonuc{margin-top:10px;padding-top:10px;border-top:1px solid #21262d;display:none}
-.sonuc.gorun{display:block}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-.olas{text-align:center;padding:10px;border-radius:9px;background:#0d1117;border:1px solid #30363d}
-.olas .p{font-size:21px;font-weight:700;color:#3fb950}
-.olas .l{font-size:9px;color:#7d8590;margin-top:3px}
-.skor{display:flex;justify-content:space-between;padding:4px 9px;background:#0d1117;border-radius:5px;margin-bottom:3px;font-size:12px}
-.skor .y{color:#58a6ff;font-weight:600}
-.et{display:inline-block;background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44;padding:3px 7px;border-radius:6px;font-size:10.5px;margin:0 4px 4px 0}
-.blok{margin-bottom:11px}
-.blok h4{font-size:11px;color:#7d8590;text-transform:uppercase;margin-bottom:6px}
-.tav{display:flex;align-items:center;gap:8px;padding:6px 9px;background:#0d1117;border-radius:6px;margin-bottom:4px;font-size:12.5px;border-left:3px solid #3fb950}
-.tav.orta{border-left-color:#d29922}
-.tav .tip{font-size:9.5px;color:#7d8590;background:#21262d;padding:2px 6px;border-radius:4px;min-width:72px;text-align:center}
-.tav .p{margin-left:auto;color:#3fb950;font-weight:700}
-.uyari{color:#d29922;font-size:11.5px;padding:5px 0}
-.genel{font-size:14px;font-weight:700;padding:10px;background:#0f2a18;border:1px solid #238636;border-radius:8px;margin-bottom:10px;color:#3fb950}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{text-align:left;padding:5px;border-bottom:1px solid #21262d}
-th{color:#7d8590;font-size:9.5px;text-transform:uppercase}
-.yuk{color:#d29922;font-size:12px;padding:6px 0}
-.hata{color:#ff7b72;font-size:12px;padding:6px 0}
-.tg{display:flex;gap:4px;flex-wrap:wrap}
-.tg span{background:#0d1117;border:1px solid #30363d;padding:4px 8px;border-radius:6px;font-size:11px}
+body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--yazi);
+     -webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh}
+
+/* ═══ UST BAR ═══ */
+header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px solid var(--cizgi);
+       padding:0 22px;height:62px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;
+       box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:16.5px;letter-spacing:-.3px}
+.logo .simge{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--yesil),var(--turkuaz));
+             display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 10px rgba(34,197,94,.28)}
+.logo small{display:block;font-size:10px;color:var(--yazi3);font-weight:400;letter-spacing:.4px}
+#durum{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:12px;color:var(--yazi2)}
+.nokta{width:7px;height:7px;border-radius:50%;background:var(--yesil);display:inline-block;
+       box-shadow:0 0 8px var(--yesil);animation:nabiz 2s infinite}
+@keyframes nabiz{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-yenile{background:var(--bg3);border:1px solid var(--cizgi2);color:var(--yazi2);padding:6px 13px;
+            border-radius:7px;font-size:11.5px;cursor:pointer;font-family:inherit;transition:.15s}
+.btn-yenile:hover{background:var(--cizgi);color:var(--yazi)}
+
+/* ═══ IZLENEN MACLAR ═══ */
+.takip{background:var(--bg2);border-bottom:1px solid var(--cizgi);padding:11px 22px;
+       display:flex;align-items:center;gap:10px;overflow-x:auto;min-height:52px}
+.takip::-webkit-scrollbar{height:0}
+.takip .et{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.7px;
+           white-space:nowrap;font-weight:600}
+.cip{background:var(--kart);border:1px solid var(--cizgi2);border-radius:7px;padding:6px 11px;
+     font-size:11.5px;white-space:nowrap;display:flex;align-items:center;gap:8px;transition:.15s;flex-shrink:0}
+.cip:hover{border-color:var(--mavi);background:#17202e}
+.cip .canli{background:var(--kirmizi);color:#fff;font-size:8.5px;padding:2px 5px;border-radius:3px;
+            font-weight:700;letter-spacing:.5px;animation:nabiz 1.4s infinite}
+.cip .sk{color:var(--yesil);font-weight:700;font-family:'SF Mono',monospace}
+
+/* ═══ ANA DUZEN ═══ */
+main{display:grid;grid-template-columns:262px 1fr;height:calc(100vh - 114px)}
+aside{background:var(--bg2);border-right:1px solid var(--cizgi);overflow-y:auto;padding:14px 11px}
+aside::-webkit-scrollbar{width:7px}
+aside::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:4px}
+.bolum-bas{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.8px;
+           font-weight:700;padding:11px 9px 7px}
+.lig{display:flex;align-items:center;gap:9px;padding:8.5px 10px;border-radius:8px;cursor:pointer;
+     transition:.13s;margin-bottom:2px;font-size:13px;border:1px solid transparent}
+.lig:hover{background:var(--bg3)}
+.lig.aktif{background:linear-gradient(90deg,rgba(34,197,94,.14),rgba(34,197,94,.03));
+           border-color:rgba(34,197,94,.32);color:var(--yesil);font-weight:600}
+.lig .bayrak{font-size:15px;width:20px;text-align:center}
+.lig .ad{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lig .say{font-size:10px;color:var(--yazi3);background:var(--bg3);padding:2px 6px;border-radius:4px}
+.lig.aktif .say{background:rgba(34,197,94,.18);color:var(--yesil)}
+
+/* ═══ ICERIK ═══ */
+section{overflow-y:auto;padding:20px 24px}
+section::-webkit-scrollbar{width:9px}
+section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.kutu-bas{padding:13px 17px;border-bottom:1px solid var(--cizgi);display:flex;align-items:center;gap:10px}
+.kutu-bas h2{font-size:13.5px;font-weight:600;letter-spacing:-.2px}
+.kutu-bas .rozet{margin-left:auto;font-size:10.5px;color:var(--yazi3);background:var(--bg3);
+                 padding:3px 9px;border-radius:5px;border:1px solid var(--cizgi2)}
+
+/* MAC SATIRI */
+.mac-satir{display:flex;align-items:center;gap:14px;padding:12px 17px;border-bottom:1px solid var(--cizgi);
+           transition:.13s}
+.mac-satir:last-child{border-bottom:0}
+.mac-satir:hover{background:rgba(255,255,255,.017)}
+.mac-sol{min-width:96px}
+.mac-tarih{font-size:11.5px;color:var(--yazi2);font-family:'SF Mono',ui-monospace,monospace}
+.mac-saat{font-size:10px;color:var(--yazi3)}
+.mac-orta{flex:1;display:flex;align-items:center;gap:11px;min-width:0}
+.takim{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.takim.ev{flex:1;text-align:right}
+.takim.dep{flex:1}
+.vs{color:var(--yazi3);font-size:10.5px;padding:3px 8px;background:var(--bg3);border-radius:5px;
+    flex-shrink:0;font-weight:600}
+.skor-kutu{background:var(--bg3);color:var(--yesil);font-weight:700;font-size:13px;padding:4px 11px;
+           border-radius:6px;font-family:'SF Mono',monospace;flex-shrink:0}
+.btn-tahmin{background:linear-gradient(135deg,var(--yesil2),var(--yesil));border:0;color:#fff;
+            padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+            font-family:inherit;transition:.15s;box-shadow:0 2px 8px rgba(34,197,94,.22);white-space:nowrap}
+.btn-tahmin:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(34,197,94,.34)}
+.btn-tahmin:disabled{background:var(--bg3);color:var(--yazi3);box-shadow:none;transform:none;cursor:default}
+
+/* ═══ TAHMIN SONUCU ═══ */
+.analiz{background:linear-gradient(180deg,#0f1620,#0c1219);border:1px solid var(--cizgi);border-radius:12px;
+        margin-bottom:14px;overflow:hidden;animation:ac .35s ease-out}
+@keyframes ac{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:none}}
+.analiz-bas{padding:15px 19px;background:linear-gradient(90deg,rgba(34,197,94,.09),transparent);
+            border-bottom:1px solid var(--cizgi)}
+.analiz-bas .mac-ad{font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.analiz-bas .alt{font-size:11.5px;color:var(--yazi3)}
+
+/* AJAN KARTI */
+.ajan{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(6,182,212,.06));
+      border:1px solid rgba(34,197,94,.3);border-radius:11px;padding:16px;margin:16px 19px}
+.ajan-bas{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ajan-bas .ikon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--yesil),var(--turkuaz));
+                display:flex;align-items:center;justify-content:center;font-size:15px}
+.ajan-bas .ad{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--yesil)}
+.ajan .ozet{font-size:14.5px;font-weight:600;margin-bottom:13px;color:var(--yazi)}
+.tav{display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.28);
+     border-radius:8px;margin-bottom:6px;border-left:3px solid var(--yesil)}
+.tav.orta{border-left-color:var(--sari)}
+.tav .tip{font-size:9.5px;font-weight:700;color:var(--yazi3);background:var(--bg3);padding:3px 8px;
+          border-radius:4px;min-width:78px;text-align:center;letter-spacing:.3px}
+.tav .metin{flex:1;font-size:13px}
+.tav .yuzde{font-weight:700;color:var(--yesil);font-size:14px;font-family:'SF Mono',monospace}
+.tav.orta .yuzde{color:var(--sari)}
+.uyari{font-size:12px;color:var(--sari);padding:6px 11px;background:rgba(234,179,8,.07);
+       border-radius:6px;margin-top:5px;border-left:2px solid var(--sari)}
+
+/* 1X2 KARTLARI */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px 19px}
+.olas{background:var(--bg3);border:1px solid var(--cizgi2);border-radius:10px;padding:15px 11px;text-align:center;
+      transition:.15s;position:relative;overflow:hidden}
+.olas::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:var(--mavi)}
+.olas.ev::before{background:var(--yesil)}.olas.ber::before{background:var(--sari)}.olas.dep::before{background:var(--kirmizi)}
+.olas .yuzde{font-size:26px;font-weight:800;letter-spacing:-1px;font-family:'SF Mono',monospace;margin-bottom:3px}
+.olas.ev .yuzde{color:var(--yesil)}.olas.ber .yuzde{color:var(--sari)}.olas.dep .yuzde{color:var(--kirmizi)}
+.olas .etiket{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+.olas .bar{height:4px;background:var(--bg);border-radius:2px;margin-top:9px;overflow:hidden}
+.olas .bar div{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.olas.ev .bar div{background:var(--yesil)}.olas.ber .bar div{background:var(--sari)}.olas.dep .bar div{background:var(--kirmizi)}
+
+/* BOLUM */
+.blk{padding:16px 19px;border-top:1px solid var(--cizgi)}
+.blk h3{font-size:11px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.8px;font-weight:700;
+        margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.cipler{display:flex;flex-wrap:wrap;gap:7px}
+.cip2{background:var(--bg3);border:1px solid var(--cizgi2);border-radius:7px;padding:7px 12px;font-size:12px;
+      display:flex;align-items:center;gap:7px}
+.cip2 b{color:var(--yazi);font-weight:600;font-family:'SF Mono',monospace}
+.cip2 .iyi{color:var(--yesil)}
+.cip2 .kotu{color:var(--kirmizi)}
+
+/* SKOR TABLOSU */
+.skorlar{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.skor{background:var(--bg3);border:1px solid var(--cizgi2);border-radius:8px;padding:9px 11px;
+      display:flex;justify-content:space-between;align-items:center;transition:.13s}
+.skor:hover{border-color:var(--mavi);transform:translateY(-2px)}
+.skor.lider{border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.07)}
+.skor .s{font-weight:700;font-size:13.5px;font-family:'SF Mono',monospace}
+.skor .y{font-size:11.5px;color:var(--mavi);font-weight:600}
+.skor.lider .y{color:var(--yesil)}
+
+/* DAGILIM */
+.dagilim{display:flex;align-items:flex-end;gap:6px;height:88px;padding-top:8px}
+.dagilim .sutun{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.dagilim .sutun .cubuk{width:100%;background:linear-gradient(180deg,var(--mavi),var(--mavi2));
+                      border-radius:4px 4px 0 0;min-height:3px;transition:height .5s;position:relative}
+.dagilim .sutun .cubuk:hover{background:linear-gradient(180deg,var(--yesil),var(--yesil2))}
+.dagilim .sutun .yuz{font-size:9.5px;color:var(--yazi2);font-weight:600;font-family:'SF Mono',monospace}
+.dagilim .sutun .gol{font-size:9.5px;color:var(--yazi3)}
+
+/* YUKLENIYOR */
+.yukleyici{text-align:center;padding:70px 20px}
+.yukleyici .halka{width:44px;height:44px;border:3px solid var(--cizgi2);border-top-color:var(--yesil);
+                  border-radius:50%;margin:0 auto 18px;animation:don 1s linear infinite}
+@keyframes don{to{transform:rotate(360deg)}}
+.yukleyici p{color:var(--yazi2);font-size:13.5px;margin-bottom:5px}
+.yukleyici small{color:var(--yazi3);font-size:11.5px}
+
+.bos{text-align:center;padding:50px 20px;color:var(--yazi3);font-size:13px}
+.hata2{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fca5a5;
+       padding:12px 16px;border-radius:9px;font-size:13px;margin:16px 19px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>⚽ Spor Maç Tahmin</h1>
-  <div class="sub">Canlı veri · Monte Carlo (30.000 simülasyon) · İstatistik Ajanı — {{ toplam }} maç</div>
 
-  <h2>📅 Oynanacak Maçlar</h2>
-  {% if gelecek %}
-    {% for m in gelecek %}
-    <div class="kart" id="k{{ loop.index }}">
-      <div class="mac">
-        <span class="tarih">{{ m.tarih }}{% if m.saat %} {{ m.saat }}{% endif %}</span>
-        <span class="takimlar">{{ m.ev }}<span class="vs">vs</span>{{ m.dep }}<span class="lig">{{ m.lig_adi }}</span></span>
-        <button class="btn" onclick="tahmin('{{ m.ev|e }}','{{ m.dep|e }}','{{ m.lig_adi|e }}','{{ loop.index }}')">▶ TAHMİN</button>
-      </div>
-      <div class="sonuc" id="s{{ loop.index }}"></div>
-    </div>
-    {% endfor %}
-  {% else %}
-    <div class="kart">Yaklaşan maç yok (internet/veri kontrolü)</div>
-  {% endif %}
+<header>
+  <div class="logo">
+    <div class="simge">⚽</div>
+    <div>Spor Tahmin<small>Monte Carlo Simülasyon</small></div>
+  </div>
+  <div id="durum">
+    <span><span class="nokta"></span> <span id="durum-yazi">Veri hazırlanıyor…</span></span>
+    <button class="btn-yenile" onclick="yenile()">↻ Yenile</button>
+  </div>
+</header>
 
-  <h2>📊 Son Sonuçlar</h2>
-  <div class="kart"><table>
-    {% for m in oynanan %}
-    <tr><td style="color:#7d8590;font-family:monospace;font-size:10.5px">{{ m.tarih }}</td>
-        <td>{{ m.ev }}</td><td style="color:#58a6ff;font-weight:600">{{ m.ev_gol }}-{{ m.dep_gol }}</td>
-        <td>{{ m.dep }}</td><td style="color:#7d8590;font-size:10.5px">{{ m.lig_adi }}</td></tr>
-    {% endfor %}
-  </table></div>
+<div class="takip" id="takip">
+  <span class="et">Sonuçlar</span>
+  <span style="color:var(--yazi3);font-size:11.5px">yükleniyor…</span>
 </div>
 
+<main>
+  <aside>
+    <div class="bolum-bas">Ligler</div>
+    <div id="ligler"><div style="padding:14px;color:var(--yazi3);font-size:12px">Yükleniyor…</div></div>
+  </aside>
+  <section id="icerik">
+    <div class="yukleyici">
+      <div class="halka"></div>
+      <p>Maç verileri çekiliyor…</p>
+      <small>13 lig · FlashScore · OpenLigaDB</small>
+    </div>
+  </section>
+</main>
+
 <script>
-async function tahmin(ev, dep, lig, id){
-  const k=document.getElementById('k'+id), s=document.getElementById('s'+id);
-  const btn=k.querySelector('button');
-  s.className='sonuc gorun'; s.innerHTML='<div class="yuk">⏳ 30.000 maç simüle ediliyor...</div>';
-  btn.disabled=true;
+let LIGLER=[], AKTIF=null, VERI={};
+const BAYRAK={"Süper Lig":"🇹🇷","Premier League":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","La Liga":"🇪🇸","Serie A":"🇮🇹",
+"Bundesliga":"🇩🇪","Ligue 1":"🇫🇷","Eredivisie":"🇳🇱","Şampiyonlar Ligi":"🏆","Avrupa Ligi":"🥈",
+"Konferans Ligi":"🥉","Championship":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Bundesliga 2":"🇩🇪","MLS":"🇺🇸"};
+
+async function durumKontrol(){
+  const r=await fetch('/api/durum'); const d=await r.json();
+  if(d.hazir){
+    LIGLER=d.ligler;
+    document.getElementById('durum-yazi').textContent=`${d.toplam.toLocaleString('tr')} maç · ${d.ligler.length} lig`;
+    ligListesi();
+    if(!AKTIF && d.ligler.length){ ligSec(d.ligler[0].ad); }
+    return true;
+  }
+  document.getElementById('durum-yazi').textContent='Veri çekiliyor…';
+  return false;
+}
+
+function ligListesi(){
+  let h='';
+  LIGLER.forEach(l=>{
+    h+=`<div class="lig ${AKTIF===l.ad?'aktif':''}" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}')">
+      <span class="bayrak">${BAYRAK[l.ad]||'⚽'}</span>
+      <span class="ad">${l.ad}</span>
+      <span class="say">${l.oynanmis}</span></div>`;
+  });
+  document.getElementById('ligler').innerHTML=h||'<div style="padding:12px;color:var(--yazi3);font-size:12px">Lig yok</div>';
+}
+
+async function ligSec(ad){
+  AKTIF=ad; ligListesi();
+  const s=document.getElementById('icerik');
+  s.innerHTML='<div class="yukleyici"><div class="halka"></div><p>Maçlar yükleniyor…</p></div>';
+  const r=await fetch('/api/maclar/'+encodeURIComponent(ad));
+  const d=await r.json();
+  VERI[ad]=d;
+  ciz(ad, d);
+}
+
+function ciz(ad, d){
+  const s=document.getElementById('icerik');
+  let h='';
+
+  // GELECEK MACLAR
+  if(d.gelecek && d.gelecek.length){
+    h+=`<div class="kutu"><div class="kutu-bas"><h2>📅 Oynanacak Maçlar</h2>
+        <span class="rozet">${d.gelecek.length} maç</span></div>`;
+    d.gelecek.forEach((m,i)=>{
+      h+=`<div class="mac-satir">
+        <div class="mac-sol"><div class="mac-tarih">${m.tarih||'-'}</div><div class="mac-saat">${m.saat||''}</div></div>
+        <div class="mac-orta">
+          <span class="takim ev">${m.ev}</span><span class="vs">VS</span><span class="takim dep">${m.dep}</span>
+        </div>
+        <button class="btn-tahmin" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${ad.replace(/'/g,"\\'")}',this)">Tahmin Et</button>
+      </div>`;
+    });
+    h+=`</div>`;
+  } else {
+    h+=`<div class="kutu"><div class="kutu-bas"><h2>📅 Oynanacak Maçlar</h2></div>
+        <div class="bos">Bu lig için yaklaşan maç bulunamadı</div></div>`;
+  }
+
+  // SON SONUCLAR
+  if(d.sonuclar && d.sonuclar.length){
+    h+=`<div class="kutu"><div class="kutu-bas"><h2>📊 Son Sonuçlar</h2></div>`;
+    d.sonuclar.forEach(m=>{
+      h+=`<div class="mac-satir">
+        <div class="mac-sol"><div class="mac-tarih">${m.tarih||'-'}</div></div>
+        <div class="mac-orta">
+          <span class="takim ev">${m.ev}</span><span class="skor-kutu">${m.ev_gol} - ${m.dep_gol}</span><span class="takim dep">${m.dep}</span>
+        </div></div>`;
+    });
+    h+=`</div>`;
+  }
+  s.innerHTML=h;
+}
+
+async function tahmin(ev, dep, lig, btn){
+  const s=document.getElementById('icerik');
+  const eski=document.getElementById('analiz-kutu'); if(eski) eski.remove();
+  btn.disabled=true; btn.textContent='⏳';
+  const yuk=document.createElement('div');
+  yuk.id='analiz-kutu';
+  yuk.innerHTML='<div class="yukleyici"><div class="halka"></div><p>30.000 maç simüle ediliyor…</p><small>'+ev+' — '+dep+'</small></div>';
+  s.insertBefore(yuk, s.firstChild);
   try{
     const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ev,dep,lig})});
     const d=await r.json();
-    if(d.hata){s.innerHTML=`<div class="hata">${d.hata}</div>`;btn.disabled=false;return;}
-    let h='';
-    // AJAN
-    if(d.ajan){
-      h+=`<div class="genel">${d.ajan.genel}</div>`;
-      h+=`<div class="blok"><h4>🤖 Ajan Tavsiyeleri</h4>`;
-      d.ajan.tavsiyeler.forEach(t=>{
-        const kls=(t.guven==='ÇOK YÜKSEK'||t.guven==='YÜKSEK')?'':'orta';
-        h+=`<div class="tav ${kls}"><span class="tip">${t.tip}</span><span>${t.tavsiye}</span><span class="p">%${t.olasilik}</span></div>`;
-      });
-      h+=`</div>`;
-      if(d.ajan.uyarilar.length){
-        h+=`<div class="blok"><h4>⚠️ Risk Uyarıları</h4>`;
-        d.ajan.uyarilar.forEach(u=>{h+=`<div class="uyari">${u}</div>`;});
-        h+=`</div>`;
-      }
-    }
-    // 1X2
-    h+=`<div class="grid3">
-      <div class="olas"><div class="p">${d.ev_kazanma}%</div><div class="l">EV KAZANIR</div></div>
-      <div class="olas"><div class="p" style="color:#d29922">${d.beraberlik}%</div><div class="l">BERABERE</div></div>
-      <div class="olas"><div class="p" style="color:#f85149">${d.dep_kazanma}%</div><div class="l">DEP KAZANIR</div></div></div>`;
-    // Cifte sans
-    h+=`<div class="blok"><h4>Çifte Şans</h4><div class="tg">
-      <span>1X: %${d['1X']}</span><span>12: %${d['12']}</span><span>X2: %${d['X2']}</span></div></div>`;
-    // Alt/Ust
-    h+=`<div class="blok"><h4>Alt / Üst</h4><div class="tg">`;
-    ['05','15','25','35','45'].forEach(e=>{
-      h+=`<span>${e[0]}.${e[1]} — Alt %${d['alt_'+e]} / Üst %${d['ust_'+e]}</span>`;
-    });
-    h+=`</div></div>`;
-    // KG + Tek/Cift
-    h+=`<div class="blok"><h4>Karşılıklı Gol & Tek/Çift</h4><div class="tg">
-      <span>KG Var: %${d.kg_var}</span><span>KG Yok: %${d.kg_yok}</span>
-      <span>Tek: %${d.tek_gol}</span><span>Çift: %${d.cift_gol}</span></div></div>`;
-    // Ilk yari
-    h+=`<div class="blok"><h4>İlk Yarı</h4><div class="tg">
-      <span>Ev: %${d.iy_ev}</span><span>Ber: %${d.iy_ber}</span><span>Dep: %${d.iy_dep}</span>
-      <span>İY 0.5 Üst: %${d.iy_05_ust}</span><span>İY 1.5 Üst: %${d.iy_15_ust}</span></div></div>`;
-    // Toplam gol dagilimi
-    h+=`<div class="blok"><h4>Toplam Gol Olasılığı</h4><div class="tg">`;
-    Object.keys(d.toplam_gol).sort((a,b)=>a-b).forEach(k=>{h+=`<span>${k} gol: %${d.toplam_gol[k]}</span>`;});
-    h+=`</div></div>`;
-    // Skorlar
-    h+=`<div class="blok"><h4>En Olası Skorlar</h4>`;
-    d.skorlar.slice(0,8).forEach(([sk,p])=>{h+=`<div class="skor"><span>${sk}</span><span class="y">%${p}</span></div>`;});
-    h+=`</div>`;
-    h+=`<div style="color:#7d8590;font-size:10.5px">Beklenen: ${d.beklenen_skor} (${d.ev_beklenen_gol}-${d.dep_beklenen_gol}) · ${d.kullanilan_mac} maç verisi · 30.000 simülasyon</div>`;
-    s.innerHTML=h;
-  }catch(e){s.innerHTML=`<div class="hata">Hata: ${e.message}</div>`;}
-  btn.disabled=false;
+    if(d.hata){ yuk.innerHTML=`<div class="hata2">${d.hata}</div>`; }
+    else { yuk.innerHTML=analizHtml(d, ev, dep, lig); yuk.scrollIntoView({behavior:'smooth',block:'start'}); }
+  }catch(e){ yuk.innerHTML=`<div class="hata2">Bağlantı hatası: ${e.message}</div>`; }
+  btn.disabled=false; btn.textContent='Tahmin Et';
 }
+
+function analizHtml(d, ev, dep, lig){
+  let h=`<div class="analiz">
+    <div class="analiz-bas">
+      <div class="mac-ad">${ev} <span style="color:var(--yazi3);font-weight:400">vs</span> ${dep}</div>
+      <div class="alt">${lig} · ${d.kullanilan_mac} maç verisi · 30.000 simülasyon</div>
+    </div>`;
+
+  // AJAN
+  if(d.ajan){
+    h+=`<div class="ajan">
+      <div class="ajan-bas"><div class="ikon">🤖</div><div class="ad">İstatistik Ajanı</div></div>
+      <div class="ozet">${d.ajan.genel}</div>`;
+    d.ajan.tavsiyeler.forEach(t=>{
+      const kls=(t.guven==='ÇOK YÜKSEK'||t.guven==='YÜKSEK')?'':'orta';
+      h+=`<div class="tav ${kls}"><span class="tip">${t.tip}</span><span class="metin">${t.tavsiye}</span>
+          <span class="yuzde">%${t.olasilik}</span></div>`;
+    });
+    d.ajan.uyarilar.forEach(u=>{ h+=`<div class="uyari">${u}</div>`; });
+    h+=`</div>`;
+  }
+
+  // 1X2
+  h+=`<div class="grid3">
+    <div class="olas ev"><div class="yuzde">${d.ev_kazanma}%</div><div class="etiket">Ev Kazanır</div>
+      <div class="bar"><div style="width:${d.ev_kazanma}%"></div></div></div>
+    <div class="olas ber"><div class="yuzde">${d.beraberlik}%</div><div class="etiket">Berabere</div>
+      <div class="bar"><div style="width:${d.beraberlik}%"></div></div></div>
+    <div class="olas dep"><div class="yuzde">${d.dep_kazanma}%</div><div class="etiket">Deplasman</div>
+      <div class="bar"><div style="width:${d.dep_kazanma}%"></div></div></div>
+  </div>`;
+
+  // Cifte sans
+  h+=`<div class="blk"><h3>Çifte Şans</h3><div class="cipler">
+    <div class="cip2">1X <b>%${d['1X']}</b></div>
+    <div class="cip2">12 <b>%${d['12']}</b></div>
+    <div class="cip2">X2 <b>%${d['X2']}</b></div>
+  </div></div>`;
+
+  // Alt/Ust
+  h+=`<div class="blk"><h3>Alt / Üst</h3><div class="cipler">`;
+  ['05','15','25','35','45'].forEach(e=>{
+    const a=d['alt_'+e], u=d['ust_'+e];
+    h+=`<div class="cip2">${e[0]}.${e[1]} <b class="${a>u?'iyi':'kotu'}">Alt %${a}</b> <b class="${u>a?'iyi':'kotu'}">Üst %${u}</b></div>`;
+  });
+  h+=`</div></div>`;
+
+  // KG + Tek/Cift
+  h+=`<div class="blk"><h3>Karşılıklı Gol & Tek/Çift</h3><div class="cipler">
+    <div class="cip2">KG Var <b class="${d.kg_var>d.kg_yok?'iyi':'kotu'}">%${d.kg_var}</b></div>
+    <div class="cip2">KG Yok <b class="${d.kg_yok>d.kg_var?'iyi':'kotu'}">%${d.kg_yok}</b></div>
+    <div class="cip2">Tek <b>%${d.tek_gol}</b></div>
+    <div class="cip2">Çift <b>%${d.cift_gol}</b></div>
+  </div></div>`;
+
+  // Ilk yari
+  h+=`<div class="blk"><h3>İlk Yarı</h3><div class="cipler">
+    <div class="cip2">Ev <b>%${d.iy_ev}</b></div>
+    <div class="cip2">Ber <b>%${d.iy_ber}</b></div>
+    <div class="cip2">Dep <b>%${d.iy_dep}</b></div>
+    <div class="cip2">İY 0.5 Üst <b>%${d.iy_05_ust}</b></div>
+    <div class="cip2">İY 1.5 Üst <b>%${d.iy_15_ust}</b></div>
+  </div></div>`;
+
+  // Toplam gol dagilim
+  h+=`<div class="blk"><h3>Toplam Gol Dağılımı</h3><div class="dagilim">`;
+  const anahtar=Object.keys(d.toplam_gol).map(Number).sort((a,b)=>a-b);
+  const max=Math.max(...anahtar.map(k=>d.toplam_gol[k]));
+  anahtar.forEach(k=>{
+    const y=d.toplam_gol[k];
+    h+=`<div class="sutun"><div class="yuz">${y}%</div>
+        <div class="cubuk" style="height:${Math.max(3,y/max*58)}px"></div>
+        <div class="gol">${k}</div></div>`;
+  });
+  h+=`</div></div>`;
+
+  // En olasi skorlar
+  h+=`<div class="blk"><h3>En Olası Skorlar</h3><div class="skorlar">`;
+  d.skorlar.slice(0,12).forEach(([sk,p],i)=>{
+    h+=`<div class="skor ${i===0?'lider':''}"><span class="s">${sk}</span><span class="y">%${p}</span></div>`;
+  });
+  h+=`</div></div>`;
+
+  h+=`<div class="blk" style="color:var(--yazi3);font-size:11.5px">
+    Beklenen skor: <b style="color:var(--yazi2)">${d.beklenen_skor}</b> · Ev ${d.ev_beklenen_gol} gol / Dep ${d.dep_beklenen_gol} gol
+  </div>`;
+  h+=`</div>`;
+  return h;
+}
+
+async function yenile(){
+  document.getElementById('durum-yazi').textContent='Yenileniyor…';
+  await fetch('/api/yukle');
+  setTimeout(durumKontrol, 3000);
+}
+
+async function sonuclariYukle(){
+  // Ust seritteki canli sonuclar
+  try{
+    const r=await fetch('/api/durum'); const d=await r.json();
+    if(!d.ligler || !d.ligler.length) return;
+  }catch(e){}
+}
+
+// Baslat
+(async function(){
+  let hazir=await durumKontrol();
+  let deneme=0;
+  while(!hazir && deneme<60){
+    await new Promise(r=>setTimeout(r,2500));
+    hazir=await durumKontrol();
+    deneme++;
+  }
+  if(!hazir){
+    document.getElementById('icerik').innerHTML='<div class="hata2">Veri çekilemedi. "Yenile" butonuna basın.</div>';
+  }
+})();
 </script>
 </body>
 </html>
