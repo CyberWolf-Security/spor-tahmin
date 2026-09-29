@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canlı Simülasyon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0d1117;color:#e6edf3;padding:18px}
+.wrap{max-width:940px;margin:0 auto}
+h1{font-size:23px;color:#58a6ff;margin-bottom:4px}
+.sub{color:#7d8590;font-size:12px;margin-bottom:18px}
+.kart{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:13px}
+label{display:block;font-size:11px;color:#7d8590;margin-bottom:5px;text-transform:uppercase}
+select{width:100%;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:14px;margin-bottom:11px}
+button{width:100%;padding:12px;background:#238636;border:0;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+button:hover{background:#2ea043}
+button.dur{background:#da3633}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+/* SAHA */
+.saha{background:linear-gradient(180deg,#0f3d1f,#0a2a15);border:2px solid #1a5c30;border-radius:10px;padding:16px;position:relative;margin-bottom:14px;min-height:170px}
+.saha::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:#1a5c30;opacity:.5}
+.saha::after{content:'';position:absolute;left:50%;top:50%;width:70px;height:70px;border:2px solid #1a5c30;border-radius:50%;transform:translate(-50%,-50%);opacity:.5}
+.skor-buyuk{text-align:center;font-size:44px;font-weight:800;letter-spacing:3px;position:relative;z-index:2;margin-bottom:6px}
+.skor-buyuk .ev{color:#3fb950}
+.skor-buyuk .dep{color:#f85149}
+.takim-adlari{display:flex;justify-content:space-between;color:#8b949e;font-size:12px;position:relative;z-index:2;padding:0 8px}
+.dakika{text-align:center;color:#d29922;font-size:15px;font-weight:700;position:relative;z-index:2;margin-top:8px}
+.gol-anim{animation:patla .8s ease-out}
+@keyframes patla{0%{transform:scale(1)}30%{transform:scale(1.35);text-shadow:0 0 24px #3fb950}100%{transform:scale(1)}}
+
+/* YARI */
+.yari{display:flex;height:26px;border-radius:13px;overflow:hidden;border:1px solid #30363d;margin-bottom:6px}
+.yari div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:width .6s ease}
+.y-ev{background:#238636;color:#fff}
+.y-ber{background:#6e7681;color:#fff}
+.y-dep{background:#da3633;color:#fff}
+.etiketler{display:flex;justify-content:space-between;font-size:10px;color:#7d8590;margin-bottom:14px}
+
+/* OLAY AKISI */
+.akis{max-height:230px;overflow-y:auto;font-size:12.5px}
+.olay{display:flex;align-items:center;gap:9px;padding:7px 9px;background:#0d1117;border-left:3px solid #30363d;border-radius:5px;margin-bottom:5px;animation:kay .35s ease-out}
+@keyframes kay{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.olay.gol{border-left-color:#3fb950;background:#0f2a18}
+.olay .dk{color:#d29922;font-weight:700;min-width:38px}
+.olay .top{font-size:14px}
+.olay .metin{flex:1;color:#c9d1d9}
+.olay .skor{margin-left:auto;color:#7d8590;font-family:monospace;font-size:13px}
+
+/* ISTATISTIK */
+.ist{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px}
+.ist .satir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #21262d}
+.hata{background:#3d1418;border:1px solid #f85149;color:#ff7b72;padding:11px;border-radius:8px;font-size:13px}
+.ilerleme{height:5px;background:#21262d;border-radius:3px;overflow:hidden;margin-top:10px}
+.ilerleme div{height:100%;background:#1f6feb;width:0;transition:width .25s}
+.ib{display:flex;justify-content:space-between;font-size:10px;color:#7d8590;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ Canlı Maç Simülasyonu</h1>
+  <div class="sub">Maç dakika dakika simüle edilir — Monte Carlo olasılıkları ile</div>
+
+  <div class="kart">
+    <label>LİG</label>
+    <select id="lig" onchange="takimYukle()">
+      <option value="">-- lig seç --</option>
+      {% for l in ligler %}<option value="{{ l.lig }}">{{ l.lig }} ({{ l.mac }} maç)</option>{% endfor %}
+    </select>
+    <div class="grid2">
+      <div><label>EV SAHİBİ</label><select id="ev"></select></div>
+      <div><label>DEPLASMAN</label><select id="dep"></select></div>
+    </div>
+    <button id="btn" onclick="basla()">▶ SİMÜLASYONU BAŞLAT</button>
+  </div>
+
+  <div id="icerik"></div>
+</div>
+
+<script>
+let ZAMAN=null, HIZ=1;
+
+async function takimYukle(){
+  const lig=document.getElementById('lig').value;
+  const e=document.getElementById('ev'), d=document.getElementById('dep');
+  if(!lig){e.innerHTML='';d.innerHTML='';return;}
+  const r=await fetch('/api/takimlar/'+encodeURIComponent(lig)); const t=await r.json();
+  const o='<option value="">-- seç --</option>'+t.map(x=>`<option>${x}</option>`).join('');
+  e.innerHTML=o; d.innerHTML=o;
+}
+
+function durdur(){
+  if(ZAMAN){clearInterval(ZAMAN); ZAMAN=null;}
+  const b=document.getElementById('btn');
+  if(b){b.textContent='▶ TEKRAR BAŞLAT'; b.className='';}
+}
+
+async function basla(){
+  durdur();
+  const lig=document.getElementById('lig').value, ev=document.getElementById('ev').value, dep=document.getElementById('dep').value;
+  const c=document.getElementById('icerik');
+  if(!lig||!ev||!dep){c.innerHTML='<div class="kart"><div class="hata">Lig ve iki takım seçin</div></div>';return;}
+  c.innerHTML='<div class="kart">⏳ Veri hazırlanıyor...</div>';
+  const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lig,ev,dep})});
+  const t=await r.json();
+  if(t.hata){c.innerHTML=`<div class="kart"><div class="hata">${t.hata}</div></div>`;return;}
+
+  // Simulasyon kur
+  c.innerHTML=`
+  <div class="kart">
+    <div class="saha">
+      <div class="skor-buyuk"><span class="ev" id="sev">0</span> <span style="color:#484f58">-</span> <span class="dep" id="sdep">0</span></div>
+      <div class="takim-adlari"><span>${ev}</span><span>${dep}</span></div>
+      <div class="dakika" id="dk">0'</div>
+    </div>
+    <div class="yari"><div class="y-ev" id="bev" style="width:${t.ev_kazanma}%">${t.ev_kazanma}%</div><div class="y-ber" id="bber" style="width:${t.beraberlik}%">${t.beraberlik}%</div><div class="y-dep" id="bdep" style="width:${t.dep_kazanma}%">${t.dep_kazanma}%</div></div>
+    <div class="etiketler"><span>EV KAZANIR</span><span>BERABERE</span><span>DEP KAZANIR</span></div>
+    <div class="ist">
+      <div><div class="satir"><span>Beklenen skor</span><b>${t.beklenen_skor}</b></div>
+           <div class="satir"><span>Üst 2.5</span><b>${t.ust_25}%</b></div></div>
+      <div><div class="satir"><span>Karşılıklı gol</span><b>${t.kg_var}%</b></div>
+           <div class="satir"><span>Veri</span><b>${t.kullanilan_mac} maç</b></div></div>
+    </div>
+    <div class="ilerleme"><div id="ilr"></div></div>
+    <div class="ib"><span id="gecen">0 olay</span><span>10.000 simülasyon</span><span id="hiz">1x</span></div>
+    <button class="dur" style="margin-top:12px" onclick="durdur()">⏹ DURDUR</button>
+  </div>
+  <div class="kart"><h3 style="font-size:12px;color:#7d8590;margin-bottom:9px;text-transform:uppercase">📺 Maç Akışı</h3><div class="akis" id="akis"></div></div>`;
+
+  // Rastgele olay uret (beklenen gole gore)
+  const eg=parseFloat(t.ev_beklenen_gol), dg=parseFloat(t.dep_beklenen_gol);
+  const olaylar=[];
+  const dagit=(lam,taraf)=>{
+    for(let d=1;d<=90;d++){ if(Math.random()<lam/90) olaylar.push({dk:d,taraf,tip:'gol'}); }
+  };
+  dagit(eg,'ev'); dagit(dg,'dep');
+  // Diger olaylar
+  const ekstra=['Sarı kart','Korner','Ofsayt','Şut','Faul','Serbest vuruş'];
+  for(let d=1;d<=90;d++){ if(Math.random()<0.10) olaylar.push({dk:d,taraf:Math.random()<.5?'ev':'dep',tip:ekstra[Math.floor(Math.random()*ekstra.length)]}); }
+  olaylar.sort((a,b)=>a.dk-b.dk);
+
+  let sev=0,sdep=0,idx=0,dk=0;
+  ZAMAN=setInterval(()=>{
+    dk++;
+    if(dk>90){ durdur(); document.getElementById('dk').textContent="MAÇ SONU"; return; }
+    document.getElementById('dk').textContent=dk+"'";
+    document.getElementById('ilr').style.width=(dk/90*100)+'%';
+    // Bu dakikadaki olaylar
+    while(idx<olaylar.length && olaylar[idx].dk===dk){
+      const o=olaylar[idx];
+      if(o.tip==='gol'){
+        if(o.taraf==='ev'){sev++; const el=document.getElementById('sev'); el.textContent=sev; el.classList.add('gol-anim'); setTimeout(()=>el.classList.remove('gol-anim'),800);}
+        else {sdep++; const el=document.getElementById('sdep'); el.textContent=sdep; el.classList.add('gol-anim'); setTimeout(()=>el.classList.remove('gol-anim'),800);}
+      }
+      const ikon=o.tip==='gol'?'⚽':(o.tip==='Sarı kart'?'🟨':(o.tip==='Korner'?'🚩':(o.tip==='Şut'?'🎯':'•')));
+      const tarafAd=o.taraf==='ev'?ev:dep;
+      const ak=document.getElementById('akis');
+      const el=document.createElement('div');
+      el.className='olay'+(o.tip==='gol'?' gol':'');
+      el.innerHTML=`<span class="dk">${o.dk}'</span><span class="top">${ikon}</span><span class="metin">${o.tip==='gol'?`GOL! ${tarafAd}`:`${tarafAd} — ${o.tip}`}</span><span class="skor">${sev}-${sdep}</span>`;
+      ak.insertBefore(el, ak.firstChild);
+      idx++;
+    }
+    document.getElementById('gecen').textContent=idx+' olay';
+  }, 700/HIZ);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2135 @@
+{
+ "maclar": [
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Rizespor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-01"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-02-02"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Antalyaspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-03-03"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Trabzonspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-04-04"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-05-05"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-06-06"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Alanyaspor",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-07-07"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Kasimpasa",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-08-08"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-09-09"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-10"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-11"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-12"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-13"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Antalyaspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-05-14"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Sivasspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-06-15"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-07-16"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-08-17"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Kasimpasa",
+   "ev_gol": 0,
+   "dep_gol": 3,
+   "tarih": "2026-09-18"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-01-19"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Basaksehir",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-02-20"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-03-21"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Hatayspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-04-22"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-23"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Sivasspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-06-24"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Galatasaray",
+   "ev_gol": 3,
+   "dep_gol": 1,
+   "tarih": "2026-07-25"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Hatayspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-08-26"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-09-27"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-01-28"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-01"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Gaziantep",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-03-02"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Kayserispor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-04-03"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-04"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Basaksehir",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-06-05"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-07-06"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Konyaspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-08-07"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-09-08"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Samsunspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-01-09"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-02-10"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-11"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-04-12"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-05-13"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Konyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-06-14"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-07-15"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Konyaspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-08-16"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Rizespor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-09-17"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Trabzonspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-01-18"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-02-19"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Rizespor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-03-20"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Samsunspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-04-21"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Fenerbahce",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-05-22"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Besiktas",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-06-23"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Rizespor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-07-24"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Fenerbahce",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-08-25"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Antalyaspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-09-26"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Rizespor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-01-27"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Pendikspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-02-28"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-01"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Fenerbahce",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-04-02"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-05-03"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-04"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Kasimpasa",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-07-05"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-08-06"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-09-07"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Konyaspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-08"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Kasimpasa",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-02-09"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Sivasspor",
+   "ev_gol": 4,
+   "dep_gol": 0,
+   "tarih": "2026-03-10"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-11"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-05-12"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Gaziantep",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-06-13"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Alanyaspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-07-14"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Hatayspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-08-15"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-09-16"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-17"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Konyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-18"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-19"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-04-20"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-05-21"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-06-22"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Istanbulspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-07-23"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Istanbulspor",
+   "ev_gol": 3,
+   "dep_gol": 1,
+   "tarih": "2026-08-24"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-09-25"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Fenerbahce",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-01-26"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Trabzonspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-02-27"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-03-28"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-04-01"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Rizespor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-02"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Antalyaspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-06-03"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Fenerbahce",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-07-04"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Gaziantep",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-08-05"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-09-06"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Antalyaspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-01-07"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Gaziantep",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-02-08"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Sivasspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-03-09"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-04-10"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Trabzonspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-05-11"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Rizespor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-12"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-07-13"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-08-14"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Gaziantep",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-09-15"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-16"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-02-17"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Alanyaspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-03-18"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Adana Demirspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-04-19"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Galatasaray",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-05-20"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Sivasspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-06-21"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-07-22"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-08-23"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Sivasspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-09-24"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-25"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Fenerbahce",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-02-26"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Samsunspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-03-27"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Kasimpasa",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-28"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Trabzonspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-05-01"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-06-02"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Samsunspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-07-03"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-08-04"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-09-05"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-06"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Kayserispor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-02-07"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Pendikspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-03-08"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-04-09"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Besiktas",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-05-10"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Konyaspor",
+   "ev_gol": 3,
+   "dep_gol": 2,
+   "tarih": "2026-06-11"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-07-12"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Kasimpasa",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-08-13"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-09-14"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-15"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Istanbulspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-02-16"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Kayserispor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-03-17"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-04-18"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Adana Demirspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-05-19"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Istanbulspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-06-20"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Galatasaray",
+   "ev_gol": 3,
+   "dep_gol": 2,
+   "tarih": "2026-07-21"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-08-22"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-09-23"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-01-24"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Besiktas",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-25"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Gaziantep",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-03-26"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Galatasaray",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-04-27"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Basaksehir",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-05-28"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-06-01"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Gaziantep",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-07-02"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-08-03"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Alanyaspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-09-04"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-05"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Kayserispor",
+   "ev_gol": 3,
+   "dep_gol": 1,
+   "tarih": "2026-02-06"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-07"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Gaziantep",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-04-08"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Hatayspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-09"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Pendikspor",
+   "ev_gol": 3,
+   "dep_gol": 3,
+   "tarih": "2026-06-10"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Basaksehir",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-07-11"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Istanbulspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-08-12"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Antalyaspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-09-13"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Antalyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-14"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-02-15"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Pendikspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-03-16"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Gaziantep",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-04-17"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-05-18"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Besiktas",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-06-19"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-07-20"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-08-21"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Kasimpasa",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-09-22"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Gaziantep",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-23"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-02-24"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-03-25"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Sivasspor",
+   "ev_gol": 3,
+   "dep_gol": 1,
+   "tarih": "2026-04-26"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Konyaspor",
+   "ev_gol": 2,
+   "dep_gol": 3,
+   "tarih": "2026-05-27"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-28"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-07-01"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Istanbulspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-08-02"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 3,
+   "tarih": "2026-09-03"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Trabzonspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-01-04"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-02-05"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Antalyaspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-03-06"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Kasimpasa",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-04-07"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-05-08"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-06-09"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-07-10"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-08-11"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-09-12"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Konyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-01-13"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-02-14"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-03-15"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-04-16"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-05-17"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-18"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Trabzonspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-07-19"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Basaksehir",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-08-20"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-09-21"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-22"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-23"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Rizespor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-03-24"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Besiktas",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-04-25"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 5,
+   "dep_gol": 0,
+   "tarih": "2026-05-26"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 3,
+   "dep_gol": 2,
+   "tarih": "2026-06-27"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-07-28"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-08-01"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Pendikspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-09-02"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 0,
+   "dep_gol": 3,
+   "tarih": "2026-01-03"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Kasimpasa",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-02-04"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-03-05"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-04-06"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-05-07"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Pendikspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-08"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-07-09"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Pendikspor",
+   "ev_gol": 3,
+   "dep_gol": 3,
+   "tarih": "2026-08-10"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Kayserispor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-09-11"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Istanbulspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-01-12"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Samsunspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-02-13"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Pendikspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-03-14"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Rizespor",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-04-15"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Samsunspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-05-16"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-06-17"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Antalyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-07-18"
+  },
+  {
+   "ev": "Sivasspor",
+   "dep": "Hatayspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-08-19"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-09-20"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Samsunspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-21"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-02-22"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Kayserispor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-23"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Fenerbahce",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-04-24"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-05-25"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Pendikspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-06-26"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Sivasspor",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-07-27"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Trabzonspor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-08-28"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Rizespor",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-09-01"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-02"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Kasimpasa",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-02-03"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Kasimpasa",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-03-04"
+  },
+  {
+   "ev": "Pendikspor",
+   "dep": "Istanbulspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-04-05"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Kayserispor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-05-06"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-06-07"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Fenerbahce",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-07-08"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-08-09"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-09-10"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-01-11"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-02-12"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-13"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-14"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Gaziantep",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-05-15"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-06-16"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-07-17"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-08-18"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Kasimpasa",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-09-19"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Pendikspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-01-20"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Gaziantep",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-02-21"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Basaksehir",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-03-22"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Alanyaspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-23"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Basaksehir",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-05-24"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Adana Demirspor",
+   "ev_gol": 1,
+   "dep_gol": 3,
+   "tarih": "2026-06-25"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-07-26"
+  },
+  {
+   "ev": "Adana Demirspor",
+   "dep": "Antalyaspor",
+   "ev_gol": 4,
+   "dep_gol": 0,
+   "tarih": "2026-08-27"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Sivasspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-09-28"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-01"
+  },
+  {
+   "ev": "Kasimpasa",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-02-02"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Antalyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-03"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-04-04"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-05"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Istanbulspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-06-06"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Samsunspor",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-07-07"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Trabzonspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-08-08"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-09-09"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-01-10"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Rizespor",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-02-11"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-12"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Fenerbahce",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-13"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Kayserispor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-05-14"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Istanbulspor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-06-15"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Kasimpasa",
+   "ev_gol": 0,
+   "dep_gol": 3,
+   "tarih": "2026-07-16"
+  },
+  {
+   "ev": "Samsunspor",
+   "dep": "Besiktas",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-08-17"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Galatasaray",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-09-18"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Ankaragucu",
+   "ev_gol": 2,
+   "dep_gol": 3,
+   "tarih": "2026-01-19"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Konyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-02-20"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Sivasspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-03-21"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Galatasaray",
+   "ev_gol": 0,
+   "dep_gol": 4,
+   "tarih": "2026-04-22"
+  },
+  {
+   "ev": "Basaksehir",
+   "dep": "Istanbulspor",
+   "ev_gol": 2,
+   "dep_gol": 2,
+   "tarih": "2026-05-23"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Basaksehir",
+   "ev_gol": 3,
+   "dep_gol": 1,
+   "tarih": "2026-06-24"
+  },
+  {
+   "ev": "Kayserispor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-07-25"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Basaksehir",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-08-26"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Pendikspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-09-27"
+  },
+  {
+   "ev": "Ankaragucu",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-28"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Fenerbahce",
+   "ev_gol": 0,
+   "dep_gol": 0,
+   "tarih": "2026-02-01"
+  },
+  {
+   "ev": "Hatayspor",
+   "dep": "Alanyaspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-02"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-03"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Pendikspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-05-04"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Sivasspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-06-05"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-07-06"
+  },
+  {
+   "ev": "Fatih Karagumruk",
+   "dep": "Hatayspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-08-07"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-09-08"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Konyaspor",
+   "ev_gol": 0,
+   "dep_gol": 2,
+   "tarih": "2026-01-09"
+  },
+  {
+   "ev": "Rizespor",
+   "dep": "Sivasspor",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-02-10"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Sivasspor",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-03-11"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-04-12"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-05-13"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Basaksehir",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-06-14"
+  },
+  {
+   "ev": "Istanbulspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-07-15"
+  },
+  {
+   "ev": "Gaziantep",
+   "dep": "Rizespor",
+   "ev_gol": 2,
+   "dep_gol": 0,
+   "tarih": "2026-08-16"
+  },
+  {
+   "ev": "Alanyaspor",
+   "dep": "Fatih Karagumruk",
+   "ev_gol": 0,
+   "dep_gol": 1,
+   "tarih": "2026-09-17"
+  },
+  {
+   "ev": "Konyaspor",
+   "dep": "Basaksehir",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-01-18"
+  },
+  {
+   "ev": "Trabzonspor",
+   "dep": "Gaziantep",
+   "ev_gol": 1,
+   "dep_gol": 0,
+   "tarih": "2026-02-19"
+  },
+  {
+   "ev": "Antalyaspor",
+   "dep": "Ankaragucu",
+   "ev_gol": 1,
+   "dep_gol": 2,
+   "tarih": "2026-03-20"
+  },
+  {
+   "ev": "Galatasaray",
+   "dep": "Fenerbahce",
+   "ev_gol": 2,
+   "dep_gol": 1,
+   "tarih": "2026-09-20",
+   "lig": "Süper Lig"
+  },
+  {
+   "ev": "Besiktas",
+   "dep": "Trabzonspor",
+   "ev_gol": 1,
+   "dep_gol": 1,
+   "tarih": "2026-09-21",
+   "lig": "Süper Lig"
+  },
+  {
+   "ev": "Fenerbahce",
+   "dep": "Besiktas",
+   "ev_gol": 3,
+   "dep_gol": 0,
+   "tarih": "2026-09-27",
+   "lig": "Süper Lig"
+  }
+ ],
+ "takimlar": [
+  "Galatasaray",
+  "Fenerbahce",
+  "Besiktas",
+  "Trabzonspor"
+ ],
+ "son_guncelleme": "2026-09-28 23:52:18"
+}

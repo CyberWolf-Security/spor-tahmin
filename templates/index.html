@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spor Tahmin — Canlı</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0d1117;color:#e6edf3;padding:18px}
+.wrap{max-width:940px;margin:0 auto}
+h1{font-size:23px;color:#58a6ff;margin-bottom:4px}
+.sub{color:#7d8590;font-size:12px;margin-bottom:18px}
+.kart{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:13px}
+label{display:block;font-size:11px;color:#7d8590;margin-bottom:5px;text-transform:uppercase}
+select{width:100%;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:14px;margin-bottom:11px}
+button{width:100%;padding:12px;background:#238636;border:0;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+button:hover{background:#2ea043}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:13px}
+.olas{text-align:center;padding:13px;border-radius:10px;background:#0d1117;border:1px solid #30363d}
+.olas .p{font-size:25px;font-weight:700;color:#3fb950}
+.olas .l{font-size:10px;color:#7d8590;margin-top:4px}
+.skor{display:flex;justify-content:space-between;padding:7px 11px;background:#0d1117;border-radius:6px;margin-bottom:4px;font-size:13px}
+.skor .y{color:#58a6ff;font-weight:600}
+.hata{background:#3d1418;border:1px solid #f85149;color:#ff7b72;padding:11px;border-radius:8px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px;border-bottom:1px solid #21262d}
+th{color:#7d8590;font-size:10.5px;text-transform:uppercase}
+.et{display:inline-block;background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44;padding:3px 8px;border-radius:6px;font-size:11px;margin:0 5px 5px 0}
+.veri{color:#7d8590;font-size:11px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ Spor Maç Tahmin</h1>
+  <div class="sub">Canlı veri + Monte Carlo simülasyon (10.000 maç) — Toplam {{ toplam }} maç yüklendi</div>
+
+  <div class="kart">
+    <label>LİG</label>
+    <select id="lig" onchange="takimYukle()">
+      <option value="">-- lig seç --</option>
+      {% for l in ligler %}
+      <option value="{{ l.lig }}">{{ l.lig }} ({{ l.mac }} maç · {{ l.kaynak }})</option>
+      {% endfor %}
+    </select>
+    <div class="grid2">
+      <div><label>EV SAHİBİ</label><select id="ev"></select></div>
+      <div><label>DEPLASMAN</label><select id="dep"></select></div>
+    </div>
+    <button onclick="tahmin()">🔮 TAHMİN ET</button>
+  </div>
+
+  <div id="sonuc"></div>
+  <div class="kart"><h3 style="font-size:12.5px;color:#7d8590;margin-bottom:9px;text-transform:uppercase">📊 Puan Tablosu</h3><div id="tablo">Lig seçin</div></div>
+</div>
+
+<script>
+async function takimYukle(){
+  const lig=document.getElementById('lig').value;
+  const e=document.getElementById('ev'), d=document.getElementById('dep');
+  if(!lig){e.innerHTML='';d.innerHTML='';document.getElementById('tablo').innerHTML='Lig seçin';return;}
+  const r=await fetch('/api/takimlar/'+encodeURIComponent(lig)); const t=await r.json();
+  const o='<option value="">-- seç --</option>'+t.map(x=>`<option>${x}</option>`).join('');
+  e.innerHTML=o; d.innerHTML=o;
+  tabloYukle(lig);
+}
+
+async function tahmin(){
+  const s=document.getElementById('sonuc');
+  const lig=document.getElementById('lig').value, ev=document.getElementById('ev').value, dep=document.getElementById('dep').value;
+  if(!lig||!ev||!dep){s.innerHTML='<div class="kart"><div class="hata">Lig ve iki takım seçin</div></div>';return;}
+  s.innerHTML='<div class="kart">⏳ 10.000 maç simüle ediliyor...</div>';
+  const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lig,ev,dep})});
+  const d=await r.json();
+  if(d.hata){s.innerHTML=`<div class="kart"><div class="hata">${d.hata}</div></div>`;return;}
+  let h=`<div class="kart"><h2 style="font-size:16px;margin-bottom:12px">${d.ev} <span style="color:#7d8590">vs</span> ${d.dep}</h2>
+  <div class="grid3">
+    <div class="olas"><div class="p">${d.ev_kazanma}%</div><div class="l">EV KAZANIR</div></div>
+    <div class="olas"><div class="p" style="color:#d29922">${d.beraberlik}%</div><div class="l">BERABERE</div></div>
+    <div class="olas"><div class="p" style="color:#f85149">${d.dep_kazanma}%</div><div class="l">DEP KAZANIR</div></div>
+  </div>
+  <div style="margin-bottom:12px"><span class="et">Beklenen: ${d.beklenen_skor}</span><span class="et">Üst 2.5: ${d.ust_25}%</span><span class="et">Alt 2.5: ${d.alt_25}%</span><span class="et">Karşılıklı gol: ${d.kg_var}%</span><span class="et">İY 0.5 Üst: ${d.iy_ust_05}%</span></div>
+  <h3 style="font-size:12px;color:#7d8590;margin-bottom:7px;text-transform:uppercase">En Olası Skorlar</h3>`;
+  d.en_olasi_skorlar.forEach(([sk,p])=>{h+=`<div class="skor"><span>${sk}</span><span class="y">%${p}</span></div>`;});
+  h+=`<div class="veri">${d.kullanilan_mac} maç verisi · ${d.kaynak} · 10.000 simülasyon</div></div>`;
+  s.innerHTML=h;
+}
+
+async function tabloYukle(lig){
+  const r=await fetch('/api/tablo/'+encodeURIComponent(lig)); const t=await r.json();
+  if(!t.length){document.getElementById('tablo').innerHTML='Veri yok';return;}
+  let h='<table><tr><th>#</th><th>Takım</th><th>Maç</th><th>Puan</th>'+(t[0].ppg!==undefined?'<th>PPG</th>':'<th>AV</th>')+'</tr>';
+  t.forEach(x=>{h+=`<tr><td>${x.sira}</td><td>${x.takim}</td><td>${x.mac}</td><td>${x.puan}</td><td>${x.ppg!==undefined?x.ppg:(x.atilan-x.yenilen)}</td></tr>`;});
+  document.getElementById('tablo').innerHTML=h+'</table>';
+}
+</script>
+</body>
+</html>
