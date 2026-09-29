@@ -88,12 +88,18 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .mac-satir{display:flex;align-items:center;gap:14px;padding:12px 17px;border-bottom:1px solid var(--cizgi);
            transition:.13s}
 .mac-satir:last-child{border-bottom:0}
-.mac-satir:hover{background:rgba(255,255,255,.017)}
+.mac-satir:hover{background:rgba(255,255,255,.03)}
+.mac-satir:hover .logo{transform:scale(1.12)}
+.logo{transition:transform .2s}
 .mac-sol{min-width:96px}
 .mac-tarih{font-size:11.5px;color:var(--yazi2);font-family:'SF Mono',ui-monospace,monospace}
 .mac-saat{font-size:10px;color:var(--yazi3)}
 .mac-orta{flex:1;display:flex;align-items:center;gap:11px;min-width:0}
-.takim{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.takim{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+       display:flex;align-items:center;gap:8px}
+.takim.ev{justify-content:flex-end}
+.logo{width:26px;height:26px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.logo.buyuk{width:38px;height:38px}
 .takim.ev{flex:1;text-align:right}
 .takim.dep{flex:1}
 .vs{color:var(--yazi3);font-size:10.5px;padding:3px 8px;background:var(--bg3);border-radius:5px;
@@ -147,6 +153,38 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .fdizi b.m{background:rgba(239,68,68,.2);color:var(--kirmizi)}
 .fdizi b.b{background:rgba(234,179,8,.18);color:var(--sari)}
 .fort{color:var(--yazi3);font-size:10.5px;font-family:'SF Mono',monospace}
+/* GUVEN SKORU */
+.gs{margin-bottom:13px}
+.gs-bas{display:flex;justify-content:space-between;font-size:11px;color:var(--yazi3);
+        text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:6px}
+.gs-bas b{font-family:'SF Mono',monospace;font-size:13px}
+.gs-bar{height:7px;background:#0d1117;border-radius:4px;overflow:hidden}
+.gs-bar div{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+/* SENARYOLAR */
+.sen-liste{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.sen{display:flex;align-items:center;gap:10px;padding:8px 11px;background:rgba(0,0,0,.24);
+     border-radius:7px;font-size:12.5px;border-left:3px solid var(--cizgi2)}
+.sen.ilk{border-left-color:var(--mavi);background:rgba(59,130,246,.07)}
+.sen-skor{font-family:'SF Mono',monospace;font-weight:700;color:var(--mavi);min-width:36px}
+.sen-txt{flex:1;color:var(--yazi2)}
+.sen-yuz{font-weight:700;color:var(--yesil);font-family:'SF Mono',monospace}
+/* SINYAL AGIRLIK */
+.sin-a{float:right;color:var(--mavi);font-size:9px;letter-spacing:1px;opacity:.75}
+.sin-y{margin-right:6px}
+/* KOMBI */
+.kombi{margin-top:12px;background:linear-gradient(135deg,rgba(139,92,246,.1),rgba(59,130,246,.06));
+       border:1px solid rgba(139,92,246,.3);border-radius:9px;padding:12px}
+.kombi-bas{font-size:11px;color:var(--mor);text-transform:uppercase;letter-spacing:.6px;
+           font-weight:700;margin-bottom:9px}
+.kombi-sat{display:flex;align-items:center;gap:9px;padding:7px 10px;background:rgba(0,0,0,.28);
+           border-radius:7px;margin-bottom:5px;font-size:12px}
+.kombi-sat.guvenli{border-left:3px solid var(--yesil)}
+.kombi-sat.riskli{border-left:3px solid var(--sari)}
+.k-et{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--bg3);color:var(--yazi3)}
+.kombi-sat.guvenli .k-et{background:rgba(34,197,94,.16);color:var(--yesil)}
+.kombi-sat.riskli .k-et{background:rgba(234,179,8,.16);color:var(--sari)}
+.k-b{flex:1;font-size:11.5px}
+.k-o{font-family:'SF Mono',monospace;font-weight:700;color:var(--mavi);font-size:12px}
 
 /* 1X2 KARTLARI */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px 19px}
@@ -193,6 +231,14 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 
 /* YUKLENIYOR */
 .yukleyici{text-align:center;padding:70px 20px}
+.skeleton{background:linear-gradient(90deg,#161d29 25%,#1f2937 50%,#161d29 75%);
+          background-size:200% 100%;animation:parla 1.5s infinite;border-radius:7px;height:16px;margin-bottom:8px}
+@keyframes parla{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.istatistik{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;padding:16px 19px}
+.ist-kart{background:#0d1117;border:1px solid var(--cizgi2);border-radius:9px;padding:11px;text-align:center;transition:.15s}
+.ist-kart:hover{border-color:var(--mavi);transform:translateY(-2px)}
+.ist-kart .d{font-size:19px;font-weight:800;font-family:'SF Mono',monospace;color:var(--mavi);margin-bottom:2px}
+.ist-kart .b{font-size:9.5px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.5px}
 .yukleyici .halka{width:44px;height:44px;border:3px solid var(--cizgi2);border-top-color:var(--yesil);
                   border-radius:50%;margin:0 auto 18px;animation:don 1s linear infinite}
 @keyframes don{to{transform:rotate(360deg)}}
@@ -213,6 +259,9 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
   </div>
   <div id="durum">
     <span><span class="nokta"></span> <span id="durum-yazi">Veri hazırlanıyor…</span></span>
+    <a href="/canli" style="background:linear-gradient(135deg,#7c3aed,#a855f7);border:0;color:#fff;
+       padding:6px 13px;border-radius:7px;font-size:11.5px;cursor:pointer;text-decoration:none;
+       font-weight:600">⚡ Canlı Simülasyon</a>
     <button class="btn-yenile" onclick="yenile()">↻ Yenile</button>
   </div>
 </header>
@@ -290,7 +339,9 @@ function ciz(ad, d){
       h+=`<div class="mac-satir">
         <div class="mac-sol"><div class="mac-tarih">${m.tarih||'-'}</div><div class="mac-saat">${m.saat||''}</div></div>
         <div class="mac-orta">
-          <span class="takim ev">${m.ev}</span><span class="vs">VS</span><span class="takim dep">${m.dep}</span>
+          <span class="takim ev">${m.ev}${m.ev_logo?`<img class="logo" src="${m.ev_logo}" onerror="this.style.display='none'">`:''}</span>
+          <span class="vs">VS</span>
+          <span class="takim dep">${m.dep_logo?`<img class="logo" src="${m.dep_logo}" onerror="this.style.display='none'">`:''}${m.dep}</span>
         </div>
         <button class="btn-tahmin" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${ad.replace(/'/g,"\\'")}',this)">Tahmin Et</button>
       </div>`;
@@ -308,7 +359,9 @@ function ciz(ad, d){
       h+=`<div class="mac-satir">
         <div class="mac-sol"><div class="mac-tarih">${m.tarih||'-'}</div></div>
         <div class="mac-orta">
-          <span class="takim ev">${m.ev}</span><span class="skor-kutu">${m.ev_gol} - ${m.dep_gol}</span><span class="takim dep">${m.dep}</span>
+          <span class="takim ev">${m.ev}${m.ev_logo?`<img class="logo" src="${m.ev_logo}" onerror="this.style.display='none'">`:''}</span>
+          <span class="skor-kutu">${m.ev_gol} - ${m.dep_gol}</span>
+          <span class="takim dep">${m.dep_logo?`<img class="logo" src="${m.dep_logo}" onerror="this.style.display='none'">`:''}${m.dep}</span>
         </div></div>`;
     });
     h+=`</div>`;
@@ -351,11 +404,50 @@ function analizHtml(d, ev, dep, lig){
       h+=`<div class="tav ${kls}"><span class="tip">${t.tip}</span><span class="metin">${t.tavsiye}</span>
           <span class="yuzde">%${t.olasilik}</span></div>`;
     });
-    // Sinyal dokumu
+    // GUVEN SKORU CUBUGU
+    const gs = d.ajan.guven_skoru || 0;
+    const gsRenk = gs>=70?'var(--yesil)':gs>=55?'#84cc16':gs>=42?'var(--sari)':'var(--kirmizi)';
+    h+=`<div class="gs"><div class="gs-bas"><span>Güven Skoru</span><b style="color:${gsRenk}">${gs}/100</b></div>
+        <div class="gs-bar"><div style="width:${gs}%;background:${gsRenk}"></div></div></div>`;
+
+    // SENARYOLAR
+    if(d.ajan.senaryolar && d.ajan.senaryolar.length){
+      h+=`<div class="sin-bas">🔮 En Muhtemel Senaryolar</div><div class="sen-liste">`;
+      d.ajan.senaryolar.forEach((s,i)=>{
+        h+=`<div class="sen ${i===0?'ilk':''}"><span class="sen-skor">${s.skor}</span>
+            <span class="sen-txt">${s.senaryo}</span><span class="sen-yuz">%${s.olasilik}</span></div>`;
+      });
+      h+=`</div>`;
+    }
+
+    // Sinyal dokumu (agirlikli)
     if(d.ajan.sinyaller && d.ajan.sinyaller.length){
-      h+=`<div class="sin-bas">Bağımsız Sinyaller (konsensüs: Ev ${d.ajan.konsensus.ev} / Dep ${d.ajan.konsensus.dep})</div>`;
+      const ep = d.ajan.konsensus.ev_puan||0, dp = d.ajan.konsensus.dep_puan||0;
+      h+=`<div class="sin-bas">Bağımsız Sinyaller — Konsensüs: <b style="color:var(--yesil)">Ev ${ep}</b> / <b style="color:var(--kirmizi)">Dep ${dp}</b></div>`;
       h+=`<div class="sin-liste">`;
-      d.ajan.sinyaller.forEach(s=>{ h+=`<div class="sin">${s}</div>`; });
+      d.ajan.sinyaller.forEach(s=>{
+        const a = s.agirlik||1;
+        const nok = a>=3?'●●●':a>=2?'●●○':'●○○';
+        h+=`<div class="sin"><span class="sin-y">${s.yon==='ev'?'🟢':'🔴'}</span>${s.metin}
+            <span class="sin-a">${nok}</span></div>`;
+      });
+      h+=`</div>`;
+    }
+
+    // KOMBI ONERISI
+    if(d.ajan.kombi && d.ajan.kombi.guvenli.bahisler.length){
+      const g=d.ajan.kombi.guvenli, r=d.ajan.kombi.riskli;
+      h+=`<div class="kombi"><div class="kombi-bas">🎫 Kombi Kupon Önerisi</div>`;
+      if(g.bahisler.length){
+        h+=`<div class="kombi-sat guvenli"><span class="k-et">GÜVENLİ</span>
+            <span class="k-b">${g.bahisler.join(' + ')}</span>
+            <span class="k-o">Oran ${g.oran||'-'}</span></div>`;
+      }
+      if(r.bahisler.length){
+        h+=`<div class="kombi-sat riskli"><span class="k-et">RİSKLİ</span>
+            <span class="k-b">${r.bahisler.join(' + ')}</span>
+            <span class="k-o">Oran ${r.oran||'-'}</span></div>`;
+      }
       h+=`</div>`;
     }
     // Form
@@ -372,6 +464,15 @@ function analizHtml(d, ev, dep, lig){
     d.ajan.uyarilar.forEach(u=>{ h+=`<div class="uyari">${u}</div>`; });
     h+=`</div>`;
   }
+
+  // HIZLI ISTATISTIK KARTLARI
+  h+=`<div class="istatistik">
+    <div class="ist-kart"><div class="d">${d.beklenen_skor}</div><div class="b">Beklenen Skor</div></div>
+    <div class="ist-kart"><div class="d" style="color:var(--yesil)">%${d.ust_25}</div><div class="b">Üst 2.5</div></div>
+    <div class="ist-kart"><div class="d" style="color:var(--sari)">%${d.kg_var}</div><div class="b">Karşılıklı Gol</div></div>
+    <div class="ist-kart"><div class="d" style="color:var(--mor||#8b5cf6)">%${d['1X']}</div><div class="b">1X (Ev/Ber)</div></div>
+    <div class="ist-kart"><div class="d">${d.kullanilan_mac}</div><div class="b">Maç Verisi</div></div>
+  </div>`;
 
   // 1X2
   h+=`<div class="grid3">
@@ -477,16 +578,3 @@ async function canliYukle(){
   let hazir=await durumKontrol();
   let deneme=0;
   while(!hazir && deneme<60){
-    await new Promise(r=>setTimeout(r,2500));
-    hazir=await durumKontrol();
-    deneme++;
-  }
-  if(!hazir){
-    document.getElementById('icerik').innerHTML='<div class="hata2">Veri çekilemedi. "Yenile" butonuna basın.</div>';
-  }
-  canliYukle();
-  setInterval(canliYukle, 30000);
-})();
-</script>
-</body>
-</html>

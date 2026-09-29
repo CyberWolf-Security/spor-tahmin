@@ -4,7 +4,7 @@ import json, os, sys, threading, webbrowser, time, socket
 from datetime import datetime
 from tahmin import takim_gucu
 from olasilik import tum_olasiliklar
-from ajan2 import gelismis_ajan
+from ajan3 import akilli_ajan
 import fs_feed as fsf
 
 app = Flask(__name__)
@@ -85,6 +85,30 @@ def api_durum():
     return jsonify({"hazir": True, "toplam": len(CACHE["maclar"]), "ligler": ligler,
                     "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""})
 
+@app.route("/canli")
+def canli_sayfa():
+    return render_template("canli.html")
+
+@app.route("/api/takimlar/<path:lig>")
+def api_takimlar(lig):
+    ms = CACHE["ligler"].get(lig, [])
+    t = set()
+    for m in ms:
+        if m["oynandi"]:
+            t.add(m["ev"]); t.add(m["dep"])
+    return jsonify(sorted(t))
+
+@app.route("/api/maclarlogoslar/<path:lig>")
+def api_logolar(lig):
+    ev = request.args.get("ev",""); dep = request.args.get("dep","")
+    ms = CACHE["ligler"].get(lig, [])
+    out = {"ev": None, "dep": None}
+    for m in ms:
+        if m["ev"]==ev and out["ev"] is None: out["ev"] = m.get("ev_logo")
+        if m["dep"]==dep and out["dep"] is None: out["dep"] = m.get("dep_logo")
+        if out["ev"] and out["dep"]: break
+    return jsonify(out)
+
 @app.route("/api/canli")
 def api_canli():
     c = canli_al()
@@ -115,7 +139,7 @@ def api_tahmin():
     if ev not in guc: return jsonify({"hata": f"{ev} — kayıtlarda yok"})
     if dep not in guc: return jsonify({"hata": f"{dep} — kayıtlarda yok"})
     o = tum_olasiliklar(ev, dep, guc, lig_ort, 30000)
-    o["ajan"] = gelismis_ajan(o, guc, ev, dep, oyn)
+    o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)
     o["kullanilan_mac"] = len(oyn)
     return jsonify(o)
 

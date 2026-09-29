@@ -112,8 +112,14 @@ def parse(icerik, sadece_onemli=True):
                         tarih = dt.strftime("%Y-%m-%d"); saat = dt.strftime("%H:%M")
                     except Exception: pass
 
+                # Logo kodlari (OA=ev logo kodu, OB=dep logo kodu)
+                oa = _al(b, "OA"); ob = _al(b, "OB")
+                ev_logo = f"https://static.flashscore.com/res/image/data/{oa}" if oa else None
+                dep_logo = f"https://static.flashscore.com/res/image/data/{ob}" if ob else None
+
                 maclar.append({
                     "ev": ev_m, "dep": dep_m,
+                    "ev_logo": ev_logo, "dep_logo": dep_logo,
                     "ev_gol": eg, "dep_gol": dg,
                     "durum": durum, "canli": durum == 2, "dakika": dakika,
                     "tarih": tarih, "saat": saat,
