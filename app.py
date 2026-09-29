@@ -180,17 +180,35 @@ def api_maclar(lig):
 
 @app.route("/api/tahmin", methods=["POST"])
 def api_tahmin():
-    j = request.json
-    ev, dep, lig = j.get("ev","").strip(), j.get("dep","").strip(), j.get("lig","").strip()
-    oyn = _lig_oynanmis(lig)
-    if len(oyn) < 5: return jsonify({"hata": f"Bu ligde yeterli veri yok ({len(oyn)} maç)"})
-    guc, lig_ort = takim_gucu(oyn)
-    if ev not in guc: return jsonify({"hata": f"{ev} — kayıtlarda yok"})
-    if dep not in guc: return jsonify({"hata": f"{dep} — kayıtlarda yok"})
-    o = tum_olasiliklar(ev, dep, guc, lig_ort, 30000)
-    o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)
-    o["kullanilan_mac"] = len(oyn)
-    return jsonify(o)
+    try:
+        j = request.get_json(silent=True)
+        if not j: return jsonify({"hata": "Gecersiz istek (JSON bekleniyor)"})
+        ev = (j.get("ev") or "").strip()
+        dep = (j.get("dep") or "").strip()
+        lig = (j.get("lig") or "").strip()
+        if not ev or not dep or not lig:
+            return jsonify({"hata": "Takim ve lig secilmelidir"})
+        if ev == dep:
+            return jsonify({"hata": "Ayni takim secilemez"})
+        if not CACHE["maclar"]:
+            return jsonify({"hata": "Veri henuz hazir degil, birkac saniye bekleyin"})
+        oyn = _lig_oynanmis(lig)
+        if len(oyn) < 5:
+            return jsonify({"hata": f"Bu ligde yeterli veri yok ({len(oyn)} mac)"})
+        guc, lig_ort = takim_gucu(oyn)
+        if ev not in guc:
+            return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
+        if dep not in guc:
+            return jsonify({"hata": f"{dep} — bu lig kayitlarinda yok"})
+        o = tum_olasiliklar(ev, dep, guc, lig_ort, 30000)
+        if not o:
+            return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
+        o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)
+        o["kullanilan_mac"] = len(oyn)
+        return jsonify(o)
+    except Exception as ex:
+        print("[TAHMIN HATA]", ex)
+        return jsonify({"hata": f"Hesaplama hatasi: {str(ex)[:80]}"}), 500
 
 def port_bul(bas=8090):
     p = bas

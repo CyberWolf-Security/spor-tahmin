@@ -33,99 +33,79 @@ jobs:
         run: |
           $p = Start-Process -FilePath "dist\SporTahmin.exe" -PassThru
           Write-Host "PID: $($p.Id)"
-          Start-Sleep -Seconds 40
+          Start-Sleep -Seconds 45
           $procs = Get-Process | Where-Object {$_.MainWindowTitle -ne ""}
-          Write-Host "=== PENCERELER ==="
           foreach ($x in $procs) { Write-Host ("Pencere: " + $x.ProcessName + " | " + $x.MainWindowTitle) }
-          
           Write-Host "=== HTTP TEST ==="
-          $ok = $false
           for ($i=1; $i -le 10; $i++) {
             try {
               $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/" -TimeoutSec 8 -UseBasicParsing
-              Write-Host ("HTTP KOD: " + $r.StatusCode)
+              Write-Host ("HTTP_KOD: " + $r.StatusCode)
               $ic = $r.Content
               Write-Host ("UZUNLUK: " + $ic.Length)
-              Write-Host ("BASLIK_YENI: " + ($ic -match "Canl. Ma. Analiz"))
-              Write-Host ("MONTE_CARLO: " + ($ic -match "Monte Carlo"))
-              Write-Host ("YUKGUNCELLE: " + ($ic -match "yukGuncelle"))
-              Write-Host ("LIGDOLDUR: " + ($ic -match "ligDoldur"))
+              Write-Host ("BASLIK: " + ($ic -match "Canl. Ma. Analiz"))
+              Write-Host ("SAHA_BLOK: " + ($ic -match "saha-blok"))
+              Write-Host ("TAHMIN_SAHA: " + ($ic -match "tahmin-saha"))
+              Write-Host ("OYUNCU_CSS: " + ($ic -match "oyuncu.ev"))
+              Write-Host ("TOP_CSS: " + ($ic -match "class=.top."))
+              Write-Host ("SAHA_BASLA: " + ($ic -match "function sahaBasla"))
+              Write-Host ("GOL_ANIM: " + ($ic -match "gol-patlama"))
+              Write-Host ("ABORT: " + ($ic -match "AbortController"))
               Write-Host ("HTML_KAPANIS: " + $ic.TrimEnd().EndsWith("</html>"))
-              $ok = $true
               break
-            } catch {
-              Write-Host ("Deneme " + $i + " basarisiz, bekleniyor...")
-              Start-Sleep -Seconds 5
-            }
+            } catch { Write-Host ("Deneme " + $i + " basarisiz"); Start-Sleep -Seconds 5 }
           }
-          if (-not $ok) { Write-Host "HTTP ERISILEMEDI" }
 
-      - name: EKRAN GORUNTUSU (site acikken)
-        shell: powershell
-        run: |
-          Start-Sleep -Seconds 5
-          Add-Type -AssemblyName System.Windows.Forms
-          Add-Type -AssemblyName System.Drawing
-          $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
-          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
-          $g = [System.Drawing.Graphics]::FromImage($bmp)
-          $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
-          $bmp.Save("$PWD\ekran1.png")
-          Write-Host "Ekran goruntusu 1 kaydedildi"
-
-      - name: PYTHON ILE EKRAN GORUNTUSU (yedek)
-        run: |
-          pip install pillow
-          python -c "from PIL import ImageGrab; ImageGrab.grab().save('ekran2.png'); print('Python ekran goruntusu kaydedildi')"
-
-      - name: CANLI SAYFA KONTROL
-        shell: powershell
-        run: |
-          try {
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/canli" -TimeoutSec 10 -UseBasicParsing
-            Write-Host ("CANLI_HTTP: " + $r.StatusCode)
-            Write-Host ("CANLI_UZUNLUK: " + $r.Content.Length)
-            Write-Host ("LIGDOLDUR: " + ($r.Content -match "ligDoldur"))
-            Write-Host ("SAHA: " + ($r.Content -match "saha"))
-            Write-Host ("MOMENTUM: " + ($r.Content -match "mom"))
-          } catch { Write-Host "CANLI_HATA" }
-
-      - name: TAHMIN TESTI (POST)
+      - name: TAHMIN TESTI
         shell: powershell
         run: |
           try {
             $body = '{"ev":"Galatasaray","dep":"Fenerbahce","lig":"Super Lig (Arsiv)"}'
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
-            Write-Host ("TAHMIN_HTTP: " + $r.StatusCode)
-            Write-Host ("TAHMIN_UZUNLUK: " + $r.Content.Length)
+            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 90 -UseBasicParsing
+            Write-Host ("TAHMIN_KOD: " + $r.StatusCode)
             $d = $r.Content | ConvertFrom-Json
             Write-Host ("EV_KAZANMA: " + $d.ev_kazanma)
-            Write-Host ("AJAN_VAR: " + ($null -ne $d.ajan))
             Write-Host ("GUVEN_SKORU: " + $d.ajan.guven_skoru)
-            Write-Host ("SENARYOLAR: " + $d.ajan.senaryolar.Count)
+            Write-Host ("SENARYO: " + $d.ajan.senaryolar.Count)
             Write-Host ("KOMBI: " + ($null -ne $d.ajan.kombi))
-          } catch {
-            Write-Host ("TAHMIN_HATA: " + $_.Exception.Message)
-          }
+          } catch { Write-Host ("TAHMIN_HATA: " + $_.Exception.Message) }
 
-      - name: TAHMIN (farkli lig)
+      - name: CANLI SAYFA
         shell: powershell
         run: |
           try {
-            $body = '{"ev":"Real Madrid","dep":"Barcelona","lig":"La Liga"}'
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
-            Write-Host ("LALIGA_HTTP: " + $r.StatusCode)
-            Write-Host ("LALIGA_UZUNLUK: " + $r.Content.Length)
-          } catch {
-            Write-Host ("LALIGA_HATA: " + $_.Exception.Message)
-          }
+            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/canli" -TimeoutSec 10 -UseBasicParsing
+            Write-Host ("CANLI_KOD: " + $r.StatusCode)
+            Write-Host ("CANLI_SAHA: " + ($r.Content -match 'id="saha"'))
+            Write-Host ("CANLI_TOP: " + ($r.Content -match "TOP_ZAMAN"))
+            Write-Host ("CANLI_MOMENTUM: " + ($r.Content -match "momVeri.push"))
+            Write-Host ("CANLI_KAYAN: " + ($r.Content -match "kayanYukle"))
+          } catch { Write-Host "CANLI_HATA" }
+
+      - name: EKRAN GORUNTUSU
+        shell: powershell
+        run: |
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
+          Start-Sleep -Seconds 3
+          $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("$PWD\ekran_ana.png")
+          Write-Host "Ana ekran kaydedildi"
+
+      - name: PYTHON EKRAN (yedek)
+        run: |
+          pip install pillow
+          python -c "from PIL import ImageGrab; ImageGrab.grab().save('ekran_py.png'); print('Python ekran OK')"
 
       - name: Artifactlar
         uses: actions/upload-artifact@v4
         with:
           name: SONUC
           path: |
-            ekran1.png
-            ekran2.png
+            ekran_ana.png
+            ekran_py.png
             dist/SporTahmin.exe
           if-no-files-found: warn

@@ -249,10 +249,16 @@ async function basla(){
   c.innerHTML='<div class="kart yuk">⏳ Maç verisi hazırlanıyor…</div>';
   let t;
   try{
+    const knt=new AbortController();
+    const zl=setTimeout(()=>knt.abort(),45000);
     const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ev,dep,lig})});
+      body:JSON.stringify({ev,dep,lig}), signal:knt.signal});
+    clearTimeout(zl);
+    if(!r.ok) throw new Error('Sunucu hatasi '+r.status);
     t=await r.json();
-  }catch(e){c.innerHTML=`<div class="kart"><div class="hata">Bağlantı hatası</div></div>`;return;}
+  }catch(e){
+    const m = e.name==='AbortError' ? 'Istek zaman asimi (45sn)' : 'Baglanti hatasi: '+e.message;
+    c.innerHTML=`<div class="kart"><div class="hata">${m}</div></div>`;return;}
   if(t.hata){c.innerHTML=`<div class="kart"><div class="hata">${t.hata}</div></div>`;return;}
   // Logo alanlarini mac listesinden al
   const macR = await fetch('/api/maclarlogoslar/'+encodeURIComponent(lig)+'?ev='+encodeURIComponent(ev)+'&dep='+encodeURIComponent(dep));
@@ -401,17 +407,19 @@ async function basla(){
   const momVeri=[];
 
   ZAMAN=setInterval(()=>{
-    dk++;
-    if(dk>90){
-      durdur();
-      document.getElementById('dkb').textContent='MAÇ SONU';
-      document.getElementById('dkb').className='';
+    const dkb=document.getElementById('dkb');
+    if(!dkb){ clearInterval(ZAMAN); ZAMAN=null; return; }
+    if(dk>=90){
+      // MAC SONU
+      dkb.textContent='MS'; dkb.className='dk bekle';
+      const b=document.getElementById('btn');
+      if(b){ b.textContent='▶ TEKRAR OYNAT'; b.className='btn'; }
+      clearInterval(ZAMAN); ZAMAN=null;
+      if(typeof TOP_ZAMAN!=='undefined' && TOP_ZAMAN){ clearInterval(TOP_ZAMAN); TOP_ZAMAN=null; }
       return;
     }
-    const dkb=document.getElementById('dkb');
-    if(!dkb) return;
+    dk++;
     if(dk===45){ dkb.textContent='İY'; dkb.className='dk iy'; }
-    else if(dk===90){ dkb.textContent='MS'; dkb.className='dk bekle'; }
     else { dkb.textContent=dk+"'"; dkb.className='dk'; }
 
     // Bu dakikadaki olaylar
@@ -469,35 +477,39 @@ async function basla(){
       else pos=Math.max(28,pos- (o.tip==='gol'?4:1.6));
 
       const ak=document.getElementById('akis');
-      const el=document.createElement('div');
-      el.className='olay'+(o.tip==='gol'?(o.taraf==='ev'?' gol':' gol-d'):(o.tip==='Sarı kart'?' olay-b':''));
-      el.innerHTML=`<span class="d">${o.dk}'</span><span class="i">${ikon}</span><span class="m">${metin}</span><span class="s">${se}-${sd}</span>`;
-      ak.insertBefore(el, ak.firstChild);
+      if(ak){
+        const el=document.createElement('div');
+        el.className='olay'+(o.tip==='gol'?(o.taraf==='ev'?' gol':' gol-d'):(o.tip==='Sarı kart'?' olay-b':''));
+        el.innerHTML=`<span class="d">${o.dk}'</span><span class="i">${ikon}</span><span class="m">${metin}</span><span class="s">${se}-${sd}</span>`;
+        ak.insertBefore(el, ak.firstChild);
+        while(ak.children.length>50) ak.removeChild(ak.lastChild);
+      }
       idx++;
     }
 
-    // İstatistik güncelle
-    document.getElementById('pe').textContent=Math.round(pos)+'%';
-    document.getElementById('pd').textContent=Math.round(100-pos)+'%';
-    document.getElementById('pbe').style.width=pos+'%';
-    document.getElementById('pbd').style.width=(100-pos)+'%';
+    // İstatistik güncelle (null guvenli)
+    const setTxt=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+    const setW=(id,v)=>{ const e=document.getElementById(id); if(e) e.style.width=v+'%'; };
+    setTxt('pe', Math.round(pos)+'%');
+    setTxt('pd', Math.round(100-pos)+'%');
+    setW('pbe', pos); setW('pbd', 100-pos);
     const shT=she+shd||1;
-    document.getElementById('shbe').style.width=(she/shT*100)+'%';
-    document.getElementById('shbd').style.width=(shd/shT*100)+'%';
+    setW('shbe', she/shT*100); setW('shbd', shd/shT*100);
     const koT=koe+kod||1;
-    document.getElementById('kobe').style.width=(koe/koT*100)+'%';
-    document.getElementById('kobd').style.width=(kod/koT*100)+'%';
+    setW('kobe', koe/koT*100); setW('kobd', kod/koT*100);
 
-    // Momentum (son 10 dakika)
-    momVeri.push({e:she-she, d:0});
+    // Momentum: her dakika topla oynama degisimi (gercek veri)
+    momVeri.push({ev:pos, dep:100-pos});
     const mom=document.getElementById('mom');
-    const son=momVeri.slice(-30);
-    const mx=Math.max(1, ...son.map(x=>Math.abs(x.e||0)));
-    mom.innerHTML=son.map((x,i)=>{
-      const h=Math.max(4, Math.abs(pos-50)/50*66);
-      const yon = pos>50?'e':'d';
-      return `<div class="s ${yon}" style="height:${h}px"></div>`;
-    }).join('');
+    if(mom){
+      const son=momVeri.slice(-40);
+      mom.innerHTML=son.map(x=>{
+        const yon = x.ev>=50 ? 'e' : 'd';
+        const yuzde = yon==='e' ? x.ev : x.dep;
+        const h=Math.max(5, Math.round((yuzde-50)/50*64)+8);
+        return `<div class="s ${yon}" style="height:${h}px" title="Top %${Math.round(x.ev)}"></div>`;
+      }).join('');
+    }
   }, HIZ_MS);
 }
 
