@@ -22,7 +22,7 @@ jobs:
           python -c "import flask; print('flask', flask.__version__)"
           python -c "import webview; print('pywebview OK')"
       - name: Derle
-        run: pyinstaller --onefile --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --collect-all webview main.py
+        run: pyinstaller --onefile --noconsole --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --collect-all webview main.py
       - name: Kontrol
         run: dir dist
       - uses: actions/upload-artifact@v4
