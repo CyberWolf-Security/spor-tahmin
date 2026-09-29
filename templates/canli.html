@@ -182,7 +182,7 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 </head>
 <body>
 <div class="wrap">
-  <a href="/" class="geri-btn" title="Ana sayfaya dön">← Geri Dön</a>
+  <a href="/" class="geri-btn" title="Ana sayfaya dön (ESC)">← Geri Dön <span style="opacity:.5;font-size:10px">ESC</span></a>
   <h1>⚽ Canlı Maç Simülasyonu</h1>
   <div class="sub">Maç dakika dakika oynanır — gol, kart, istatistik canlı akar</div>
 
@@ -538,6 +538,11 @@ async function kayanYukle(){
 }
 setInterval(kayanYukle, 30000);
 kayanYukle();
+
+// ESC ile geri don
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){ window.location.href='/'; }
+});
 
 // Başlat — veri hazır olana kadar bekle
 (async function(){

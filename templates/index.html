@@ -371,7 +371,7 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 <body>
 
 <header>
-  <div class="logo">
+  <div class="logo" onclick="location.reload()" title="Yenile" style="cursor:pointer">
     <div class="marka-simge">
       <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
         <circle cx="16" cy="16" r="14" stroke="url(#g1)" stroke-width="2"/>
@@ -391,7 +391,7 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
   </div>
   <div id="durum">
     <span><span class="nokta"></span> <span id="durum-yazi">Veri hazırlanıyor…</span></span>
-    <a href="/canli" style="background:linear-gradient(135deg,#7c3aed,#a855f7);border:0;color:#fff;
+    <a href="/canli" onclick="this.innerHTML='⏳ Açılıyor…'" style="background:linear-gradient(135deg,#7c3aed,#a855f7);border:0;color:#fff;
        padding:6px 13px;border-radius:7px;font-size:11.5px;cursor:pointer;text-decoration:none;
        font-weight:600">⚡ Canlı Simülasyon</a>
     <button class="btn-yenile" onclick="yenile()">↻ Yenile</button>
@@ -974,6 +974,14 @@ async function canliYukle(){
     </div>`).join('');
   }catch(e){}
 }
+
+// ESC tusu: tahmin sonucu varsa kapat
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){
+    const a=document.querySelector('.analiz');
+    if(a){ sahaDurdur(); a.remove(); }
+  }
+});
 
 // Yukleme ilerleme animasyonu
 let YUK_N=0;
