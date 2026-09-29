@@ -744,6 +744,30 @@ header{
                    border-color:var(--mavi);box-shadow:0 4px 14px rgba(59,130,246,.35);
                    transform:translateX(-2px)}
 
+
+/* EN OLASI SKORLAR */
+.skor-blok{margin-bottom:14px}
+.skor-liste{padding:10px 13px;display:flex;flex-direction:column;gap:5px}
+.skor-it{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;
+         background:rgba(255,255,255,.02);border:1px solid transparent;transition:all .15s}
+.skor-it:hover{background:rgba(255,255,255,.04);border-color:rgba(34,197,94,.15)}
+.skor-it.skor-1{background:linear-gradient(90deg,rgba(34,197,94,.13),transparent);
+                border-color:rgba(34,197,94,.28);box-shadow:0 2px 10px rgba(34,197,94,.12)}
+.skor-it.skor-2{background:rgba(59,130,246,.05)}
+.skor-no{width:19px;height:19px;border-radius:50%;background:var(--bg3);color:var(--yazi3);
+         font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.skor-1 .skor-no{background:var(--yesil);color:#04140a}
+.skor-ad{font-family:'SF Mono',monospace;font-size:14px;font-weight:800;color:#e8eef7;
+         min-width:42px;letter-spacing:.5px}
+.skor-bar{flex:1;height:6px;background:rgba(0,0,0,.35);border-radius:3px;overflow:hidden}
+.skor-bar div{height:100%;border-radius:3px;
+              background:linear-gradient(90deg,var(--yesil),var(--turkuaz));
+              box-shadow:0 0 8px rgba(34,197,94,.5);transition:width .4s ease-out}
+.skor-2 .skor-bar div{background:linear-gradient(90deg,#3b82f6,#06b6d4);box-shadow:none}
+.skor-yz{font-family:'SF Mono',monospace;font-size:11.5px;font-weight:700;color:var(--yesil);
+         min-width:40px;text-align:right}
+.skor-2 .skor-yz{color:var(--mavi)}
+
 </style>
 </head>
 <body>
@@ -1165,8 +1189,8 @@ function sahaBasla(ev, dep, oto){
   // Ajan tahmini notu (simulasyon ile tutarli)
   const sa = document.getElementById('sim-ajan');
   if(sa && olas.ajan){
-    const g = olas.ajan.guven || '';
-    sa.textContent = '🤖 Ajan: ' + (olas.ajan.genel||'').replace(/[🎯👍🤔⚠️]/g,'').trim();
+    sa.textContent = '🤖 Ajan: ' + (olas.ajan.genel||'').replace(/[🎯👍🤔⚠️]/g,'').trim() +
+      ' — Simülasyon bu sonuca göre oynanır';
   }
 
   // ═══ GERCEK MAC AKISI MOTORU ═══
@@ -1264,27 +1288,51 @@ function sahaBasla(ev, dep, oto){
     });
   }, 900);
 
-  // ═══ OLAYLAR: AJAN TAHMINIYLE TUTARLI ═══
-  // Ajanin kazanan tahmini ve guven skoru gol dagilimini belirler
+  // ═══ OLAYLAR: AJAN TAHMINIYLE %100 TUTARLI ═══
+  // YONTEM: Once ajanin olasiligina gore KAZANANI cek (Monte Carlo),
+  //         sonra o sonuca uygun skoru uret. Boylece simulasyon
+  //         her zaman ajanin tahminiyle AYNI yonde biter.
   const ajan = olas.ajan || {};
   const evO = parseFloat(olas.ev_kazanma)||33, berO = parseFloat(olas.beraberlik)||33, depO = parseFloat(olas.dep_kazanma)||33;
+
+  // 1) AJANIN OLASILIGINA GORE KAZANANI CEK
+  const zar = Math.random() * 100;
+  let hedef;                                  // 'ev' | 'ber' | 'dep'
+  if(zar < evO) hedef = 'ev';
+  else if(zar < evO + berO) hedef = 'ber';
+  else hedef = 'dep';
+
+  // 2) O SONUCA UYGUN SKOR URET (beklenen gol tabanli)
   let eg = parseFloat(olas.ev_beklenen_gol)||1.3;
   let dg = parseFloat(olas.dep_beklenen_gol)||1.1;
 
-  // Ajanin galibiyet olasiligi farki -> gol beklentisini kaydir (tutarlilik)
-  const fark = (evO - depO) / 100;            // -1 .. +1
-  const guc = Math.min(0.55, Math.abs(fark) * 0.85);  // kaydirma orani
-  if(fark > 0){ eg += guc * 1.5; dg -= guc * 0.9; }   // ev ustun -> ev daha cok atar
-  else if(fark < 0){ dg += guc * 1.5; eg -= guc * 0.9; }
-  // Guven skoru dusukse daha cok rastgelelik
-  const guven = (ajan.guven_skoru||50) / 100;
-  const rastgelelik = 0.35 + (1-guven)*0.5;
-  eg = Math.max(0.25, eg * (1 + (Math.random()-0.5)*rastgelelik));
-  dg = Math.max(0.25, dg * (1 + (Math.random()-0.5)*rastgelelik));
+  // Poisson ile dogal gol sayilari
+  function poisson(l){
+    let L=Math.exp(-l), k=0, p=1;
+    do { k++; p *= Math.random(); } while(p > L && k < 12);
+    return k-1;
+  }
+  let se = Math.max(0, poisson(Math.max(0.2, eg)));
+  let sd = Math.max(0, poisson(Math.max(0.2, dg)));
 
+  // 3) HEDEF SONUCA GORE DUZELT (tutarlilik garantisi)
+  if(hedef === 'ev' && se <= sd){
+    se = sd + 1 + (Math.random()<0.45 ? 1 : 0);     // ev kazansin
+  } else if(hedef === 'dep' && sd <= se){
+    sd = se + 1 + (Math.random()<0.45 ? 1 : 0);     // dep kazansin
+  } else if(hedef === 'ber' && se !== sd){
+    const ort = Math.max(se, sd);
+    se = sd = Math.max(0, ort - (Math.random()<0.5?1:0));
+  }
+
+  // 4) Gol dakikalarini uret (oyun akisi icin)
   const olaylar=[];
-  for(let d=1;d<=90;d++){ if(Math.random()<eg/90) olaylar.push({dk:d,taraf:'ev',tip:'gol'}); }
-  for(let d=1;d<=90;d++){ if(Math.random()<dg/90) olaylar.push({dk:d,taraf:'dep',tip:'gol'}); }
+  const golDk = (n) => {
+    const ds=[]; for(let i=0;i<n;i++) ds.push(1+Math.floor(Math.random()*90));
+    return ds.sort((a,b)=>a-b);
+  };
+  golDk(se).forEach(d=>olaylar.push({dk:d,taraf:'ev',tip:'gol'}));
+  golDk(sd).forEach(d=>olaylar.push({dk:d,taraf:'dep',tip:'gol'}));
   const ek=[['Sarı kart','🟨'],['Korner','🚩'],['Şut','🎯'],['Ofsayt','🚫'],['Faul','⚡']];
   for(let d=1;d<=90;d++){ if(Math.random()<0.09){
     const e=ek[Math.floor(Math.random()*ek.length)];
@@ -1384,13 +1432,32 @@ function analizHtml(d, ev, dep, lig){
   let h=`<div class="analiz">
     <div class="analiz-bas">
       <div class="mac-ad">${ev} <span style="color:var(--yazi3);font-weight:400">vs</span> ${dep}</div>
-      <div class="alt">${lig} · ${d.kullanilan_mac} maç verisi</div>
+      <div class="alt">${lig} · ${d.kullanilan_mac} maç verisi${d.simulasyon ? ' · '+d.simulasyon.toLocaleString('tr')+' simülasyon' : ''}</div>
       <div style="display:flex;gap:7px;position:absolute;top:12px;right:14px">
         <button class="geri-analiz" onclick="analizKapat()" title="Maç listesine dön">← Geri</button>
         <button class="yazdir-btn" onclick="yazdir()" title="Tahmini yazdır/kaydet">🖨 Yazdır</button>
       </div>
     </div>`;
   h += karsilastirHtml(d, ev, dep);
+
+  // ═══ EN OLASI SKORLAR (1M simulasyondan) ═══
+  if(d.en_skorlar && d.en_skorlar.length){
+    const mx = d.en_skorlar[0].olasilik || 1;
+    h += '<div class="blok skor-blok">' +
+      '<div class="blok-bas">🎯 En Olası Skorlar <span style="color:var(--yazi3);font-weight:400;font-size:10.5px">(' +
+      ((d.simulasyon||0).toLocaleString('tr')) + ' simülasyondan)</span></div>' +
+      '<div class="skor-liste">';
+    d.en_skorlar.forEach((s,i)=>{
+      const oran = Math.round(100*s.olasilik/mx);
+      const cls = i===0 ? 'skor-1' : (i<3 ? 'skor-2' : '');
+      h += '<div class="skor-it ' + cls + '">' +
+        '<span class="skor-no">' + (i+1) + '</span>' +
+        '<span class="skor-ad">' + s.skor + '</span>' +
+        '<div class="skor-bar"><div style="width:' + oran + '%"></div></div>' +
+        '<span class="skor-yz">%' + s.olasilik + '</span></div>';
+    });
+    h += '</div></div>';
+  }
 
   // ═══ MAC SAHA GORUNUMU (canli simulasyon) ═══
   h+=`<div class="saha-blok">

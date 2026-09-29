@@ -3,6 +3,12 @@ from flask import Flask, render_template, request, jsonify
 import json, os, sys, threading, webbrowser, time, socket
 from datetime import datetime
 from tahmin import takim_gucu
+try:
+    import mega_ajan as MEGA
+    import mega_karar as MKARAR
+    MEGA_VAR = True
+except ImportError:
+    MEGA_VAR = False
 from olasilik import tum_olasiliklar
 from ajan3 import akilli_ajan
 import fs_feed as fsf
@@ -245,6 +251,21 @@ def api_tahmin():
         oyn = _lig_oynanmis(lig)
         if len(oyn) < 5:
             return jsonify({"hata": f"Bu ligde yeterli veri yok ({len(oyn)} mac)"})
+        # ═══ MEGA MOTOR (1.000.000 simulasyon) ═══
+        if MEGA_VAR:
+            gm, lm = MEGA.takim_gucu(oyn)
+            if ev not in gm:
+                return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
+            if dep not in gm:
+                return jsonify({"hata": f"{dep} — bu lig kayitlarinda yok"})
+            o = MEGA.mega_simulasyon(ev, dep, gm, lm, 1000000)
+            if not o:
+                return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
+            o["ajan"] = MKARAR.karar_motoru(o, ev, dep, gm, oyn)
+            o["kullanilan_mac"] = len(oyn)
+            o["motor"] = "mega-v6"
+            return jsonify(o)
+        # Yedek: eski motor
         guc, lig_ort = takim_gucu(oyn)
         if ev not in guc:
             return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
@@ -255,6 +276,7 @@ def api_tahmin():
             return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
         o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)
         o["kullanilan_mac"] = len(oyn)
+        o["motor"] = "eski"
         return jsonify(o)
     except Exception as ex:
         print("[TAHMIN HATA]", ex)
