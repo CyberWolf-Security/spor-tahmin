@@ -3,95 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Spor Tahmin — Canlı</title>
+<title>Spor Tahmin</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0d1117;color:#e6edf3;padding:18px}
-.wrap{max-width:940px;margin:0 auto}
-h1{font-size:23px;color:#58a6ff;margin-bottom:4px}
-.sub{color:#7d8590;font-size:12px;margin-bottom:18px}
-.kart{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:13px}
-label{display:block;font-size:11px;color:#7d8590;margin-bottom:5px;text-transform:uppercase}
-select{width:100%;padding:10px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:14px;margin-bottom:11px}
-button{width:100%;padding:12px;background:#238636;border:0;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
-button:hover{background:#2ea043}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:13px}
-.olas{text-align:center;padding:13px;border-radius:10px;background:#0d1117;border:1px solid #30363d}
-.olas .p{font-size:25px;font-weight:700;color:#3fb950}
-.olas .l{font-size:10px;color:#7d8590;margin-top:4px}
-.skor{display:flex;justify-content:space-between;padding:7px 11px;background:#0d1117;border-radius:6px;margin-bottom:4px;font-size:13px}
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0d1117;color:#e6edf3;padding:16px}
+.wrap{max-width:1020px;margin:0 auto}
+h1{font-size:22px;color:#58a6ff;margin-bottom:3px}
+.sub{color:#7d8590;font-size:12px;margin-bottom:14px}
+h2{font-size:13px;color:#7d8590;text-transform:uppercase;margin:16px 0 8px}
+.kart{background:#161b22;border:1px solid #30363d;border-radius:11px;padding:12px 14px;margin-bottom:8px}
+.mac{display:flex;align-items:center;gap:11px}
+.mac .tarih{color:#7d8590;font-size:11px;min-width:80px;font-family:monospace}
+.mac .takimlar{flex:1;font-size:14px}
+.mac .vs{color:#484f58;margin:0 6px;font-size:11px}
+.mac .lig{color:#7d8590;font-size:10.5px;margin-left:7px}
+.btn{padding:7px 14px;background:#238636;border:0;border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#2ea043}.btn:disabled{background:#21262d;color:#484f58}
+.sonuc{margin-top:10px;padding-top:10px;border-top:1px solid #21262d;display:none}
+.sonuc.gorun{display:block}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.olas{text-align:center;padding:10px;border-radius:9px;background:#0d1117;border:1px solid #30363d}
+.olas .p{font-size:21px;font-weight:700;color:#3fb950}
+.olas .l{font-size:9px;color:#7d8590;margin-top:3px}
+.skor{display:flex;justify-content:space-between;padding:4px 9px;background:#0d1117;border-radius:5px;margin-bottom:3px;font-size:12px}
 .skor .y{color:#58a6ff;font-weight:600}
-.hata{background:#3d1418;border:1px solid #f85149;color:#ff7b72;padding:11px;border-radius:8px;font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{text-align:left;padding:7px;border-bottom:1px solid #21262d}
-th{color:#7d8590;font-size:10.5px;text-transform:uppercase}
-.et{display:inline-block;background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44;padding:3px 8px;border-radius:6px;font-size:11px;margin:0 5px 5px 0}
-.veri{color:#7d8590;font-size:11px;margin-top:8px}
+.et{display:inline-block;background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44;padding:3px 7px;border-radius:6px;font-size:10.5px;margin:0 4px 4px 0}
+.blok{margin-bottom:11px}
+.blok h4{font-size:11px;color:#7d8590;text-transform:uppercase;margin-bottom:6px}
+.tav{display:flex;align-items:center;gap:8px;padding:6px 9px;background:#0d1117;border-radius:6px;margin-bottom:4px;font-size:12.5px;border-left:3px solid #3fb950}
+.tav.orta{border-left-color:#d29922}
+.tav .tip{font-size:9.5px;color:#7d8590;background:#21262d;padding:2px 6px;border-radius:4px;min-width:72px;text-align:center}
+.tav .p{margin-left:auto;color:#3fb950;font-weight:700}
+.uyari{color:#d29922;font-size:11.5px;padding:5px 0}
+.genel{font-size:14px;font-weight:700;padding:10px;background:#0f2a18;border:1px solid #238636;border-radius:8px;margin-bottom:10px;color:#3fb950}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:5px;border-bottom:1px solid #21262d}
+th{color:#7d8590;font-size:9.5px;text-transform:uppercase}
+.yuk{color:#d29922;font-size:12px;padding:6px 0}
+.hata{color:#ff7b72;font-size:12px;padding:6px 0}
+.tg{display:flex;gap:4px;flex-wrap:wrap}
+.tg span{background:#0d1117;border:1px solid #30363d;padding:4px 8px;border-radius:6px;font-size:11px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>⚽ Spor Maç Tahmin</h1>
-  <div class="sub">Canlı veri + Monte Carlo simülasyon (10.000 maç) — Toplam {{ toplam }} maç yüklendi</div>
+  <div class="sub">Canlı veri · Monte Carlo (30.000 simülasyon) · İstatistik Ajanı — {{ toplam }} maç</div>
 
-  <div class="kart">
-    <label>LİG</label>
-    <select id="lig" onchange="takimYukle()">
-      <option value="">-- lig seç --</option>
-      {% for l in ligler %}
-      <option value="{{ l.lig }}">{{ l.lig }} ({{ l.mac }} maç · {{ l.kaynak }})</option>
-      {% endfor %}
-    </select>
-    <div class="grid2">
-      <div><label>EV SAHİBİ</label><select id="ev"></select></div>
-      <div><label>DEPLASMAN</label><select id="dep"></select></div>
+  <h2>📅 Oynanacak Maçlar</h2>
+  {% if gelecek %}
+    {% for m in gelecek %}
+    <div class="kart" id="k{{ loop.index }}">
+      <div class="mac">
+        <span class="tarih">{{ m.tarih }}{% if m.saat %} {{ m.saat }}{% endif %}</span>
+        <span class="takimlar">{{ m.ev }}<span class="vs">vs</span>{{ m.dep }}<span class="lig">{{ m.lig_adi }}</span></span>
+        <button class="btn" onclick="tahmin('{{ m.ev|e }}','{{ m.dep|e }}','{{ m.lig_adi|e }}','{{ loop.index }}')">▶ TAHMİN</button>
+      </div>
+      <div class="sonuc" id="s{{ loop.index }}"></div>
     </div>
-    <button onclick="tahmin()">🔮 TAHMİN ET</button>
-  </div>
+    {% endfor %}
+  {% else %}
+    <div class="kart">Yaklaşan maç yok (internet/veri kontrolü)</div>
+  {% endif %}
 
-  <div id="sonuc"></div>
-  <div class="kart"><h3 style="font-size:12.5px;color:#7d8590;margin-bottom:9px;text-transform:uppercase">📊 Puan Tablosu</h3><div id="tablo">Lig seçin</div></div>
+  <h2>📊 Son Sonuçlar</h2>
+  <div class="kart"><table>
+    {% for m in oynanan %}
+    <tr><td style="color:#7d8590;font-family:monospace;font-size:10.5px">{{ m.tarih }}</td>
+        <td>{{ m.ev }}</td><td style="color:#58a6ff;font-weight:600">{{ m.ev_gol }}-{{ m.dep_gol }}</td>
+        <td>{{ m.dep }}</td><td style="color:#7d8590;font-size:10.5px">{{ m.lig_adi }}</td></tr>
+    {% endfor %}
+  </table></div>
 </div>
 
 <script>
-async function takimYukle(){
-  const lig=document.getElementById('lig').value;
-  const e=document.getElementById('ev'), d=document.getElementById('dep');
-  if(!lig){e.innerHTML='';d.innerHTML='';document.getElementById('tablo').innerHTML='Lig seçin';return;}
-  const r=await fetch('/api/takimlar/'+encodeURIComponent(lig)); const t=await r.json();
-  const o='<option value="">-- seç --</option>'+t.map(x=>`<option>${x}</option>`).join('');
-  e.innerHTML=o; d.innerHTML=o;
-  tabloYukle(lig);
-}
-
-async function tahmin(){
-  const s=document.getElementById('sonuc');
-  const lig=document.getElementById('lig').value, ev=document.getElementById('ev').value, dep=document.getElementById('dep').value;
-  if(!lig||!ev||!dep){s.innerHTML='<div class="kart"><div class="hata">Lig ve iki takım seçin</div></div>';return;}
-  s.innerHTML='<div class="kart">⏳ 10.000 maç simüle ediliyor...</div>';
-  const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lig,ev,dep})});
-  const d=await r.json();
-  if(d.hata){s.innerHTML=`<div class="kart"><div class="hata">${d.hata}</div></div>`;return;}
-  let h=`<div class="kart"><h2 style="font-size:16px;margin-bottom:12px">${d.ev} <span style="color:#7d8590">vs</span> ${d.dep}</h2>
-  <div class="grid3">
-    <div class="olas"><div class="p">${d.ev_kazanma}%</div><div class="l">EV KAZANIR</div></div>
-    <div class="olas"><div class="p" style="color:#d29922">${d.beraberlik}%</div><div class="l">BERABERE</div></div>
-    <div class="olas"><div class="p" style="color:#f85149">${d.dep_kazanma}%</div><div class="l">DEP KAZANIR</div></div>
-  </div>
-  <div style="margin-bottom:12px"><span class="et">Beklenen: ${d.beklenen_skor}</span><span class="et">Üst 2.5: ${d.ust_25}%</span><span class="et">Alt 2.5: ${d.alt_25}%</span><span class="et">Karşılıklı gol: ${d.kg_var}%</span><span class="et">İY 0.5 Üst: ${d.iy_ust_05}%</span></div>
-  <h3 style="font-size:12px;color:#7d8590;margin-bottom:7px;text-transform:uppercase">En Olası Skorlar</h3>`;
-  d.en_olasi_skorlar.forEach(([sk,p])=>{h+=`<div class="skor"><span>${sk}</span><span class="y">%${p}</span></div>`;});
-  h+=`<div class="veri">${d.kullanilan_mac} maç verisi · ${d.kaynak} · 10.000 simülasyon</div></div>`;
-  s.innerHTML=h;
-}
-
-async function tabloYukle(lig){
-  const r=await fetch('/api/tablo/'+encodeURIComponent(lig)); const t=await r.json();
-  if(!t.length){document.getElementById('tablo').innerHTML='Veri yok';return;}
-  let h='<table><tr><th>#</th><th>Takım</th><th>Maç</th><th>Puan</th>'+(t[0].ppg!==undefined?'<th>PPG</th>':'<th>AV</th>')+'</tr>';
-  t.forEach(x=>{h+=`<tr><td>${x.sira}</td><td>${x.takim}</td><td>${x.mac}</td><td>${x.puan}</td><td>${x.ppg!==undefined?x.ppg:(x.atilan-x.yenilen)}</td></tr>`;});
-  document.getElementById('tablo').innerHTML=h+'</table>';
+async function tahmin(ev, dep, lig, id){
+  const k=document.getElementById('k'+id), s=document.getElementById('s'+id);
+  const btn=k.querySelector('button');
+  s.className='sonuc gorun'; s.innerHTML='<div class="yuk">⏳ 30.000 maç simüle ediliyor...</div>';
+  btn.disabled=true;
+  try{
+    const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ev,dep,lig})});
+    const d=await r.json();
+    if(d.hata){s.innerHTML=`<div class="hata">${d.hata}</div>`;btn.disabled=false;return;}
+    let h='';
+    // AJAN
+    if(d.ajan){
+      h+=`<div class="genel">${d.ajan.genel}</div>`;
+      h+=`<div class="blok"><h4>🤖 Ajan Tavsiyeleri</h4>`;
+      d.ajan.tavsiyeler.forEach(t=>{
+        const kls=(t.guven==='ÇOK YÜKSEK'||t.guven==='YÜKSEK')?'':'orta';
+        h+=`<div class="tav ${kls}"><span class="tip">${t.tip}</span><span>${t.tavsiye}</span><span class="p">%${t.olasilik}</span></div>`;
+      });
+      h+=`</div>`;
+      if(d.ajan.uyarilar.length){
+        h+=`<div class="blok"><h4>⚠️ Risk Uyarıları</h4>`;
+        d.ajan.uyarilar.forEach(u=>{h+=`<div class="uyari">${u}</div>`;});
+        h+=`</div>`;
+      }
+    }
+    // 1X2
+    h+=`<div class="grid3">
+      <div class="olas"><div class="p">${d.ev_kazanma}%</div><div class="l">EV KAZANIR</div></div>
+      <div class="olas"><div class="p" style="color:#d29922">${d.beraberlik}%</div><div class="l">BERABERE</div></div>
+      <div class="olas"><div class="p" style="color:#f85149">${d.dep_kazanma}%</div><div class="l">DEP KAZANIR</div></div></div>`;
+    // Cifte sans
+    h+=`<div class="blok"><h4>Çifte Şans</h4><div class="tg">
+      <span>1X: %${d['1X']}</span><span>12: %${d['12']}</span><span>X2: %${d['X2']}</span></div></div>`;
+    // Alt/Ust
+    h+=`<div class="blok"><h4>Alt / Üst</h4><div class="tg">`;
+    ['05','15','25','35','45'].forEach(e=>{
+      h+=`<span>${e[0]}.${e[1]} — Alt %${d['alt_'+e]} / Üst %${d['ust_'+e]}</span>`;
+    });
+    h+=`</div></div>`;
+    // KG + Tek/Cift
+    h+=`<div class="blok"><h4>Karşılıklı Gol & Tek/Çift</h4><div class="tg">
+      <span>KG Var: %${d.kg_var}</span><span>KG Yok: %${d.kg_yok}</span>
+      <span>Tek: %${d.tek_gol}</span><span>Çift: %${d.cift_gol}</span></div></div>`;
+    // Ilk yari
+    h+=`<div class="blok"><h4>İlk Yarı</h4><div class="tg">
+      <span>Ev: %${d.iy_ev}</span><span>Ber: %${d.iy_ber}</span><span>Dep: %${d.iy_dep}</span>
+      <span>İY 0.5 Üst: %${d.iy_05_ust}</span><span>İY 1.5 Üst: %${d.iy_15_ust}</span></div></div>`;
+    // Toplam gol dagilimi
+    h+=`<div class="blok"><h4>Toplam Gol Olasılığı</h4><div class="tg">`;
+    Object.keys(d.toplam_gol).sort((a,b)=>a-b).forEach(k=>{h+=`<span>${k} gol: %${d.toplam_gol[k]}</span>`;});
+    h+=`</div></div>`;
+    // Skorlar
+    h+=`<div class="blok"><h4>En Olası Skorlar</h4>`;
+    d.skorlar.slice(0,8).forEach(([sk,p])=>{h+=`<div class="skor"><span>${sk}</span><span class="y">%${p}</span></div>`;});
+    h+=`</div>`;
+    h+=`<div style="color:#7d8590;font-size:10.5px">Beklenen: ${d.beklenen_skor} (${d.ev_beklenen_gol}-${d.dep_beklenen_gol}) · ${d.kullanilan_mac} maç verisi · 30.000 simülasyon</div>`;
+    s.innerHTML=h;
+  }catch(e){s.innerHTML=`<div class="hata">Hata: ${e.message}</div>`;}
+  btn.disabled=false;
 }
 </script>
 </body>
