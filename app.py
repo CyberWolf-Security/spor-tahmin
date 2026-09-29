@@ -130,12 +130,59 @@ def api_durum():
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
         gelecek = len([m for m in ms if not m["oynandi"] and m.get("tarih")])
         bayrak = next((m["bayrak"] for m in ms if m.get("bayrak")), "⚽")
-        ligler.append({"ad": ad, "mac": len(ms), "oynanmis": oyn, "gelecek": gelecek, "bayrak": bayrak})
-    ligler = [l for l in ligler if l["oynanmis"] >= 5 or l["gelecek"] >= 3]
+        # Ulke adi (lig adindan: "ENGLAND — Premier League" -> "ENGLAND")
+        if "—" in ad:
+            ulke = ad.split("—")[0].strip()
+        elif " - " in ad:
+            ulke = ad.split(" - ")[0].strip()
+        else:
+            ulke = "DIGER"
+        ligler.append({"ad": ad, "mac": len(ms), "oynanmis": oyn, "gelecek": gelecek,
+                       "bayrak": bayrak, "ulke": ulke})
+    ligler = [l for l in ligler if l["mac"] >= 2]
     ligler.sort(key=lambda x: (-x["oynanmis"], x["ad"]))
     return jsonify({"hazir": True, "toplam": len(CACHE["maclar"]), "ligler": ligler,
                     "tam": CACHE.get("tam", False),
                     "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""})
+
+@app.route("/api/tumliglerde")
+def api_tumliglerde():
+    """Takimlari tum liglerde ara (kayan seritten gelen maclar icin)"""
+    ev = request.args.get("ev","").strip()
+    dep = request.args.get("dep","").strip()
+    if not ev or not dep: return jsonify({"bulundu": False})
+    for ad, ms in CACHE["ligler"].items():
+        for m in ms:
+            if ev.lower() in m["ev"].lower() and dep.lower() in m["dep"].lower():
+                return jsonify({"bulundu": True, "lig": ad})
+    return jsonify({"bulundu": False})
+
+@app.route("/api/ulkeler")
+def api_ulkeler():
+    """Ligleri ulkeye gore gruplu dondur"""
+    if not CACHE["maclar"]:
+        return jsonify({"hazir": False})
+    ulkeler = {}
+    for ad, ms in CACHE["ligler"].items():
+        oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
+        gelecek = len([m for m in ms if not m["oynandi"] and m.get("tarih")])
+        if len(ms) < 2: continue
+        bayrak = next((m["bayrak"] for m in ms if m.get("bayrak")), "⚽")
+        if "—" in ad: ulke = ad.split("—")[0].strip()
+        elif " - " in ad: ulke = ad.split(" - ")[0].strip()
+        else: ulke = "DIGER"
+        ulkeler.setdefault(ulke, {"ad": ulke, "ligler": [], "mac": 0, "oynanmis": 0})
+        ulkeler[ulke]["ligler"].append({"ad": ad, "mac": len(ms), "oynanmis": oyn,
+                                        "gelecek": gelecek, "bayrak": bayrak})
+        ulkeler[ulke]["mac"] += len(ms)
+        ulkeler[ulke]["oynanmis"] += oyn
+    # Her ulkede ligleri sirala
+    for u in ulkeler.values():
+        u["ligler"].sort(key=lambda x: (-x["oynanmis"], x["ad"]))
+    # Ulkeleri mac sayisina gore sirala
+    liste = sorted(ulkeler.values(), key=lambda x: (-x["oynanmis"], -x["mac"]))
+    return jsonify({"hazir": True, "ulkeler": liste, "toplam_ulke": len(liste),
+                    "toplam_lig": sum(len(u["ligler"]) for u in liste)})
 
 @app.route("/canli")
 def canli_sayfa():
