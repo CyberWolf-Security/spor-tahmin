@@ -13,7 +13,7 @@
 AppId={{8F3A5C21-9D74-4B6E-A2F1-7C8E9D0B3A45}
 AppName={#UygulamaAdi}
 AppVersion={#UygulamaSurum}
-AppVerName={#UygulamaAdi} {#UygulamaSurum}
+AppVerName={#UygulamaAdi}
 AppPublisher={#UygulamaYayinci}
 AppPublisherURL=https://cyberwolfsec.com
 AppSupportURL=https://cyberwolfsec.com

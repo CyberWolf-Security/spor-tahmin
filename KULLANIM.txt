@@ -1,7 +1,6 @@
 SPOR TAHMİN — KULLANIM KILAVUZU
 ═══════════════════════════════════════════════════════════
 
-Sürüm     : 6.0
 Yayıncı   : CyberWolfSec
 Web       : https://cyberwolfsec.com
 
@@ -67,7 +66,7 @@ NOTLAR
 ───────────────────────────────────────────────────────────
 
 • Program yerel çalışır (127.0.0.1), verileriniz dışarı gitmez
-• Maç verileri açık kaynaktan çekilir (FlashScore feed)
+• Maç verileri açık kaynaktan çekilir
 • İnternet bağlantısı gerekir (canlı veriler için)
 • Bahis tavsiyesi değildir, istatistiksel analiz aracıdır
 
@@ -75,9 +74,25 @@ NOTLAR
 KALDIRMA
 ───────────────────────────────────────────────────────────
 
-Başlat Menüsü → Spor Tahmin → "Kaldır Spor Tahmin"
-veya Denetim Masası → Programlar → Spor Tahmin → Kaldır
+1. Başlat Menüsü → Ayarlar → Uygulamalar
+2. "Spor Tahmin" bul → Kaldır
+   (Masaüstü kısayolu da otomatik silinir)
+
+───────────────────────────────────────────────────────────
+SORUN GİDERME
+───────────────────────────────────────────────────────────
+
+VERİ GELMİYOR
+  • İnternet bağlantısını kontrol et
+  • VPN açıksa KAPAT (veri kaynağını engelliyor olabilir)
+  • Windows Güvenlik Duvarı programı engelliyorsa izin ver
+  • Program açıkken bekleyin (ilk açılış 10-60 saniye sürebilir)
+  • Log dosyası: %USERPROFILE%\SporTahmin_log.txt
+
+PROGRAM AÇILMIYOR
+  • Windows Defender → "İzin ver" de
+  • Yönetici olarak çalıştır (sağ tık → Yönetici olarak çalıştır)
 
 ═══════════════════════════════════════════════════════════
-© 2026 CyberWolfSec — Tüm hakları saklıdır.
+CyberWolfSec — 2026
 ═══════════════════════════════════════════════════════════
