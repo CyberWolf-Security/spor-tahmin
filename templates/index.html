@@ -659,18 +659,27 @@ header{
 </main>
 
 <script>
-let LIGLER=[], AKTIF=null, VERI={};
+let LIGLER=[], AKTIF=null, VERI={}, TAM_YUKLENDI=false;
 const BAYRAK={"Süper Lig":"🇹🇷","Premier League":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","La Liga":"🇪🇸","Serie A":"🇮🇹",
 "Bundesliga":"🇩🇪","Ligue 1":"🇫🇷","Eredivisie":"🇳🇱","Şampiyonlar Ligi":"🏆","Avrupa Ligi":"🥈",
 "Konferans Ligi":"🥉","Championship":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Bundesliga 2":"🇩🇪","MLS":"🇺🇸"};
 
+let SON_LIG_SAYISI = 0;
 async function durumKontrol(){
   const r=await fetch('/api/durum'); const d=await r.json();
   if(d.hazir){
-    LIGLER=d.ligler;
-    document.getElementById('durum-yazi').textContent=`${d.toplam.toLocaleString('tr')} maç · ${d.ligler.length} lig`;
-    ligListesi();
-    if(!AKTIF && d.ligler.length){ ligSec(d.ligler[0].ad); }
+    const yeniSayi = d.ligler.length;
+    LIGLER = d.ligler;
+    VERI = d;
+    document.getElementById('durum-yazi').textContent =
+      `${d.toplam.toLocaleString('tr')} maç · ${yeniSayi} lig` + (d.tam ? '' : ' ⏳');
+    // Lig sayisi degistiyse listeyi yenile
+    if(yeniSayi !== SON_LIG_SAYISI){
+      SON_LIG_SAYISI = yeniSayi;
+      ligListesi();
+      // Aktif lig secili degilse ilkini sec
+      if(!AKTIF && yeniSayi){ ligSec(d.ligler[0].ad); }
+    }
     return true;
   }
   document.getElementById('durum-yazi').textContent='Veri çekiliyor…';
@@ -694,9 +703,21 @@ function ligListesi(){
       <span class="ad">${l.ad}</span>
       <span class="say" title="${l.oynanmis} oynanmis / ${l.gelecek} gelecek">${l.oynanmis}</span></div>`;
   });
+  const yukleniyor = !!(VERI && VERI.tam === false);
+  if(yukleniyor && !ara){
+    h = '<div style="padding:10px 12px;font-size:11px;color:var(--sari);background:rgba(234,179,8,.08);'+
+        'border-radius:6px;margin:6px 8px">⏳ Dünya ligleri taranıyor… mevcut: '+LIGLER.length+' lig</div>' + h;
+  } else if(VERI && VERI.tam===false && !ara){
+    h += '<div style="padding:9px 12px;font-size:10.5px;color:var(--yazi3);text-align:center">'+
+         '⏳ Tüm dünya ligleri yükleniyor…</div>';
+  }
   document.getElementById('ligler').innerHTML=h||'<div style="padding:12px;color:var(--yazi3);font-size:12px">Eşleşen lig yok</div>';
   const sc=document.getElementById('lig-sayac');
-  if(sc) sc.textContent = ara ? `${suz.length}/${LIGLER.length}` : `${LIGLER.length} lig`;
+  if(sc){
+    if(yukleniyor) sc.textContent = `${LIGLER.length} lig ⏳`;
+    else if(ara) sc.textContent = `${suz.length}/${LIGLER.length}`;
+    else sc.textContent = `${LIGLER.length} lig`;
+  }
 }
 
 async function ligSec(ad){
@@ -860,10 +881,17 @@ function sahaMotoru(ev, dep, olas){
         const gk=document.getElementById('tahmin-gol');
         if(gk){ const p=document.createElement('div'); p.className='gol-patlama'; p.textContent='GOL!';
           p.style.color=o.taraf==='ev'?'#4ade80':'#f87171'; gk.appendChild(p); setTimeout(()=>p.remove(),1800); }
+        // Top kaleye girsin
         const w2=W(), h2=H(); const t2=document.getElementById('tahmin-top');
-        if(t2){ t2.classList.add('vurus'); tx=o.taraf==='ev'?0.93:0.07; ty=0.5;
-          t2.style.left=(tx*w2-6)+'px'; t2.style.top=(ty*h2-6)+'px';
-          setTimeout(()=>t2.classList.remove('vurus'),700); }
+        if(t2){
+          t2.classList.add('vurus');
+          const kx = o.taraf==='ev' ? w2-22 : 22;
+          const ky = h2/2;
+          t2.style.left=(kx-6)+'px'; t2.style.top=(ky-6)+'px';
+          setTimeout(()=>t2.classList.remove('vurus'),700);
+        }
+        // Gol sonrasi: top orta yuvarlaktan yeniden baslasin
+        setTimeout(()=>{ try{ baslat(); }catch(e){} }, 1600);
         ikon='⚽'; metin='GOL! '+(o.taraf==='ev'?ev:dep);
       } else if(o.tip==='Şut'){ ikon='🎯'; metin=(o.taraf==='ev'?ev:dep)+' şut çekti'; }
       else if(o.tip==='Korner'){ ikon='🚩'; metin=(o.taraf==='ev'?ev:dep)+' korner kazandı'; }
@@ -888,7 +916,7 @@ function sahaDurdur(){
 
 // ═══ MAC SAHA MOTORU ═══
 let S_TOP=null, S_OYN=null, S_OYN2=null;
-function sahaBasla(ev, dep){
+function sahaBasla(ev, dep, oto){
   sahaDurdur();
   const olas = window.__OLAS__ || {};
   const saha = document.getElementById('tahmin-saha');
@@ -917,22 +945,100 @@ function sahaBasla(ev, dep){
   kur();
   window.addEventListener('resize',()=>{ if(document.getElementById('tahmin-saha')) kur(); });
 
-  let tx=0.5, ty=0.5;
+  // ═══ GERCEK MAC AKISI MOTORU ═══
+  let topSahip = -1;          // topu tutan oyuncu index
+  let atakYon = 'ev';         // hangi takim atakta
+  let pasSayaci = 0;
+
+  function topuKoy(x, y){
+    const t=document.getElementById('tahmin-top');
+    if(t){ t.style.left=(x-6)+'px'; t.style.top=(y-6)+'px'; }
+  }
+
+  function oyuncuyaGit(idx){
+    const w=W(), h=H();
+    if(idx<0 || idx>=OY.length) return;
+    const o = OY[idx];
+    const el = document.getElementById('to'+idx);
+    // Top oyuncunun ayagina
+    const bx = o.x + (o.tak==='ev'? 14 : -14);
+    const by = o.y + 6;
+    topuKoy(bx, by);
+    topSahip = idx;
+    // O oyuncu hafif ileri kaysin
+    if(el){
+      const yeniX = Math.max(20, Math.min(w-30, bx + (o.tak==='ev'? 12 : -12)));
+      el.style.left = (yeniX-7)+'px';
+      el.style.top = (by-7)+'px';
+      o.x = yeniX; o.y = by;
+    }
+  }
+
+  function pasVer(){
+    const w=W(), h=H();
+    // Ayni takimdan yakin oyuncuya pas
+    const ayni = OY.map((o,i)=>({o,i})).filter(x=>x.o.tak===atakYon);
+    if(!ayni.length) return;
+    // En yakin 4 adaydan birine
+    const suanki = topSahip>=0 ? OY[topSahip] : null;
+    let aday = ayni;
+    if(suanki){
+      aday = ayni.map(x=>({...x, d: Math.hypot(x.o.x-suanki.x, x.o.y-suanki.y)}))
+                 .sort((a,b)=>a.d-b.d).slice(1,5);
+    }
+    const sec = aday[Math.floor(Math.random()*aday.length)];
+    oyuncuyaGit(sec.i);
+    pasSayaci++;
+
+    // 3-4 pas sonra sut veya top kaybi
+    if(pasSayaci >= 3){
+      pasSayaci = 0;
+      if(Math.random() < 0.55){
+        // SUT: kale yonune
+        const kaleX = atakYon==='ev' ? w-30 : 30;
+        const kaleY = h/2 + (Math.random()-0.5)*40;
+        topuKoy(kaleX, kaleY);
+        // Atak sonu -> top karsi takima
+        setTimeout(()=>{ atakYon = atakYon==='ev' ? 'dep' : 'ev'; pasSayaci=0; }, 600);
+      } else {
+        // Top kaybi: rakip alir
+        atakYon = atakYon==='ev' ? 'dep' : 'ev';
+      }
+    }
+  }
+
+  // Kaleci topu baslatsin, sonra paslasma
+  function baslat(){
+    const kaleciler = OY.map((o,i)=>({o,i})).filter(x=>x.o.no==='GK');
+    if(kaleciler.length){
+      const k = kaleciler[Math.random()<0.5 ? 0 : 1];
+      atakYon = k.o.tak;
+      oyuncuyaGit(k.i);
+    }
+  }
+  baslat();
+
+  // Pas dongusu (900ms) - surekli mac akiyor
   S_TOP=setInterval(()=>{
     if(!document.getElementById('tahmin-saha')){ clearInterval(S_TOP); return; }
+    pasVer();
+    // Diger oyuncular pozisyon alsin (takim halinde kayma)
     const w=W(), h=H();
-    tx=Math.max(0.06,Math.min(0.94, tx+(Math.random()-0.5)*0.22));
-    ty=Math.max(0.12,Math.min(0.88, ty+(Math.random()-0.5)*0.20));
-    const t=document.getElementById('tahmin-top');
-    if(t){ t.style.left=(tx*w-6)+'px'; t.style.top=(ty*h-6)+'px'; }
-    OY.map((o,i)=>({o,i,d:Math.hypot(o.x-tx*w,o.y-ty*h)})).sort((a,b)=>a.d-b.d).slice(0,3)
-      .forEach(({o,i})=>{
-        const el=document.getElementById('to'+i); if(!el) return;
-        const hx=Math.max(6,Math.min(w-24, tx*w+(o.tak==='ev'?-18:18)));
-        const hy=Math.max(28,Math.min(h-28, ty*h+(Math.random()-0.5)*24));
-        el.style.left=hx+'px'; el.style.top=hy+'px'; o.x=hx; o.y=hy;
-      });
-  }, 1600);
+    OY.forEach((o,i)=>{
+      if(i===topSahip) return;
+      const el = document.getElementById('to'+i);
+      if(!el) return;
+      // Topa gore hafif kayma (takim blok hareketi)
+      const tx2 = topSahip>=0 ? OY[topSahip].x : w/2;
+      const hedefX = o.x + (tx2 - o.x) * 0.06 * (o.tak===atakYon ? 1 : 0.4);
+      const hedefY = o.y + (Math.random()-0.5)*8;
+      const yx = Math.max(10, Math.min(w-20, hedefX));
+      const yy = Math.max(28, Math.min(h-24, hedefY));
+      el.style.left = (yx-7)+'px';
+      el.style.top = (yy-7)+'px';
+      o.x = yx; o.y = yy;
+    });
+  }, 900);
 
   // Olaylar
   const eg=parseFloat(olas.ev_beklenen_gol)||1.3, dg=parseFloat(olas.dep_beklenen_gol)||1.1;
@@ -948,6 +1054,22 @@ function sahaBasla(ev, dep){
   let dk=0, se=0, sd=0, i2=0;
   const akis=document.getElementById('tahmin-akis');
   if(akis) akis.innerHTML='';
+
+  // Simulasyon sayaci (10.000 mac kosuyor gibi)
+  let simSayi = 0;
+  const simKap = document.getElementById('sim-sayac');
+  const simDurum = document.getElementById('sim-durum');
+  const SIM_MAX = 10000;
+  if(simKap){ simKap.textContent = '· 10.000 simülasyon'; }
+  const SIM_ZAMAN = setInterval(()=>{
+    simSayi += 320;
+    if(simSayi >= SIM_MAX){
+      simSayi = SIM_MAX;
+      if(simDurum){ simDurum.textContent = '✓ TAMAMLANDI'; simDurum.style.color='var(--mavi)'; }
+      clearInterval(SIM_ZAMAN);
+    }
+    if(simKap) simKap.textContent = '· ' + simSayi.toLocaleString('tr') + ' simülasyon';
+  }, 120);
 
   S_OYN=setInterval(()=>{
     if(!document.getElementById('tahmin-saha')){ clearInterval(S_OYN); return; }
@@ -990,6 +1112,7 @@ function sahaBasla(ev, dep){
 function sahaDurdur(){
   if(S_TOP){ clearInterval(S_TOP); S_TOP=null; }
   if(S_OYN){ clearInterval(S_OYN); S_OYN=null; }
+  if(typeof SIM_ZAMAN!=='undefined' && SIM_ZAMAN){ clearInterval(SIM_ZAMAN); }
 }
 
 function analizHtml(d, ev, dep, lig){
@@ -1004,8 +1127,11 @@ function analizHtml(d, ev, dep, lig){
   // ═══ MAC SAHA GORUNUMU (canli simulasyon) ═══
   h+=`<div class="saha-blok">
     <div class="saha-bas">
-      <span>🎬 Canlı Maç Simülasyonu</span>
-      <button class="saha-btn" id="saha-btn" onclick="sahaBasla('${ev.replace(/'/g,"\\'")}','${dep.replace(/'/g,"\\'")}')">▶ Oynat</button>
+      <span>🎬 Maç Simülasyonu <span id="sim-sayac" style="color:var(--mavi);font-family:monospace;font-size:11px"></span></span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span id="sim-durum" style="font-size:10.5px;color:var(--yesil)">● CANLI</span>
+        <button class="saha-btn" id="saha-btn" onclick="sahaBasla('${ev.replace(/'/g,"\\'")}','${dep.replace(/'/g,"\\'")}')">▶ Oynat</button>
+      </div>
     </div>
     <div class="saha" id="tahmin-saha">
       <div class="cizgi orta-dikey"></div>
@@ -1033,6 +1159,11 @@ function analizHtml(d, ev, dep, lig){
   </div>`;
 
   window.__OLAS__ = d;
+
+  // ═══ OTOMATIK BASLAT: ajan tahmin ederken mac oynansin ═══
+  setTimeout(()=>{
+    try { sahaBasla(ev, dep, true); } catch(e){ console.log('saha:', e); }
+  }, 400);
 
   // AJAN
   if(d.ajan){
@@ -1096,9 +1227,9 @@ function analizHtml(d, ev, dep, lig){
       const formRenk=(d)=>d.dizi.map(x=>x==='G'?'<b class="g">G</b>':x==='M'?'<b class="m">M</b>':'<b class="b">B</b>').join('');
       h+=`<div class="form-sat">`+
          `<div class="form-takim"><span>${ev}</span><span class="fdizi">${formRenk(fe)}</span>`+
-         `<span class="fort">${fe.puan_ort.toFixed(1)} p/m · ${fe.atilan_ort.toFixed(1)}-${fe.yenilen_ort.toFixed(1)}</span></div>`+
+         `<span class="fort">${(fe.puan_ort||0).toFixed(1)} p/m · ${(fe.atilan||0).toFixed(1)}-${(fe.yenilen||0).toFixed(1)}</span></div>`+
          `<div class="form-takim"><span>${dep}</span><span class="fdizi">${formRenk(fd)}</span>`+
-         `<span class="fort">${fd.puan_ort.toFixed(1)} p/m · ${fd.atilan_ort.toFixed(1)}-${fd.yenilen_ort.toFixed(1)}</span></div>`+
+         `<span class="fort">${(fd.puan_ort||0).toFixed(1)} p/m · ${(fd.atilan||0).toFixed(1)}-${(fd.yenilen||0).toFixed(1)}</span></div>`+
          `</div>`;
     }
     d.ajan.uyarilar.forEach(u=>{ h+=`<div class="uyari">${u}</div>`; });

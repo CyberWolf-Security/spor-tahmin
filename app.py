@@ -9,7 +9,7 @@ import fs_feed as fsf
 
 app = Flask(__name__)
 BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
-CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False, "canli": [], "canli_zaman": None}
+CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False, "canli": [], "canli_zaman": None, "tam": False}
 
 def arsiv_yukle():
     """Onceden cekilmis takim arsivleri (veri havuzu)"""
@@ -55,6 +55,7 @@ def veri_al(force=False):
         return CACHE
     if CACHE["yukleniyor"]: return CACHE
     CACHE["yukleniyor"] = True
+    CACHE["tam"] = False
     try:
         # 1) Takim arsivleri (yerel dosya - ANINDA)
         ars = arsiv_yukle()
@@ -93,6 +94,7 @@ def veri_al(force=False):
         for m in maclar:
             ligler.setdefault(m["lig_adi"], []).append(m)
         CACHE["ligler"] = ligler
+        CACHE["tam"] = True
     finally:
         CACHE["yukleniyor"] = False
     return CACHE
@@ -122,7 +124,7 @@ def api_durum():
         # Otomatik baslat (frontend bekliyorsa kendiliginden yuklensin)
         if not CACHE["yukleniyor"]:
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
-        return jsonify({"hazir": False, "yukleniyor": True})
+        return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
@@ -132,6 +134,7 @@ def api_durum():
     ligler = [l for l in ligler if l["oynanmis"] >= 5 or l["gelecek"] >= 3]
     ligler.sort(key=lambda x: (-x["oynanmis"], x["ad"]))
     return jsonify({"hazir": True, "toplam": len(CACHE["maclar"]), "ligler": ligler,
+                    "tam": CACHE.get("tam", False),
                     "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""})
 
 @app.route("/canli")
