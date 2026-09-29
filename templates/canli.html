@@ -23,6 +23,25 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 .btn:hover{filter:brightness(1.1)}
 .btn.dur{background:linear-gradient(135deg,#b91c1c,#ef4444)}
 
+/* KAYAN CANLI SERIT */
+.canli-bar{background:linear-gradient(90deg,rgba(239,68,68,.1),rgba(239,68,68,.02));
+           border-bottom:1px solid rgba(239,68,68,.22);padding:0 4px;height:38px;
+           display:flex;align-items:center;gap:10px;overflow:hidden;margin-bottom:14px}
+.kayan-kap{flex:1;overflow:hidden;position:relative;height:34px;display:flex;align-items:center;min-width:0}
+.kayan-kap::before,.kayan-kap::after{content:'';position:absolute;top:0;bottom:0;width:36px;z-index:2;pointer-events:none}
+.kayan-kap::before{left:0;background:linear-gradient(90deg,var(--kart),transparent)}
+.kayan-kap::after{right:0;background:linear-gradient(270deg,var(--kart),transparent)}
+.kayan-ic{display:flex;gap:9px;white-space:nowrap;animation:kay 40s linear infinite}
+.kayan-ic:hover{animation-play-state:paused}
+@keyframes kay{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.km{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:7px;
+    background:linear-gradient(135deg,rgba(239,68,68,.13),rgba(239,68,68,.03));
+    border:1px solid rgba(239,68,68,.3);font-size:11.5px}
+.km .dk{background:var(--kirmizi);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px}
+.km .sk{color:var(--yesil);font-weight:700;font-family:'SF Mono',monospace}
+.km .lg{color:var(--yazi3);font-size:9.5px}
+.kayan-bos{color:var(--yazi3);font-size:11.5px}
+
 /* SAHA */
 .saha{background:linear-gradient(180deg,#0d3320,#08210f);border:2px solid #1a5c30;border-radius:12px;
       padding:20px 18px;position:relative;margin-bottom:14px;min-height:200px;overflow:hidden}
@@ -101,6 +120,16 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 <div class="wrap">
   <h1>⚽ Canlı Maç Simülasyonu</h1>
   <div class="sub">Maç dakika dakika oynanır — gol, kart, istatistik canlı akar</div>
+
+  <div class="canli-bar">
+    <span style="font-size:10px;color:var(--kirmizi);font-weight:700;letter-spacing:.7px;
+                 background:rgba(239,68,68,.15);padding:4px 9px;border-radius:6px;flex-shrink:0">🔴 CANLI</span>
+    <div class="kayan-kap">
+      <div id="canli-kayan" class="kayan-ic">
+        <span class="kayan-bos">Canlı maç yok — maç saatlerinde burada akacak</span>
+      </div>
+    </div>
+  </div>
 
   <div class="kart">
     <label>LİG</label>
@@ -311,6 +340,27 @@ async function basla(){
     }).join('');
   }, HIZ_MS);
 }
+
+// CANLI MACLARI KAYAN SERIDE GOSTER
+async function kayanYukle(){
+  try {
+    const r = await fetch('/api/canli'); const d = await r.json();
+    const k = document.getElementById('canli-kayan');
+    if(!k) return;
+    if(!d || !d.length){
+      k.innerHTML = '<span class="kayan-bos">Canlı maç yok — maç saatlerinde burada akacak</span>';
+      return;
+    }
+    const html = d.map(m=>`<span class="km">
+      <span class="dk">${m.dakika||'?'}'</span>
+      <span>${m.ev}</span><span class="sk">${m.ev_gol}-${m.dep_gol}</span><span>${m.dep}</span>
+      <span class="lg">${m.lig||''}</span></span>`).join('');
+    // Kesintisiz akis icin 2 kez yaz
+    k.innerHTML = html + html;
+  } catch(e){}
+}
+setInterval(kayanYukle, 30000);
+kayanYukle();
 
 // Başlat — veri hazır olana kadar bekle
 (async function(){

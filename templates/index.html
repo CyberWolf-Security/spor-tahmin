@@ -64,6 +64,22 @@ header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px soli
 .canli-mac .sk{color:var(--yesil);font-weight:700;font-family:'SF Mono',monospace;font-size:13px}
 .canli-mac .lg{color:var(--yazi3);font-size:10px;margin-left:5px}
 #canli-serit::-webkit-scrollbar{height:0}
+/* KAYAN SERIT */
+.kayan-kap{flex:1;overflow:hidden;position:relative;height:34px;display:flex;align-items:center;min-width:0}
+.kayan-kap::before,.kayan-kap::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+.kayan-kap::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)}
+.kayan-kap::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
+.kayan-ic{display:flex;gap:9px;white-space:nowrap;animation:kay 40s linear infinite;will-change:transform}
+.kayan-ic:hover{animation-play-state:paused}
+.kayan-ic.yavas{animation-duration:70s}
+.kayan-ic.hizli{animation-duration:22s}
+@keyframes kay{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.canli-mac{flex-shrink:0}
+.kayan-bos{color:var(--yazi3);font-size:11.5px;padding-left:6px}
+/* Canli sayfada da ayni serit */
+.canli-bar{background:linear-gradient(90deg,rgba(239,68,68,.1),rgba(239,68,68,.02));
+           border-bottom:1px solid rgba(239,68,68,.22);padding:0 16px;height:40px;
+           display:flex;align-items:center;gap:11px;overflow:hidden;margin:-18px -18px 16px}
 .takip .et{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.7px;
            white-space:nowrap;font-weight:600}
 .cip{background:var(--kart);border:1px solid var(--cizgi2);border-radius:7px;padding:6px 11px;
@@ -320,14 +336,21 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 
 <div class="takip" id="takip">
   <span class="et"><span class="canli-nokta"></span> CANLI</span>
-  <div id="canli-serit" style="display:flex;gap:9px;overflow-x:auto;flex:1">
-    <span style="color:var(--yazi3);font-size:11.5px">canlı maç yok</span>
+  <div class="kayan-kap">
+    <div id="canli-serit" class="kayan-ic">
+      <span class="kayan-bos">Canlı maç yok — maç saatlerinde burada akacak</span>
+    </div>
   </div>
 </div>
 
 <main>
   <aside>
-    <div class="bolum-bas">Ligler</div>
+    <div class="bolum-bas">Ligler <span id="lig-sayac" style="float:right;font-size:10px;color:var(--yazi3);font-weight:400">—</span></div>
+    <div style="padding:8px 10px 4px">
+      <input id="lig-ara" type="text" placeholder="Lig ara…" oninput="ligListesi()"
+             style="width:100%;padding:7px 10px;background:#0d1117;border:1px solid var(--cizgi2);
+                    border-radius:7px;color:var(--yazi);font-size:12px;font-family:inherit;outline:none">
+    </div>
     <div id="ligler"><div style="padding:14px;color:var(--yazi3);font-size:12px">Yükleniyor…</div></div>
   </aside>
   <section id="icerik">
@@ -358,15 +381,26 @@ async function durumKontrol(){
   return false;
 }
 
+let LIG_FILTRE='';
+function ligAra(v){ LIG_FILTRE=(v||'').toLowerCase(); ligListesi(); }
 function ligListesi(){
-  let h='';
-  LIGLER.forEach(l=>{
-    h+=`<div class="lig ${AKTIF===l.ad?'aktif':''}" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}')">
-      <span class="bayrak">${BAYRAK[l.ad]||'⚽'}</span>
-      <span class="ad">${l.ad}</span>
-      <span class="say">${l.oynanmis}</span></div>`;
+  const ara=(document.getElementById('lig-ara')?.value||LIG_FILTRE).toLowerCase();
+  // Oynanmis maci olanlar one, sonra alfabetik
+  const sirali=[...LIGLER].sort((a,b)=>{
+    if((b.oynanmis||0)!==(a.oynanmis||0)) return (b.oynanmis||0)-(a.oynanmis||0);
+    return a.ad.localeCompare(b.ad,'tr');
   });
-  document.getElementById('ligler').innerHTML=h||'<div style="padding:12px;color:var(--yazi3);font-size:12px">Lig yok</div>';
+  const suz=sirali.filter(l=>!ara || l.ad.toLowerCase().includes(ara));
+  let h='';
+  suz.forEach(l=>{
+    h+=`<div class="lig ${AKTIF===l.ad?'aktif':''}" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}')">
+      <span class="bayrak">${BAYRAK[l.ad]||l.bayrak||'⚽'}</span>
+      <span class="ad">${l.ad}</span>
+      <span class="say" title="${l.oynanmis} oynanmis / ${l.gelecek} gelecek">${l.oynanmis}</span></div>`;
+  });
+  document.getElementById('ligler').innerHTML=h||'<div style="padding:12px;color:var(--yazi3);font-size:12px">Eşleşen lig yok</div>';
+  const sc=document.getElementById('lig-sayac');
+  if(sc) sc.textContent = ara ? `${suz.length}/${LIGLER.length}` : `${LIGLER.length} lig`;
 }
 
 async function ligSec(ad){
