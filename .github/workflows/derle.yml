@@ -80,12 +80,16 @@ jobs:
             $liste = $mm.gelecek
             if (-not $liste -or $liste.Count -eq 0) { $liste = $mm.sonuclar }
             Write-Host ("ADAY_SAYI: " + $liste.Count)
-            # Gecerli tahmin veren mac bul (deneme yanilma)
+            # Gecerli tahmin veren mac bul (deneme yanilma) — ASCII guvenli
             $d = $null
-            foreach ($cand in $liste | Select-Object -First 12) {
+            foreach ($cand in $liste | Select-Object -First 25) {
+              # Turkce karakter icermeyen adlari tercih et (PowerShell JSON sorunu)
+              $tr = [char]0x130 + [char]0x131 + [char]0x15E + [char]0x15F + [char]0xE7 + [char]0xC7 + [char]0xF6 + [char]0xD6 + [char]0xFC + [char]0xDC + [char]0x11F + [char]0x11E + [char]0x15E
+              if ($cand.ev.IndexOfAny($tr.ToCharArray()) -ge 0 -or $cand.dep.IndexOfAny($tr.ToCharArray()) -ge 0) { continue }
               $govde = @{ ev = $cand.ev; dep = $cand.dep; lig = $lig } | ConvertTo-Json -Compress
+              $baytlar = [System.Text.Encoding]::UTF8.GetBytes($govde)
               try {
-                $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $govde -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
+                $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $baytlar -ContentType "application/json; charset=utf-8" -TimeoutSec 60 -UseBasicParsing
                 $tmp = $r.Content | ConvertFrom-Json
                 if ($null -ne $tmp.ev_kazanma -and $null -eq $tmp.hata) {
                   $d = $tmp
@@ -93,7 +97,7 @@ jobs:
                   break
                 }
                 Write-Host ("ATLANDI: " + $cand.ev + " (" + $tmp.hata + ")")
-              } catch { }
+              } catch { Write-Host ("HATA: " + $_.Exception.Message) }
             }
             if ($null -eq $d) { throw "Gecerli mac bulunamadi" }
             Write-Host ("TAHMIN_KOD: 200")
