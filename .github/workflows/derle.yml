@@ -21,7 +21,7 @@ jobs:
           pip install flask pywebview pyinstaller numpy
 
       - name: Derle
-        run: pyinstaller --onefile --noconsole --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --hidden-import=numpy --hidden-import=mega_ajan --hidden-import=mega_karar --collect-all webview --collect-all numpy main.py
+        run: pyinstaller --onefile --noconsole --name SporTahmin --version-file surum.txt --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --hidden-import=numpy --hidden-import=mega_ajan --hidden-import=mega_karar --collect-all webview --collect-all numpy main.py
 
       - name: Exe boyut
         shell: bash
@@ -183,6 +183,21 @@ jobs:
         run: |
           pip install pillow
           python -c "from PIL import ImageGrab; ImageGrab.grab().save('ekran_py.png'); print('Python ekran OK')"
+
+      - name: SURUM KONTROL
+        shell: powershell
+        run: |
+          $e = "dist\SporTahmin.exe"
+          if (Test-Path $e) {
+            $v = (Get-Item $e).VersionInfo
+            Write-Host ("EXE_SURUM: " + $v.FileVersion)
+            Write-Host ("EXE_URUN: " + $v.ProductName)
+            Write-Host ("EXE_YAYINCI: " + $v.CompanyName)
+            Write-Host ("EXE_ACIKLAMA: " + $v.FileDescription)
+            $h = (Get-FileHash $e -Algorithm MD5).Hash
+            Write-Host ("EXE_MD5: " + $h)
+            Write-Host ("EXE_BOYUT: " + (Get-Item $e).Length)
+          } else { Write-Host "EXE_YOK" }
 
       - name: Inno Setup kur
         run: choco install innosetup -y --no-progress

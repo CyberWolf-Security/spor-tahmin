@@ -5,7 +5,7 @@
 ; ═══════════════════════════════════════════════════════════
 
 #define UygulamaAdi "Spor Tahmin"
-#define UygulamaSurum "6.0"
+#define UygulamaSurum "6.2"
 #define UygulamaYayinci "CyberWolfSec"
 #define UygulamaExe "SporTahmin.exe"
 
