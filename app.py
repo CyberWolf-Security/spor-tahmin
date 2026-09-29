@@ -56,11 +56,27 @@ def veri_al(force=False):
     if CACHE["yukleniyor"]: return CACHE
     CACHE["yukleniyor"] = True
     try:
-        # 1) Canli feed (tum dunya, 15 gun)
-        maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
-        # 2) Takim arsivleri (gecmis veri havuzu)
+        # 1) Takim arsivleri (yerel dosya - ANINDA)
         ars = arsiv_yukle()
-        print(f"[VERI] feed={len(maclar)} arsiv={len(ars)}")
+        print(f"[VERI] arsiv={len(ars)} (yerel, hizli)")
+        # Hemen erisilebilir yap (arayuz bos kalmasin)
+        if ars:
+            for m in ars:
+                if not m.get("lig_adi"):
+                    m["lig_adi"] = "Süper Lig (Arşiv)"; m["bayrak"] = "🇹🇷"
+                m["kaynak"] = "Arşiv"
+            _logo_yukle(); lg0 = logo_sozluk()
+            for m in ars:
+                if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg0, m["ev"])
+                if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg0, m["dep"])
+            CACHE["maclar"] = list(ars)
+            l0 = {}
+            for m in ars: l0.setdefault(m["lig_adi"], []).append(m)
+            CACHE["ligler"] = l0
+            print(f"[VERI] ON HAZIR: {len(ars)} mac")
+        # 2) Canli feed (yavas - 15 gun)
+        maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
+        print(f"[VERI] feed={len(maclar)}")
         _logo_yukle()
         lg = logo_sozluk()
         for m in ars:
@@ -103,7 +119,10 @@ def ana():
 @app.route("/api/durum")
 def api_durum():
     if not CACHE["maclar"]:
-        return jsonify({"hazir": False, "yukleniyor": CACHE["yukleniyor"]})
+        # Otomatik baslat (frontend bekliyorsa kendiliginden yuklensin)
+        if not CACHE["yukleniyor"]:
+            threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
+        return jsonify({"hazir": False, "yukleniyor": True})
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
