@@ -1,4 +1,4 @@
-name: Windows EXE Derle
+name: Derle
 
 on:
   push:
@@ -10,26 +10,22 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Python kur
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Bagimliliklari kur
+      - name: Kur
+        shell: cmd
         run: |
           python -m pip install --upgrade pip
           pip install flask requests pyinstaller
-
-      - name: EXE derle
+      - name: Derle
+        shell: cmd
         run: |
-          pyinstaller --onefile --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --noconsole app.py
-
-      - name: Dosyalari listele
+          pyinstaller --onefile --name SporTahmin --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=itsdangerous --hidden-import=click --hidden-import=blinker --noconsole app.py
+      - name: Kontrol
+        shell: cmd
         run: dir dist
-
-      - name: Artifact yukle
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: SporTahmin-Windows
           path: dist/SporTahmin.exe
