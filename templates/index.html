@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>v6.2 · Spor Tahmin</title>
+<title>v6.3 · Spor Tahmin</title>
 <style>
 :root{
   --bg:#0a0e14;--bg2:#111721;--bg3:#161d29;--kart:#131a24;
@@ -792,7 +792,7 @@ header{
       </svg>
     </div>
     <div class="marka-yazi">
-      <span class="m-ust">SPOR<span class="m-vurgu">TAHMİN</span><span class="surum-rozet">v6.2</span></span>
+      <span class="m-ust">SPOR<span class="m-vurgu">TAHMİN</span><span class="surum-rozet">v6.3</span></span>
       <span class="m-alt">Canlı Maç Analiz Motoru · 1M Simülasyon</span>
     </div>
   </div>
@@ -870,24 +870,30 @@ const BAYRAK={"Süper Lig":"🇹🇷","Premier League":"🏴󠁧󠁢󠁥󠁮󠁧
 
 let SON_LIG_SAYISI = 0;
 async function durumKontrol(){
-  const r=await fetch('/api/durum'); const d=await r.json();
-  if(d.hazir){
-    const yeniSayi = d.ligler.length;
-    LIGLER = d.ligler;
-    VERI = d;
-    document.getElementById('durum-yazi').textContent =
-      `${d.toplam.toLocaleString('tr')} maç · ${yeniSayi} lig` + (d.tam ? '' : ' ⏳');
-    // Lig sayisi degistiyse listeyi yenile
-    if(yeniSayi !== SON_LIG_SAYISI){
-      SON_LIG_SAYISI = yeniSayi;
-      ligListesi();
-      // Aktif lig secili degilse ilkini sec
-      if(!AKTIF && yeniSayi){ ligSec(d.ligler[0].ad); }
+  try{
+    const r = await fetch('/api/durum', {cache:'no-store'});
+    if(!r.ok){ throw new Error('HTTP ' + r.status); }
+    const d = await r.json();
+    if(d.hazir && d.ligler && d.ligler.length){
+      const yeniSayi = d.ligler.length;
+      LIGLER = d.ligler;
+      VERI = d;
+      document.getElementById('durum-yazi').textContent =
+        `${(d.toplam||0).toLocaleString('tr')} maç · ${yeniSayi} lig` + (d.tam ? '' : ' ⏳');
+      if(yeniSayi !== SON_LIG_SAYISI){
+        SON_LIG_SAYISI = yeniSayi;
+        try{ ligListesi(); }catch(_){}
+        if(!AKTIF && yeniSayi){ try{ ligSec(d.ligler[0].ad); }catch(_){} }
+      }
+      return true;
     }
-    return true;
+    document.getElementById('durum-yazi').textContent = 'Veri çekiliyor…';
+    return false;
+  }catch(e){
+    // Sunucuya ulasilamadi — pencereyi DONdurma!
+    document.getElementById('durum-yazi').textContent = 'Sunucu bekleniyor… (' + e.message + ')';
+    return false;
   }
-  document.getElementById('durum-yazi').textContent='Veri çekiliyor…';
-  return false;
 }
 
 let LIG_FILTRE='';
@@ -1879,29 +1885,33 @@ function yukGuncelle(mesaj, alt, yuzde){
   const t0 = Date.now();
   yukGuncelle('Maç verileri çekiliyor…', 'Bağlanıyor…', 5);
   let hazir = false, deneme = 0;
-  while(!hazir && deneme < 60){          // 60 x 1sn = 60 sn max
+  while(!hazir && deneme < 90){          // 90 x 1sn = 90 sn max
     await new Promise(r=>setTimeout(r,1000));
     const sn = Math.round((Date.now()-t0)/1000);
-    const yz = Math.min(92, 5 + deneme*2.2);
+    const yz = Math.min(92, 5 + deneme*1.5);
     let bas, alt;
     if(sn < 3){        bas='Bağlanıyor…';                    alt='Sunucu hazırlanıyor'; }
-    else if(sn < 8){   bas='Süper Lig arşivi yükleniyor…';   alt='762 maç (yerel veri)'; }
-    else if(sn < 20){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · 15 günlük fikstür'; }
-    else if(sn < 40){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · internet yavaş olabilir'; }
+    else if(sn < 10){  bas='Süper Lig arşivi yükleniyor…';   alt='762 maç (yerel veri)'; }
+    else if(sn < 30){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · 15 günlük fikstür'; }
+    else if(sn < 60){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · internet yavaş olabilir'; }
     else{              bas='Neredeyse hazır…';               alt=sn+' saniye'; }
     yukGuncelle(bas, alt, yz);
-    hazir = await durumKontrol();
+    try{ hazir = await durumKontrol(); }catch(e){ hazir = false; }
     deneme++;
   }
-  yukGuncelle('Hazır!', d_toplam(), 100);
-  if(!hazir){
+  if(hazir){
+    yukGuncelle('Hazır!', (VERI && VERI.toplam ? VERI.toplam.toLocaleString('tr') + ' maç' : ''), 100);
+  } else {
     document.getElementById('icerik').innerHTML =
-      '<div class="hata2">Veri çekilemedi (' + Math.round((Date.now()-t0)/1000) + ' sn).<br>' +
-      'İnternet bağlantısını kontrol edin. VPN açıksa kapatın.<br>' +
-      'Sonra "Yenile" butonuna basın.</div>';
+      '<div class="hata2">Veri çekilemedi (' + Math.round((Date.now()-t0)/1000) + ' sn).<br><br>' +
+      'Denenebilecekler:<br>' +
+      '1) İnternet bağlantısını kontrol edin<br>' +
+      '2) VPN açıksa KAPATIN (veri kaynağını engelliyor olabilir)<br>' +
+      '3) Windows Güvenlik Duvarı programı engelliyorsa izin verin<br>' +
+      '4) "↻ Yenile" butonuna basın<br><br>' +
+      '<small>Log: %USERPROFILE%\\SporTahmin_log.txt</small></div>';
   }
-  canliYukle();
-  setInterval(canliYukle, 30000);
+  try{ canliYukle(); setInterval(canliYukle, 30000); }catch(_){}
 })();
 
 function d_toplam(){
