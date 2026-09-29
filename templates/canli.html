@@ -11,6 +11,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--yazi);padding:18px}
 .wrap{max-width:1080px;margin:0 auto}
+.geri-btn{display:inline-flex;align-items:center;gap:6px;background:#1a2332;border:1px solid var(--cizgi2);
+          color:var(--yazi2);text-decoration:none;padding:7px 14px;border-radius:8px;font-size:12.5px;
+          font-weight:600;margin-bottom:12px;transition:.15s;font-family:inherit;cursor:pointer}
+.geri-btn:hover{background:#243044;color:var(--yazi);border-color:var(--mavi);transform:translateX(-2px)}
 h1{font-size:22px;color:var(--mavi);margin-bottom:3px}
 .sub{color:var(--yazi3);font-size:12px;margin-bottom:16px}
 .kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;padding:16px;margin-bottom:13px}
@@ -178,6 +182,7 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 </head>
 <body>
 <div class="wrap">
+  <a href="/" class="geri-btn" title="Ana sayfaya dön">← Geri Dön</a>
   <h1>⚽ Canlı Maç Simülasyonu</h1>
   <div class="sub">Maç dakika dakika oynanır — gol, kart, istatistik canlı akar</div>
 
