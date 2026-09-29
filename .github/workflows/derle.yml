@@ -71,7 +71,10 @@ jobs:
             $lig = $dd.ligler[0].ad
             Write-Host ("SECILEN_LIG: " + $lig)
             $mm = (Invoke-WebRequest -Uri ("http://127.0.0.1:8090/api/maclar/" + [uri]::EscapeDataString($lig)) -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
-            $ev = $mm[0].ev; $dep = $mm[0].dep
+            $liste = $mm.gelecek
+            if (-not $liste -or $liste.Count -eq 0) { $liste = $mm.sonuclar }
+            $ev = $liste[0].ev; $dep = $liste[0].dep
+            Write-Host ("ADAY_SAYI: " + $liste.Count)
             Write-Host ("MAC: " + $ev + " vs " + $dep)
             $govde = @{ ev = $ev; dep = $dep; lig = $lig } | ConvertTo-Json -Compress
             $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $govde -ContentType "application/json" -TimeoutSec 120 -UseBasicParsing
