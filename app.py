@@ -24,6 +24,32 @@ def arsiv_yukle():
                 except Exception: pass
     return hepsi
 
+_LOGO_CACHE = None
+
+def logo_sozluk():
+    return _LOGO_CACHE or {}
+
+def _logo_bul(lg, ad):
+    """Bulank eslestirme: 'Fenerbahçe (Tur)' -> 'Fenerbahçe'"""
+    if not ad: return None
+    if ad in lg: return lg[ad]
+    # Parantezli kismi at
+    temiz = ad.split("(")[0].strip()
+    if temiz in lg: return lg[temiz]
+    # Kismi eslesme
+    for k, v in lg.items():
+        if k == temiz or k.startswith(temiz) or temiz.startswith(k):
+            return v
+    return None
+
+def _logo_yukle():
+    global _LOGO_CACHE
+    try:
+        with open(os.path.join(BASE_DIR, "veri", "logolar.json"), encoding="utf-8") as f:
+            _LOGO_CACHE = json.load(f)
+    except Exception:
+        _LOGO_CACHE = {}
+
 def veri_al(force=False):
     if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 1200:
         return CACHE
@@ -35,7 +61,11 @@ def veri_al(force=False):
         # 2) Takim arsivleri (gecmis veri havuzu)
         ars = arsiv_yukle()
         print(f"[VERI] feed={len(maclar)} arsiv={len(ars)}")
+        _logo_yukle()
+        lg = logo_sozluk()
         for m in ars:
+            if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg, m["ev"])
+            if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg, m["dep"])
             if not m.get("lig_adi"):
                 m["lig_adi"] = "Süper Lig (Arşiv)" if "Fenerbah" in str(m) or True else "Arşiv"
                 m["bayrak"] = "🇹🇷"
