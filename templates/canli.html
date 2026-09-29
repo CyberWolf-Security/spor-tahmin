@@ -178,6 +178,128 @@ select{width:100%;padding:10px;background:#0d1117;border:1px solid var(--cizgi2)
 .hata{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.32);color:#fca5a5;
       padding:12px;border-radius:9px;font-size:13px}
 .yuk{text-align:center;padding:30px;color:var(--yazi2);font-size:13px}
+
+/* ═══════════ MODERN SIK TASARIM ═══════════ */
+:root{
+  --golge-1:0 1px 2px rgba(0,0,0,.35);
+  --golge-2:0 2px 6px rgba(0,0,0,.4);
+  --golge-3:0 6px 16px rgba(0,0,0,.45);
+  --golge-4:0 12px 32px rgba(0,0,0,.55);
+}
+
+/* Kartlar */
+.kart{
+  box-shadow:var(--golge-3), inset 0 1px 0 rgba(255,255,255,.04)!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+.kart:hover{box-shadow:var(--golge-4), inset 0 1px 0 rgba(255,255,255,.05)!important}
+
+/* Butonlar */
+.btn{
+  box-shadow:var(--golge-2);
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.15), transparent 50%);
+  opacity:0;transition:opacity .2s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--golge-3), 0 0 24px rgba(34,197,94,.35)}
+.btn:hover::after{opacity:1}
+.btn:active{transform:translateY(0);box-shadow:var(--golge-1)}
+.btn.dur{box-shadow:var(--golge-2), 0 0 0 rgba(239,68,68,0)}
+.btn.dur:hover{box-shadow:var(--golge-3), 0 0 24px rgba(239,68,68,.35)}
+
+/* Geri butonu */
+.geri-btn{
+  box-shadow:var(--golge-1);
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+}
+.geri-btn:hover{
+  transform:translateX(-3px);
+  box-shadow:var(--golge-2), 0 0 14px rgba(59,130,246,.3);
+}
+
+/* Select kutulari */
+select{
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+  transition:all .18s;
+}
+select:hover{border-color:var(--cizgi2)!important}
+select:focus{
+  outline:none;
+  border-color:var(--mavi)!important;
+  box-shadow:0 0 0 3px rgba(59,130,246,.15), inset 0 1px 3px rgba(0,0,0,.4);
+}
+
+/* Saha: derinlik */
+.saha{
+  box-shadow:inset 0 0 80px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4)!important;
+}
+.saha-blok{box-shadow:var(--golge-3), inset 0 1px 0 rgba(255,255,255,.04)}
+
+/* Tabela: cam efekti + parlama */
+.tabela{
+  box-shadow:0 6px 24px rgba(0,0,0,.7), 0 0 0 1px rgba(34,197,94,.15), inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+.tabela .dk{
+  box-shadow:0 2px 8px rgba(220,38,38,.5);
+}
+
+/* Oyuncular: golge */
+.oyuncu{
+  box-shadow:0 3px 8px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.3)!important;
+}
+.oyuncu.ev{box-shadow:0 3px 8px rgba(0,0,0,.7), 0 0 10px rgba(34,197,94,.35)!important}
+.oyuncu.dep{box-shadow:0 3px 8px rgba(0,0,0,.7), 0 0 10px rgba(239,68,68,.35)!important}
+
+/* Top: parlama */
+.top{
+  box-shadow:0 2px 8px rgba(0,0,0,.8), 0 0 16px rgba(255,255,255,.45)!important;
+}
+
+/* Olay satirlari */
+.olay{
+  box-shadow:var(--golge-1);
+  transition:all .15s;
+}
+.olay:hover{transform:translateX(3px);box-shadow:var(--golge-2)}
+
+/* Istatistik kartlari */
+.olas{box-shadow:var(--golge-1);transition:all .2s}
+.olas:hover{transform:translateY(-3px);box-shadow:var(--golge-3)}
+
+/* Kayan serit */
+.canli-bar{
+  box-shadow:0 2px 12px rgba(239,68,68,.15), inset 0 -1px 0 rgba(239,68,68,.2);
+}
+.km{
+  box-shadow:var(--golge-1);
+  transition:all .15s;
+}
+.km:hover{transform:translateY(-2px);box-shadow:var(--golge-2), 0 0 14px rgba(239,68,68,.3)}
+
+/* Canli nokta */
+.canli-nokta{
+  box-shadow:0 0 8px var(--kirmizi), 0 0 16px rgba(239,68,68,.5);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#2a3543,#1f2937);
+  border-radius:5px;border:2px solid transparent;background-clip:content-box;
+}
+::-webkit-scrollbar-thumb:hover{background:#3a4655;background-clip:content-box}
+
+/* Giris animasyonu */
+@keyframes yukari{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kart{animation:yukari .3s cubic-bezier(.4,0,.2,1)}
+
 </style>
 </head>
 <body>

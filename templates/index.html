@@ -160,7 +160,7 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .analiz{background:linear-gradient(180deg,#0f1620,#0c1219);border:1px solid var(--cizgi);border-radius:12px;
         margin-bottom:14px;overflow:hidden;animation:ac .35s ease-out}
 @keyframes ac{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:none}}
-.analiz-bas{padding:15px 19px;background:linear-gradient(90deg,rgba(34,197,94,.09),transparent);
+.analiz-bas{position:relative;padding:15px 19px;background:linear-gradient(90deg,rgba(34,197,94,.09),transparent);
             border-bottom:1px solid var(--cizgi)}
 .analiz-bas .mac-ad{font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
 .analiz-bas .alt{font-size:11.5px;color:var(--yazi3)}
@@ -366,6 +366,236 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .saha-akis .olay .m{flex:1}
 .saha-akis .olay .s{margin-left:auto;color:var(--yazi3);font-family:monospace;font-size:11.5px}
 
+
+/* ═══ GECMIS (son bakilan maclar) ═══ */
+.gecmis{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid var(--cizgi);
+        background:rgba(0,0,0,.15);min-height:0}
+.gecmis.yok{display:none}
+.gecmis-it{background:#0d1117;border:1px solid var(--cizgi2);border-radius:6px;padding:4px 9px;
+           font-size:11px;cursor:pointer;transition:.15s;white-space:nowrap}
+.gecmis-it:hover{border-color:var(--mavi);color:var(--mavi)}
+.gecmis-it b{color:var(--yesil)}
+/* ═══ KARSILASTIRMA ═══ */
+.kars{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;padding:14px 18px;
+      background:linear-gradient(90deg,rgba(34,197,94,.06),rgba(59,130,246,.04),rgba(239,68,68,.06));
+      border-bottom:1px solid var(--cizgi)}
+.kars .y{font-size:22px;font-weight:800;font-family:monospace}
+.kars .y.e{color:var(--yesil)}.kars .y.d{color:var(--kirmizi)}.kars .y.b{color:var(--sari)}
+.kars .et{font-size:9.5px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.5px;text-align:center}
+.kars .bar{height:6px;border-radius:3px;background:var(--cizgi);overflow:hidden;margin-top:4px}
+.kars .bar div{height:100%;background:linear-gradient(90deg,var(--yesil),var(--turkuaz))}
+/* ═══ YAZDIRMA ═══ */
+.yazdir-btn{position:absolute;top:12px;right:14px;background:#1a2332;border:1px solid var(--cizgi2);color:var(--yazi2);padding:6px 11px;
+            border-radius:7px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
+.yazdir-btn:hover{border-color:var(--mavi);color:var(--yazi)}
+@media print{
+  header,.takip,aside,.btn-yenile,.yazdir-btn,.saha-btn,.btn{display:none!important}
+  main{grid-template-columns:1fr!important}
+  body{background:#fff;color:#000}
+  .analiz{break-inside:avoid}
+}
+/* ═══ KISAYOL IPUCU ═══ */
+.ks-ipucu{position:fixed;bottom:12px;right:12px;background:rgba(13,17,23,.95);border:1px solid var(--cizgi2);
+          border-radius:9px;padding:10px 13px;font-size:10.5px;color:var(--yazi3);z-index:200;
+          box-shadow:0 4px 16px rgba(0,0,0,.5);line-height:1.7;display:none}
+.ks-ipucu.goster{display:block}
+.ks-ipucu b{color:var(--mavi);font-family:monospace;background:#1a2332;padding:1px 5px;border-radius:3px}
+
+
+/* ═══════════ MODERN SIK TASARIM ═══════════ */
+:root{
+  --golge-1:0 1px 2px rgba(0,0,0,.35);
+  --golge-2:0 2px 6px rgba(0,0,0,.4);
+  --golge-3:0 6px 16px rgba(0,0,0,.45);
+  --golge-4:0 12px 32px rgba(0,0,0,.55);
+  --golge-yesil:0 4px 20px rgba(34,197,94,.35);
+  --golge-mavi:0 4px 20px rgba(59,130,246,.35);
+  --kenar-parlak:rgba(255,255,255,.06);
+}
+
+/* Kartlar: katmanli golge + kenar parlamasi */
+.kart, .blok, .analiz, .saha-blok{
+  box-shadow:var(--golge-3), inset 0 1px 0 rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+}
+.kart:hover{box-shadow:var(--golge-4), inset 0 1px 0 rgba(255,255,255,.05)}
+
+/* Header: cam efekti + golge */
+header{
+  background:linear-gradient(180deg, rgba(19,26,36,.98), rgba(15,21,30,.94))!important;
+  backdrop-filter:blur(12px) saturate(160%);
+  box-shadow:0 2px 12px rgba(0,0,0,.5), inset 0 -1px 0 rgba(255,255,255,.05)!important;
+  border-bottom:1px solid rgba(34,197,94,.12)!important;
+}
+
+/* Butonlar: gradient + golge + basma animasyonu */
+.btn, .btn-yenile, .saha-btn, .yazdir-btn, .tahmin-btn{
+  position:relative;
+  box-shadow:var(--golge-2);
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  letter-spacing:.2px;
+}
+.btn:hover, .saha-btn:hover, .tahmin-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--golge-3), 0 0 20px rgba(34,197,94,.3);
+}
+.btn:active, .saha-btn:active, .tahmin-btn:active{
+  transform:translateY(0);
+  box-shadow:var(--golge-1);
+}
+.btn-yenile{
+  background:linear-gradient(135deg,#1e293b,#0f172a);
+  border:1px solid rgba(255,255,255,.08)!important;
+  color:var(--yazi2)!important;
+}
+.btn-yenile:hover{
+  border-color:var(--mavi)!important;
+  color:#fff!important;
+  box-shadow:var(--golge-mavi);
+}
+.yazdir-btn:hover{box-shadow:var(--golge-mavi);transform:translateY(-1px)}
+
+/* Maç satırları: hover'da yükselme + golge */
+.mac-satir{
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  border:1px solid transparent;
+}
+.mac-satir:hover{
+  background:rgba(255,255,255,.035)!important;
+  transform:translateX(3px);
+  border-color:rgba(34,197,94,.2);
+  box-shadow:var(--golge-2), -3px 0 0 var(--yesil);
+}
+
+/* Lig öğeleri: seçili olanda parlama */
+.lig{
+  transition:all .15s cubic-bezier(.4,0,.2,1);
+  border-left:2px solid transparent;
+}
+.lig:hover{
+  background:rgba(255,255,255,.04)!important;
+  border-left-color:rgba(34,197,94,.5);
+  padding-left:12px;
+}
+.lig.aktif{
+  background:linear-gradient(90deg, rgba(34,197,94,.14), rgba(34,197,94,.03))!important;
+  border-left:3px solid var(--yesil)!important;
+  box-shadow:inset 0 0 20px rgba(34,197,94,.08), var(--golge-1);
+}
+
+/* Ajan kartı: gradient + parlama */
+.ajan{
+  background:linear-gradient(135deg, rgba(34,197,94,.09), rgba(6,182,212,.05), rgba(59,130,246,.05))!important;
+  border:1px solid rgba(34,197,94,.22)!important;
+  box-shadow:var(--golge-2), inset 0 1px 0 rgba(255,255,255,.06);
+  position:relative;
+  overflow:hidden;
+}
+.ajan::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--yesil),var(--turkuaz),var(--mavi));
+}
+
+/* Olasılık kartları: hover'da yükselme */
+.olas{
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--golge-1);
+}
+.olas:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--golge-3);
+}
+
+/* İstatistik kartları */
+.ist-kart{
+  box-shadow:var(--golge-1);
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+.ist-kart:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--golge-3), 0 0 16px rgba(59,130,246,.2);
+  border-color:var(--mavi)!important;
+}
+
+/* Güven skoru çubuğu: parlama */
+.gs-bar{
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.5);
+}
+.gs-bar div{
+  box-shadow:0 0 12px currentColor;
+}
+
+/* Senaryo kartları */
+.sen{
+  transition:all .15s;
+  box-shadow:var(--golge-1);
+}
+.sen:hover{
+  transform:translateX(3px);
+  box-shadow:var(--golge-2);
+  border-left-color:var(--mavi);
+}
+
+/* Kombi kutusu: gradient + golge */
+.kombi{
+  box-shadow:var(--golge-3), inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+.kombi-sat{
+  transition:all .15s;
+  box-shadow:var(--golge-1);
+}
+.kombi-sat:hover{transform:translateX(2px);box-shadow:var(--golge-2)}
+
+/* Canlı nokta: nabız + parlama */
+.nokta, .canli-nokta{
+  box-shadow:0 0 8px var(--yesil), 0 0 16px rgba(34,197,94,.5);
+  animation:nabiz 1.6s ease-in-out infinite;
+}
+@keyframes nabiz{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+
+/* Arama kutusu: focus'ta parlama */
+#lig-ara{
+  transition:all .18s;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+}
+#lig-ara:focus{
+  border-color:var(--yesil)!important;
+  box-shadow:0 0 0 3px rgba(34,197,94,.15), inset 0 1px 3px rgba(0,0,0,.4);
+  outline:none;
+}
+
+/* Tablo/hızlı istatistik */
+.istatistik{
+  background:linear-gradient(90deg, rgba(34,197,94,.03), transparent, rgba(59,130,246,.03));
+}
+
+/* Scrollbar: şık */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.2)}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#2a3543,#1f2937);
+  border-radius:5px;
+  border:2px solid transparent;
+  background-clip:content-box;
+}
+::-webkit-scrollbar-thumb:hover{background:#3a4655;background-clip:content-box}
+
+/* Giriş animasyonları */
+@keyframes yukari{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.analiz{animation:yukari .35s cubic-bezier(.4,0,.2,1)}
+.kart{animation:yukari .3s cubic-bezier(.4,0,.2,1)}
+.blok{animation:yukari .3s cubic-bezier(.4,0,.2,1)}
+
+/* Geçmiş öğeleri */
+.gecmis-it{
+  box-shadow:var(--golge-1);
+  transition:all .15s;
+}
+.gecmis-it:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--golge-2), 0 0 12px rgba(59,130,246,.25);
+}
+
 </style>
 </head>
 <body>
@@ -406,6 +636,8 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
     </div>
   </div>
 </div>
+
+<div class="gecmis yok" id="gecmis"></div>
 
 <main>
   <aside>
@@ -536,7 +768,11 @@ async function tahmin(ev, dep, lig, btn){
     if(!r.ok){ yuk.innerHTML=`<div class="hata2">Sunucu hatası (${r.status}) — tekrar deneyin</div>`; btn.disabled=false; btn.textContent='Tahmin Et'; return; }
     const d=await r.json();
     if(d.hata){ yuk.innerHTML=`<div class="hata2">${d.hata}</div>`; }
-    else { yuk.innerHTML=analizHtml(d, ev, dep, lig); yuk.scrollIntoView({behavior:'smooth',block:'start'}); }
+    else {
+      yuk.innerHTML=analizHtml(d, ev, dep, lig);
+      yuk.scrollIntoView({behavior:'smooth',block:'start'});
+      try { gecmisEkle(ev, dep, lig); tahminKaydet(ev, dep, lig, d); } catch(_) {}
+    }
   }catch(e){
     const m = e.name==='AbortError' ? 'İstek zaman aşımına uğradı (45sn) — tekrar deneyin' : 'Bağlantı hatası: '+e.message;
     yuk.innerHTML=`<div class="hata2">${m}</div>`;
@@ -761,7 +997,9 @@ function analizHtml(d, ev, dep, lig){
     <div class="analiz-bas">
       <div class="mac-ad">${ev} <span style="color:var(--yazi3);font-weight:400">vs</span> ${dep}</div>
       <div class="alt">${lig} · ${d.kullanilan_mac} maç verisi</div>
+      <button class="yazdir-btn" onclick="yazdir()" title="Tahmini yazdır/kaydet">🖨 Yazdır</button>
     </div>`;
+  h += karsilastirHtml(d, ev, dep);
 
   // ═══ MAC SAHA GORUNUMU (canli simulasyon) ═══
   h+=`<div class="saha-blok">
@@ -983,6 +1221,120 @@ document.addEventListener('keydown', (e)=>{
   }
 });
 
+
+// ═══ KULLANISLILIK MOTORU ═══
+let GECMIS = JSON.parse(localStorage.getItem('spor_gecmis') || '[]');
+let TAHMIN_GECMIS = JSON.parse(localStorage.getItem('spor_tahminler') || '[]');
+
+function gecmisEkle(ev, dep, lig){
+  const k = {ev, dep, lig, t: Date.now()};
+  GECMIS = [k, ...GECMIS.filter(x=>!(x.ev===ev && x.dep===dep))].slice(0, 8);
+  localStorage.setItem('spor_gecmis', JSON.stringify(GECMIS));
+  gecmisCiz();
+}
+function gecmisCiz(){
+  const kap = document.getElementById('gecmis');
+  if(!kap) return;
+  if(!GECMIS.length){ kap.className='gecmis yok'; return; }
+  kap.className = 'gecmis';
+  kap.innerHTML = '<span style="font-size:10px;color:var(--yazi3);align-self:center;text-transform:uppercase;letter-spacing:.5px">Son:</span>'
+    + GECMIS.map(x=>`<div class="gecmis-it" onclick="hizliTahmin('${x.ev.replace(/'/g,"\\'")}','${x.dep.replace(/'/g,"\\'")}','${(x.lig||'').replace(/'/g,"\\'")}')">
+        ${x.ev} <b>vs</b> ${x.dep}</div>`).join('');
+}
+
+// Hizli tahmin (gecmisten)
+async function hizliTahmin(ev, dep, lig){
+  const yuk = document.getElementById('icerik');
+  yuk.innerHTML='<div class="yukleyici"><div class="halka"></div><p>Tahmin hazırlanıyor…</p></div>';
+  try{
+    const knt=new AbortController(); const zl=setTimeout(()=>knt.abort(),45000);
+    const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ev,dep,lig}), signal:knt.signal});
+    clearTimeout(zl);
+    if(!r.ok) throw new Error('Sunucu '+r.status);
+    const d=await r.json();
+    if(d.hata){ yuk.innerHTML=`<div class="hata2">${d.hata}</div>`; return; }
+    yuk.innerHTML = analizHtml(d, ev, dep, lig);
+    yuk.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){
+    yuk.innerHTML=`<div class="hata2">Bağlantı hatası: ${e.message}</div>`;
+  }
+}
+
+// ═══ KLAVYE KISAYOLLARI ═══
+document.addEventListener('keydown', (e)=>{
+  const aktif = document.activeElement;
+  const yaziyor = aktif && (aktif.tagName==='INPUT' || aktif.tagName==='SELECT' || aktif.tagName==='TEXTAREA');
+
+  // '/' : lig arama
+  if(e.key==='/' && !yaziyor){
+    e.preventDefault();
+    const ara = document.getElementById('lig-ara');
+    if(ara){ ara.focus(); ara.scrollIntoView({block:'center'}); }
+    return;
+  }
+  // '?' : yardim
+  if(e.key==='?' && !yaziyor){
+    const ip = document.getElementById('ks-ipucu');
+    if(ip) ip.classList.toggle('goster');
+    return;
+  }
+  // ESC
+  if(e.key==='Escape'){
+    const ara = document.getElementById('lig-ara');
+    if(yaziyor && ara){ ara.value=''; ligListesi(); ara.blur(); return; }
+    const a = document.querySelector('.analiz');
+    if(a){ sahaDurdur(); a.remove(); }
+    const ip = document.getElementById('ks-ipucu');
+    if(ip) ip.classList.remove('goster');
+    return;
+  }
+  // 'R' : yenile
+  if((e.key==='r'||e.key==='R') && !yaziyor && !e.ctrlKey && !e.metaKey){ yenile(); return; }
+  // 1-3 : ilk 3 maca hizli tahmin
+  if(['1','2','3'].includes(e.key) && !yaziyor){
+    const satirlar = document.querySelectorAll('.mac-satir');
+    const i = parseInt(e.key)-1;
+    if(satirlar[i]){ satirlar[i].click(); }
+  }
+});
+
+// ═══ KARSILASTIRMA (ajan onerileri yan yana) ═══
+function karsilastirHtml(d, ev, dep){
+  const e = d.ev_kazanma, b = d.beraberlik, dp = d.dep_kazanma;
+  return `<div class="kars">
+    <div style="text-align:center">
+      <div class="y e">%${e}</div><div class="et">${ev} kazanır</div>
+      <div class="bar"><div style="width:${e}%"></div></div>
+    </div>
+    <div style="text-align:center">
+      <div class="y b">%${b}</div><div class="et">berabere</div>
+      <div class="bar"><div style="width:${b}%;background:var(--sari)"></div></div>
+    </div>
+    <div style="text-align:center">
+      <div class="y d">%${dp}</div><div class="et">${dep} kazanır</div>
+      <div class="bar"><div style="width:${dp}%;background:var(--kirmizi)"></div></div>
+    </div>
+  </div>`;
+}
+
+// ═══ YAZDIRMA / KAYDETME ═══
+function yazdir(){
+  window.print();
+}
+function tahminKaydet(ev, dep, lig, d){
+  const k = {ev, dep, lig, t: new Date().toISOString(), d: {
+    ev_k: d.ev_kazanma, ber: d.beraberlik, dep_k: d.dep_kazanma,
+    guven: d.ajan ? d.ajan.guven_skoru : null,
+    oneri: d.ajan ? d.ajan.genel : ''
+  }};
+  TAHMIN_GECMIS = [k, ...TAHMIN_GECMIS].slice(0, 50);
+  localStorage.setItem('spor_tahminler', JSON.stringify(TAHMIN_GECMIS));
+}
+
+// Baslangicta gecmisi ciz
+setTimeout(gecmisCiz, 500);
+
 // Yukleme ilerleme animasyonu
 let YUK_N=0;
 function yukGuncelle(mesaj, alt, yuzde){
@@ -1024,5 +1376,9 @@ function d_toplam(){
   try { return document.getElementById('durum-yazi').textContent; } catch(e){ return ''; }
 }
 </script>
+<div class="ks-ipucu" id="ks-ipucu">
+  <div><b>/</b> lig ara · <b>ESC</b> kapat · <b>?</b> bu yardım</div>
+  <div><b>1</b><b>2</b><b>3</b> hızlı tahmin · <b>R</b> yenile</div>
+</div>
 </body>
 </html>
