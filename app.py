@@ -1,21 +1,46 @@
-"""Spor Tahmin - Flask (coklu lig + tum olasiliklar + ajan)"""
+"""Spor Tahmin - Flask (dunya capinda feed + canli serit)"""
 from flask import Flask, render_template, request, jsonify
-import json, os, threading, webbrowser, time, socket
+import json, os, sys, threading, webbrowser, time, socket
+from datetime import datetime
 from tahmin import takim_gucu
-from olasilik import tum_olasiliklar, ajan_analiz
-import flashscore_multi as fsm
+from olasilik import tum_olasiliklar
+from ajan2 import gelismis_ajan
+import fs_feed as fsf
 
 app = Flask(__name__)
-CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False}
+BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False, "canli": [], "canli_zaman": None}
+
+def arsiv_yukle():
+    """Onceden cekilmis takim arsivleri (veri havuzu)"""
+    hepsi = []
+    vr = os.path.join(BASE_DIR, "veri")
+    if os.path.isdir(vr):
+        for f in os.listdir(vr):
+            if f.startswith("arsiv_") and f.endswith(".json"):
+                try:
+                    with open(os.path.join(vr, f), encoding="utf-8") as fh:
+                        hepsi += json.load(fh).get("maclar", [])
+                except Exception: pass
+    return hepsi
 
 def veri_al(force=False):
-    from datetime import datetime
-    if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 900:
+    if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 1200:
         return CACHE
     if CACHE["yukleniyor"]: return CACHE
     CACHE["yukleniyor"] = True
     try:
-        maclar = fsm.tum_ligler()
+        # 1) Canli feed (tum dunya, 15 gun)
+        maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
+        # 2) Takim arsivleri (gecmis veri havuzu)
+        ars = arsiv_yukle()
+        print(f"[VERI] feed={len(maclar)} arsiv={len(ars)}")
+        for m in ars:
+            if not m.get("lig_adi"):
+                m["lig_adi"] = "Süper Lig (Arşiv)" if "Fenerbah" in str(m) or True else "Arşiv"
+                m["bayrak"] = "🇹🇷"
+            m["kaynak"] = "Arşiv"
+        maclar += ars
         CACHE["maclar"] = maclar
         CACHE["zaman"] = datetime.now()
         ligler = {}
@@ -26,9 +51,18 @@ def veri_al(force=False):
         CACHE["yukleniyor"] = False
     return CACHE
 
+def canli_al():
+    if CACHE["canli_zaman"] and (datetime.now()-CACHE["canli_zaman"]).seconds < 25:
+        return CACHE["canli"]
+    try:
+        CACHE["canli"] = fsf.canli_maclar()
+        CACHE["canli_zaman"] = datetime.now()
+    except Exception:
+        pass
+    return CACHE["canli"]
+
 def _lig_oynanmis(lig):
-    c = CACHE
-    ms = c["ligler"].get(lig, [])
+    ms = CACHE["ligler"].get(lig, [])
     return [{"ev":m["ev"],"dep":m["dep"],"ev_gol":m["ev_gol"],"dep_gol":m["dep_gol"],
              "tarih":m["tarih"]} for m in ms if m["oynandi"] and m["ev_gol"] is not None]
 
@@ -38,31 +72,33 @@ def ana():
 
 @app.route("/api/durum")
 def api_durum():
-    """Veri hazir mi?"""
     if not CACHE["maclar"]:
         return jsonify({"hazir": False, "yukleniyor": CACHE["yukleniyor"]})
     ligler = []
-    for ad, ms in sorted(CACHE["ligler"].items()):
+    for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
         gelecek = len([m for m in ms if not m["oynandi"] and m.get("tarih")])
-        if oyn >= 5:
-            ligler.append({"ad": ad, "mac": len(ms), "oynanmis": oyn, "gelecek": gelecek})
-    return jsonify({
-        "hazir": True, "toplam": len(CACHE["maclar"]),
-        "ligler": ligler,
-        "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""
-    })
+        bayrak = next((m["bayrak"] for m in ms if m.get("bayrak")), "⚽")
+        ligler.append({"ad": ad, "mac": len(ms), "oynanmis": oyn, "gelecek": gelecek, "bayrak": bayrak})
+    ligler = [l for l in ligler if l["oynanmis"] >= 5 or l["gelecek"] >= 3]
+    ligler.sort(key=lambda x: (-x["oynanmis"], x["ad"]))
+    return jsonify({"hazir": True, "toplam": len(CACHE["maclar"]), "ligler": ligler,
+                    "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""})
+
+@app.route("/api/canli")
+def api_canli():
+    c = canli_al()
+    return jsonify([{"ev":m["ev"],"dep":m["dep"],"ev_gol":m["ev_gol"],"dep_gol":m["dep_gol"],
+                     "dakika":m["dakika"],"lig":m["lig_adi"],"bayrak":m.get("bayrak","⚽")} for m in c])
 
 @app.route("/api/yukle")
 def api_yukle():
-    """Veriyi yukle (arka planda)"""
     threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
     return jsonify({"basladi": True})
 
 @app.route("/api/maclar/<path:lig>")
 def api_maclar(lig):
-    c = CACHE
-    ms = c["ligler"].get(lig, [])
+    ms = CACHE["ligler"].get(lig, [])
     gelecek = [m for m in ms if not m["oynandi"] and m.get("tarih")]
     gelecek.sort(key=lambda x: (x.get("tarih") or "", x.get("saat") or ""))
     oyn = [m for m in ms if m["oynandi"]]
@@ -79,13 +115,13 @@ def api_tahmin():
     if ev not in guc: return jsonify({"hata": f"{ev} — kayıtlarda yok"})
     if dep not in guc: return jsonify({"hata": f"{dep} — kayıtlarda yok"})
     o = tum_olasiliklar(ev, dep, guc, lig_ort, 30000)
-    o["ajan"] = ajan_analiz(o, ev, dep)
+    o["ajan"] = gelismis_ajan(o, guc, ev, dep, oyn)
     o["kullanilan_mac"] = len(oyn)
     return jsonify(o)
 
 def port_bul(bas=8090):
     p = bas
-    while p < bas+50:
+    while p < bas+60:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.bind(("127.0.0.1", p)); s.close(); return p

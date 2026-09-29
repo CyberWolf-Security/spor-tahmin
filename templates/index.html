@@ -36,6 +36,18 @@ header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px soli
 .takip{background:var(--bg2);border-bottom:1px solid var(--cizgi);padding:11px 22px;
        display:flex;align-items:center;gap:10px;overflow-x:auto;min-height:52px}
 .takip::-webkit-scrollbar{height:0}
+.canli-nokta{width:6px;height:6px;border-radius:50%;background:var(--kirmizi);display:inline-block;
+             margin-right:5px;animation:nabiz 1.2s infinite;box-shadow:0 0 7px var(--kirmizi)}
+.canli-mac{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.04));
+           border:1px solid rgba(239,68,68,.35);border-radius:8px;padding:7px 12px;
+           display:flex;align-items:center;gap:9px;flex-shrink:0;font-size:12px;cursor:pointer;
+           transition:.15s}
+.canli-mac:hover{border-color:var(--kirmizi);background:rgba(239,68,68,.16)}
+.canli-mac .dk{background:var(--kirmizi);color:#fff;font-size:10px;font-weight:700;
+               padding:2px 6px;border-radius:4px;animation:nabiz 1.5s infinite}
+.canli-mac .sk{color:var(--yesil);font-weight:700;font-family:'SF Mono',monospace;font-size:13px}
+.canli-mac .lg{color:var(--yazi3);font-size:10px;margin-left:5px}
+#canli-serit::-webkit-scrollbar{height:0}
 .takip .et{font-size:10px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.7px;
            white-space:nowrap;font-weight:600}
 .cip{background:var(--kart);border:1px solid var(--cizgi2);border-radius:7px;padding:6px 11px;
@@ -121,6 +133,20 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .tav.orta .yuzde{color:var(--sari)}
 .uyari{font-size:12px;color:var(--sari);padding:6px 11px;background:rgba(234,179,8,.07);
        border-radius:6px;margin-top:5px;border-left:2px solid var(--sari)}
+.sin-bas{font-size:10.5px;color:var(--yazi3);text-transform:uppercase;letter-spacing:.6px;
+         font-weight:700;margin:12px 0 7px}
+.sin-liste{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.sin{font-size:11.5px;color:var(--yazi2);padding:5px 10px;background:rgba(0,0,0,.22);border-radius:6px}
+.form-sat{display:flex;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.form-takim{flex:1;min-width:180px;background:rgba(0,0,0,.24);border-radius:7px;padding:8px 11px;
+            font-size:11.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.form-takim>span:first-child{font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fdizi b{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:4px;
+         font-size:10px;font-weight:700;margin-right:2px}
+.fdizi b.g{background:rgba(34,197,94,.22);color:var(--yesil)}
+.fdizi b.m{background:rgba(239,68,68,.2);color:var(--kirmizi)}
+.fdizi b.b{background:rgba(234,179,8,.18);color:var(--sari)}
+.fort{color:var(--yazi3);font-size:10.5px;font-family:'SF Mono',monospace}
 
 /* 1X2 KARTLARI */
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px 19px}
@@ -192,8 +218,10 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 </header>
 
 <div class="takip" id="takip">
-  <span class="et">Sonuçlar</span>
-  <span style="color:var(--yazi3);font-size:11.5px">yükleniyor…</span>
+  <span class="et"><span class="canli-nokta"></span> CANLI</span>
+  <div id="canli-serit" style="display:flex;gap:9px;overflow-x:auto;flex:1">
+    <span style="color:var(--yazi3);font-size:11.5px">canlı maç yok</span>
+  </div>
 </div>
 
 <main>
@@ -323,6 +351,24 @@ function analizHtml(d, ev, dep, lig){
       h+=`<div class="tav ${kls}"><span class="tip">${t.tip}</span><span class="metin">${t.tavsiye}</span>
           <span class="yuzde">%${t.olasilik}</span></div>`;
     });
+    // Sinyal dokumu
+    if(d.ajan.sinyaller && d.ajan.sinyaller.length){
+      h+=`<div class="sin-bas">Bağımsız Sinyaller (konsensüs: Ev ${d.ajan.konsensus.ev} / Dep ${d.ajan.konsensus.dep})</div>`;
+      h+=`<div class="sin-liste">`;
+      d.ajan.sinyaller.forEach(s=>{ h+=`<div class="sin">${s}</div>`; });
+      h+=`</div>`;
+    }
+    // Form
+    if(d.ajan.form_ev && d.ajan.form_dep){
+      const fe=d.ajan.form_ev, fd=d.ajan.form_dep;
+      const formRenk=(d)=>d.dizi.map(x=>x==='G'?'<b class="g">G</b>':x==='M'?'<b class="m">M</b>':'<b class="b">B</b>').join('');
+      h+=`<div class="form-sat">`+
+         `<div class="form-takim"><span>${ev}</span><span class="fdizi">${formRenk(fe)}</span>`+
+         `<span class="fort">${fe.puan_ort.toFixed(1)} p/m · ${fe.atilan_ort.toFixed(1)}-${fe.yenilen_ort.toFixed(1)}</span></div>`+
+         `<div class="form-takim"><span>${dep}</span><span class="fdizi">${formRenk(fd)}</span>`+
+         `<span class="fort">${fd.puan_ort.toFixed(1)} p/m · ${fd.atilan_ort.toFixed(1)}-${fd.yenilen_ort.toFixed(1)}</span></div>`+
+         `</div>`;
+    }
     d.ajan.uyarilar.forEach(u=>{ h+=`<div class="uyari">${u}</div>`; });
     h+=`</div>`;
   }
@@ -409,6 +455,23 @@ async function sonuclariYukle(){
   }catch(e){}
 }
 
+// CANLI MACLAR (30 sn'de bir yenile)
+async function canliYukle(){
+  try{
+    const r=await fetch('/api/canli'); const d=await r.json();
+    const s=document.getElementById('canli-serit');
+    if(!d.length){
+      s.innerHTML='<span style="color:var(--yazi3);font-size:11.5px">Şu an canlı maç yok</span>';
+      return;
+    }
+    s.innerHTML=d.map(m=>`<div class="canli-mac" title="${m.lig}">
+      <span class="dk">${m.dakika||'?'}'</span>
+      <span>${m.ev}</span><span class="sk">${m.ev_gol}-${m.dep_gol}</span><span>${m.dep}</span>
+      <span class="lg">${m.bayrak||''} ${m.lig.split('—').pop().trim().slice(0,18)}</span>
+    </div>`).join('');
+  }catch(e){}
+}
+
 // Baslat
 (async function(){
   let hazir=await durumKontrol();
@@ -421,6 +484,8 @@ async function sonuclariYukle(){
   if(!hazir){
     document.getElementById('icerik').innerHTML='<div class="hata2">Veri çekilemedi. "Yenile" butonuna basın.</div>';
   }
+  canliYukle();
+  setInterval(canliYukle, 30000);
 })();
 </script>
 </body>
