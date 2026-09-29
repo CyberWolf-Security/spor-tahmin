@@ -129,18 +129,55 @@ jobs:
             Write-Host ("CANLI_KAYAN: " + ($r.Content -match "kayanYukle"))
           } catch { Write-Host "CANLI_HATA" }
 
-      - name: EKRAN GORUNTUSU
+      - name: EKRAN GORUNTUSU (adim adim)
         shell: powershell
         run: |
           Add-Type -AssemblyName System.Windows.Forms
           Add-Type -AssemblyName System.Drawing
-          Start-Sleep -Seconds 3
-          $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
-          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
-          $g = [System.Drawing.Graphics]::FromImage($bmp)
-          $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
-          $bmp.Save("$PWD\ekran_ana.png")
-          Write-Host "Ana ekran kaydedildi"
+          function EkranAl($ad) {
+            $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            $g = [System.Drawing.Graphics]::FromImage($bmp)
+            $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+            $bmp.Save("$PWD\$ad.png")
+            $g.Dispose(); $bmp.Dispose()
+            Write-Host ("EKRAN: " + $ad)
+          }
+          # 5, 15, 30, 45, 60. saniyelerde ekran goruntusu
+          Start-Sleep -Seconds 5
+          EkranAl "t05_saniye"
+          Start-Sleep -Seconds 10
+          EkranAl "t15_saniye"
+          Start-Sleep -Seconds 15
+          EkranAl "t30_saniye"
+          Start-Sleep -Seconds 15
+          EkranAl "t45_saniye"
+          Start-Sleep -Seconds 15
+          EkranAl "t60_saniye"
+
+      - name: LOG DOSYASI OKU
+        shell: powershell
+        run: |
+          $log = Join-Path $env:USERPROFILE "SporTahmin_log.txt"
+          if (Test-Path $log) {
+            Write-Host "===== UYGULAMA LOG DOSYASI ====="
+            Get-Content $log | ForEach-Object { Write-Host $_ }
+            Write-Host "===== LOG SONU ====="
+          } else {
+            Write-Host "LOG_DOSYASI_YOK: $log"
+          }
+
+      - name: API DURUM KONTROL
+        shell: powershell
+        run: |
+          try {
+            $d = (Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/durum" -TimeoutSec 20 -UseBasicParsing).Content | ConvertFrom-Json
+            Write-Host ("DURUM_hazir: " + $d.hazir)
+            Write-Host ("DURUM_tam: " + $d.tam)
+            Write-Host ("DURUM_toplam: " + $d.toplam)
+            Write-Host ("DURUM_ligler: " + $d.ligler.Count)
+            Write-Host ("DURUM_hata: " + $d.hata)
+          } catch { Write-Host ("DURUM_HATA: " + $_.Exception.Message) }
 
       - name: PYTHON EKRAN (yedek)
         run: |
@@ -175,6 +212,11 @@ jobs:
           path: |
             ekran_ana.png
             ekran_py.png
+            t05_saniye.png
+            t15_saniye.png
+            t30_saniye.png
+            t45_saniye.png
+            t60_saniye.png
             dist/SporTahmin.exe
             kurulum_cikti/SporTahmin_Kurulum.exe
           if-no-files-found: warn

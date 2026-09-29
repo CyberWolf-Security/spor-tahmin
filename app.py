@@ -56,16 +56,26 @@ def _logo_yukle():
     except Exception:
         _LOGO_CACHE = {}
 
+def _logla(mesaj):
+    """Dosyaya log yaz (noconsole modda gorunmez oldugu icin)"""
+    try:
+        yol = os.path.join(os.path.expanduser("~"), "SporTahmin_log.txt")
+        with open(yol, "a", encoding="utf-8") as f:
+            f.write("[%s] %s\n" % (datetime.now().strftime("%H:%M:%S"), mesaj))
+    except Exception:
+        pass
+
 def veri_al(force=False):
     if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 1200:
         return CACHE
     if CACHE["yukleniyor"]: return CACHE
     CACHE["yukleniyor"] = True
     CACHE["tam"] = False
+    CACHE["hata"] = None
     try:
         # 1) Takim arsivleri (yerel dosya - ANINDA)
         ars = arsiv_yukle()
-        print(f"[VERI] arsiv={len(ars)} (yerel, hizli)")
+        _logla("arsiv=%d mac (BASE_DIR=%s)" % (len(ars), BASE_DIR))
         # Hemen erisilebilir yap (arayuz bos kalmasin)
         if ars:
             for m in ars:
@@ -80,29 +90,39 @@ def veri_al(force=False):
             l0 = {}
             for m in ars: l0.setdefault(m["lig_adi"], []).append(m)
             CACHE["ligler"] = l0
-            print(f"[VERI] ON HAZIR: {len(ars)} mac")
-        # 2) Canli feed (yavas - 15 gun)
-        maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
-        print(f"[VERI] feed={len(maclar)}")
-        _logo_yukle()
-        lg = logo_sozluk()
-        for m in ars:
-            if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg, m["ev"])
-            if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg, m["dep"])
-            if not m.get("lig_adi"):
-                m["lig_adi"] = "Süper Lig (Arşiv)" if "Fenerbah" in str(m) or True else "Arşiv"
-                m["bayrak"] = "🇹🇷"
-            m["kaynak"] = "Arşiv"
-        maclar += ars
-        CACHE["maclar"] = maclar
-        CACHE["zaman"] = datetime.now()
-        ligler = {}
-        for m in maclar:
-            ligler.setdefault(m["lig_adi"], []).append(m)
-        CACHE["ligler"] = ligler
-        CACHE["tam"] = True
+            _logla("ON HAZIR: %d mac, %d lig" % (len(ars), len(l0)))
+        # 2) Canli feed (yavas - 15 gun) — hata olsa bile arsiv kalir
+        try:
+            maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
+            _logla("feed=%d mac" % len(maclar))
+            _logo_yukle()
+            lg = logo_sozluk()
+            for m in ars:
+                if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg, m["ev"])
+                if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg, m["dep"])
+                if not m.get("lig_adi"):
+                    m["lig_adi"] = "Süper Lig (Arşiv)"
+                    m["bayrak"] = "🇹🇷"
+                m["kaynak"] = "Arşiv"
+            maclar += ars
+            CACHE["maclar"] = maclar
+            ligler = {}
+            for m in maclar:
+                ligler.setdefault(m["lig_adi"], []).append(m)
+            CACHE["ligler"] = ligler
+            CACHE["tam"] = True
+            _logla("TAM HAZIR: %d mac, %d lig" % (len(maclar), len(ligler)))
+        except Exception as fe:
+            _logla("FEED HATA (arsiv korundu): %s" % fe)
+            CACHE["tam"] = True   # arsivle devam et
+    except Exception as e:
+        import traceback
+        _logla("KRITIK HATA: %s\n%s" % (e, traceback.format_exc()))
+        CACHE["hata"] = str(e)
     finally:
         CACHE["yukleniyor"] = False
+        if not CACHE["maclar"]:
+            _logla("UYARI: maclar bos kaldi!")
     return CACHE
 
 def canli_al():
