@@ -147,6 +147,27 @@ jobs:
           pip install pillow
           python -c "from PIL import ImageGrab; ImageGrab.grab().save('ekran_py.png'); print('Python ekran OK')"
 
+      - name: Inno Setup kur
+        run: choco install innosetup -y --no-progress
+
+      - name: Kurulum paketi derle
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" kurulum.iss
+          dir kurulum_cikti
+
+      - name: Kurulum dogrula
+        shell: powershell
+        run: |
+          $k = "kurulum_cikti\SporTahmin_Kurulum.exe"
+          if (Test-Path $k) {
+            $b = (Get-Item $k).Length
+            Write-Host ("KURULUM_BOYUT: " + $b)
+            Write-Host ("KURULUM_MB: " + [math]::Round($b/1MB, 2))
+            $h = (Get-FileHash $k -Algorithm MD5).Hash
+            Write-Host ("KURULUM_MD5: " + $h)
+          } else { Write-Host "KURULUM_YOK" }
+
       - name: Artifactlar
         uses: actions/upload-artifact@v4
         with:
@@ -155,4 +176,5 @@ jobs:
             ekran_ana.png
             ekran_py.png
             dist/SporTahmin.exe
+            kurulum_cikti/SporTahmin_Kurulum.exe
           if-no-files-found: warn

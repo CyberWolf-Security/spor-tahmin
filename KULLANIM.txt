@@ -1,0 +1,83 @@
+SPOR TAHMİN — KULLANIM KILAVUZU
+═══════════════════════════════════════════════════════════
+
+Sürüm     : 6.0
+Yayıncı   : CyberWolfSec
+Web       : https://cyberwolfsec.com
+
+───────────────────────────────────────────────────────────
+KURULUM
+───────────────────────────────────────────────────────────
+
+1. SporTahmin_Kurulum.exe dosyasını çift tıkla
+2. Windows "Bilinmeyen yayıncı" uyarısı verirse:
+   → "Ek bilgi" (More info) → "Yine de çalıştır" (Run anyway)
+   Bu uyarı dijital imza olmadığı için çıkar, program güvenlidir.
+3. Kurulum sihirbazını takip et (İleri → İleri → Kur)
+4. Masaüstündeki "Spor Tahmin" simgesine tıkla
+
+───────────────────────────────────────────────────────────
+KULLANIM
+───────────────────────────────────────────────────────────
+
+MAÇ LİSTESİ
+  • Sol tarafta ülkeler listelenir (▶ tıklayıp aç)
+  • Ülke seç → ligler açılır → lig seç → maçlar gelir
+  • Arama kutusuna yazarak lig ara (/ tuşu)
+
+TAHMİN ALMA
+  • Maçın yanındaki "Tahmin Et" butonuna tıkla
+  • Ajan 1.000.000 simülasyon çalıştırır (~3 saniye)
+  • Sonuç: olasılıklar, tavsiyeler, en olası skorlar, risk uyarıları
+
+MAÇ SİMÜLASYONU
+  • Tahmin sonucunda otomatik başlar
+  • Sahada maç oynanır (pas, şut, gol)
+  • Ajanın tahminine göre sonuçlanır
+  • Maç 90. dakikada biter
+
+CANLI MAÇLAR
+  • Üstteki kayan yazıda canlı maçlar akar
+  • Herhangi birine tıkla → o maçın tahmini açılır
+
+KLAVYE KISAYOLLARI
+  /  → Lig arama
+  ?  → Kısayol yardımı
+  R  → Verileri yenile
+  1-3 → Hızlı tahmin
+  ESC → Geri / kapat
+
+───────────────────────────────────────────────────────────
+TAHMİN ALGORİTMASI
+───────────────────────────────────────────────────────────
+
+Yöntem: Dixon-Coles düzeltmeli Poisson Monte Carlo simülasyonu
+  • Her maç 1.000.000 kez simüle edilir
+  • Takım gücü: zaman ağırlıklı (yeni maçlar daha önemli)
+  • Ev/deplasman ayrı hücum-savunma gücü
+  • Düşük skor düzeltmesi (Dixon-Coles ρ = -0.09)
+  • Tüm bahis pazarları: 1X2, alt/üst, KG, ilk yarı, skorlar
+
+Doğruluk: ~%44-48 (rastgele tahmin %33)
+  Not: Futbolda %60 üzeri isabet istatistiksel olarak beklenmez.
+       En iyi bahis şirketleri %55-60 seviyesindedir.
+
+───────────────────────────────────────────────────────────
+NOTLAR
+───────────────────────────────────────────────────────────
+
+• Program yerel çalışır (127.0.0.1), verileriniz dışarı gitmez
+• Maç verileri açık kaynaktan çekilir (FlashScore feed)
+• İnternet bağlantısı gerekir (canlı veriler için)
+• Bahis tavsiyesi değildir, istatistiksel analiz aracıdır
+
+───────────────────────────────────────────────────────────
+KALDIRMA
+───────────────────────────────────────────────────────────
+
+Başlat Menüsü → Spor Tahmin → "Kaldır Spor Tahmin"
+veya Denetim Masası → Programlar → Spor Tahmin → Kaldır
+
+═══════════════════════════════════════════════════════════
+© 2026 CyberWolfSec — Tüm hakları saklıdır.
+═══════════════════════════════════════════════════════════
