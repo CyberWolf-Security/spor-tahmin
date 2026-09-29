@@ -13,12 +13,28 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: HTML KONTROL
+        shell: bash
+        run: |
+          echo "=== index.html boyut ==="
+          wc -c templates/index.html
+          echo "=== BASLIK ==="
+          grep -o "Spor Tahmin<small>[^<]*" templates/index.html
+          echo "=== yukGuncelle sayisi ==="
+          grep -c "yukGuncelle" templates/index.html
+          echo "=== Monte Carlo var mi ==="
+          grep -c "Monte Carlo" templates/index.html || echo "0 (YOK - DOGRU)"
+          echo "=== kapanis ==="
+          tail -c 50 templates/index.html
       - name: Pip
         run: |
           python -m pip install --upgrade pip
           pip install flask pywebview pyinstaller
       - name: Derle
         run: pyinstaller --onefile --noconsole --name SporTahmin --add-data "templates;templates" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --collect-all webview main.py
+      - name: Exe boyut
+        shell: bash
+        run: ls -la dist/
       - uses: actions/upload-artifact@v4
         with:
           name: SporTahmin
