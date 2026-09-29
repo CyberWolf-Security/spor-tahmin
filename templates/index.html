@@ -1871,25 +1871,29 @@ function yukGuncelle(mesaj, alt, yuzde){
 
 // Baslat
 (async function(){
-  yukGuncelle('Maç verileri çekiliyor…', 'Dünya geneli ligler taranıyor', 8);
-  let hazir=await durumKontrol();
-  let deneme=0;
-  while(!hazir && deneme<90){
-    await new Promise(r=>setTimeout(r,2500));
-    // Ilerleme guncelle
-    const yz = Math.min(88, 8 + deneme*1.4);
-    yukGuncelle(deneme<8 ? 'Maç verileri çekiliyor…' :
-                deneme<20 ? 'Ligler analiz ediliyor…' :
-                deneme<40 ? 'Takım verileri işleniyor…' :
-                'Neredeyse hazır…',
-                'Dünya geneli ligler taranıyor',
-                yz);
-    hazir=await durumKontrol();
+  const t0 = Date.now();
+  yukGuncelle('Maç verileri çekiliyor…', 'Bağlanıyor…', 5);
+  let hazir = false, deneme = 0;
+  while(!hazir && deneme < 60){          // 60 x 1sn = 60 sn max
+    await new Promise(r=>setTimeout(r,1000));
+    const sn = Math.round((Date.now()-t0)/1000);
+    const yz = Math.min(92, 5 + deneme*2.2);
+    let bas, alt;
+    if(sn < 3){        bas='Bağlanıyor…';                    alt='Sunucu hazırlanıyor'; }
+    else if(sn < 8){   bas='Süper Lig arşivi yükleniyor…';   alt='762 maç (yerel veri)'; }
+    else if(sn < 20){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · 15 günlük fikstür'; }
+    else if(sn < 40){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · internet yavaş olabilir'; }
+    else{              bas='Neredeyse hazır…';               alt=sn+' saniye'; }
+    yukGuncelle(bas, alt, yz);
+    hazir = await durumKontrol();
     deneme++;
   }
   yukGuncelle('Hazır!', d_toplam(), 100);
   if(!hazir){
-    document.getElementById('icerik').innerHTML='<div class="hata2">Veri çekilemedi — internet bağlantısını kontrol edip "Yenile" butonuna basın.</div>';
+    document.getElementById('icerik').innerHTML =
+      '<div class="hata2">Veri çekilemedi (' + Math.round((Date.now()-t0)/1000) + ' sn).<br>' +
+      'İnternet bağlantısını kontrol edin. VPN açıksa kapatın.<br>' +
+      'Sonra "Yenile" butonuna basın.</div>';
   }
   canliYukle();
   setInterval(canliYukle, 30000);
