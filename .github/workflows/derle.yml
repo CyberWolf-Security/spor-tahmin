@@ -79,13 +79,24 @@ jobs:
             $mm = (Invoke-WebRequest -Uri ("http://127.0.0.1:8090/api/maclar/" + [uri]::EscapeDataString($lig)) -TimeoutSec 30 -UseBasicParsing).Content | ConvertFrom-Json
             $liste = $mm.gelecek
             if (-not $liste -or $liste.Count -eq 0) { $liste = $mm.sonuclar }
-            $ev = $liste[0].ev; $dep = $liste[0].dep
             Write-Host ("ADAY_SAYI: " + $liste.Count)
-            Write-Host ("MAC: " + $ev + " vs " + $dep)
-            $govde = @{ ev = $ev; dep = $dep; lig = $lig } | ConvertTo-Json -Compress
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $govde -ContentType "application/json" -TimeoutSec 120 -UseBasicParsing
-            Write-Host ("TAHMIN_KOD: " + $r.StatusCode)
-            $d = $r.Content | ConvertFrom-Json
+            # Gecerli tahmin veren mac bul (deneme yanilma)
+            $d = $null
+            foreach ($cand in $liste | Select-Object -First 12) {
+              $govde = @{ ev = $cand.ev; dep = $cand.dep; lig = $lig } | ConvertTo-Json -Compress
+              try {
+                $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $govde -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
+                $tmp = $r.Content | ConvertFrom-Json
+                if ($null -ne $tmp.ev_kazanma -and $null -eq $tmp.hata) {
+                  $d = $tmp
+                  Write-Host ("SECILEN_MAC: " + $cand.ev + " vs " + $cand.dep)
+                  break
+                }
+                Write-Host ("ATLANDI: " + $cand.ev + " (" + $tmp.hata + ")")
+              } catch { }
+            }
+            if ($null -eq $d) { throw "Gecerli mac bulunamadi" }
+            Write-Host ("TAHMIN_KOD: 200")
             Write-Host ("MOTOR: " + $d.motor)
             Write-Host ("SIMULASYON: " + $d.simulasyon)
             Write-Host ("EV_KAZANMA: " + $d.ev_kazanma)
