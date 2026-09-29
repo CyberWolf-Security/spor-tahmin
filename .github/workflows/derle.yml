@@ -90,6 +90,36 @@ jobs:
             Write-Host ("MOMENTUM: " + ($r.Content -match "mom"))
           } catch { Write-Host "CANLI_HATA" }
 
+      - name: TAHMIN TESTI (POST)
+        shell: powershell
+        run: |
+          try {
+            $body = '{"ev":"Galatasaray","dep":"Fenerbahce","lig":"Super Lig (Arsiv)"}'
+            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
+            Write-Host ("TAHMIN_HTTP: " + $r.StatusCode)
+            Write-Host ("TAHMIN_UZUNLUK: " + $r.Content.Length)
+            $d = $r.Content | ConvertFrom-Json
+            Write-Host ("EV_KAZANMA: " + $d.ev_kazanma)
+            Write-Host ("AJAN_VAR: " + ($null -ne $d.ajan))
+            Write-Host ("GUVEN_SKORU: " + $d.ajan.guven_skoru)
+            Write-Host ("SENARYOLAR: " + $d.ajan.senaryolar.Count)
+            Write-Host ("KOMBI: " + ($null -ne $d.ajan.kombi))
+          } catch {
+            Write-Host ("TAHMIN_HATA: " + $_.Exception.Message)
+          }
+
+      - name: TAHMIN (farkli lig)
+        shell: powershell
+        run: |
+          try {
+            $body = '{"ev":"Real Madrid","dep":"Barcelona","lig":"La Liga"}'
+            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/api/tahmin" -Method POST -Body $body -ContentType "application/json" -TimeoutSec 60 -UseBasicParsing
+            Write-Host ("LALIGA_HTTP: " + $r.StatusCode)
+            Write-Host ("LALIGA_UZUNLUK: " + $r.Content.Length)
+          } catch {
+            Write-Host ("LALIGA_HATA: " + $_.Exception.Message)
+          }
+
       - name: Artifactlar
         uses: actions/upload-artifact@v4
         with:
