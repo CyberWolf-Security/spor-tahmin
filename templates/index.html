@@ -307,65 +307,188 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 
 
 /* ═══ MAC SAHA GORUNUMU ═══ */
-.saha-blok{background:#0d1117;border:1px solid var(--cizgi2);border-radius:11px;margin-bottom:14px;overflow:hidden}
-.saha-bas{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
-          border-bottom:1px solid var(--cizgi2);font-size:12px;color:var(--yazi2);font-weight:600}
+/* ═══════════ GERCEKCI FUTBOL SAHASI ═══════════ */
+.saha-blok{background:linear-gradient(180deg,#0d1117,#0a0e14);border:1px solid var(--cizgi2);
+           border-radius:13px;margin-bottom:14px;overflow:hidden;
+           box-shadow:0 8px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04)}
+.saha-bas{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;
+          border-bottom:1px solid var(--cizgi2);font-size:12px;color:var(--yazi2);font-weight:600;
+          background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
 .saha-btn{background:linear-gradient(135deg,#16a34a,#22c55e);border:0;color:#fff;padding:6px 14px;
-          border-radius:7px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit}
-.saha-btn:hover{filter:brightness(1.12)}
-.saha{position:relative;overflow:hidden;height:290px;
-      background:repeating-linear-gradient(90deg,#0e4a24 0 8%,#0c4020 8% 16%);
-      border-top:1px solid #1d6b38;border-bottom:1px solid #1d6b38}
-.cizgi{position:absolute;background:rgba(255,255,255,.4);pointer-events:none}
-.cizgi.orta-dikey{left:50%;top:0;bottom:0;width:2px;transform:translateX(-1px)}
-.cizgi.orta-yuvarlak{left:50%;top:50%;width:104px;height:104px;border:2px solid rgba(255,255,255,.4);
-                     border-radius:50%;background:none;transform:translate(-50%,-50%)}
-.cizgi.orta-nokta{left:50%;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%)}
-.cizgi.ceza-sol{left:0;top:50%;width:15%;height:52%;border:2px solid rgba(255,255,255,.4);border-left:0;transform:translateY(-50%)}
-.cizgi.ceza-sag{right:0;top:50%;width:15%;height:52%;border:2px solid rgba(255,255,255,.4);border-right:0;transform:translateY(-50%)}
-.cizgi.kale-sol{left:0;top:50%;width:6%;height:26%;border:2px solid rgba(255,255,255,.4);border-left:0;transform:translateY(-50%)}
-.cizgi.kale-sag{right:0;top:50%;width:6%;height:26%;border:2px solid rgba(255,255,255,.4);border-right:0;transform:translateY(-50%)}
-.cizgi.ust{left:0;right:0;top:12px;height:2px}
-.cizgi.alt{left:0;right:0;bottom:12px;height:2px}
-.oyuncu{position:absolute;width:15px;height:15px;border-radius:50%;transition:all 1.1s cubic-bezier(.4,0,.2,1);
-        box-shadow:0 2px 6px rgba(0,0,0,.6);z-index:4;border:2px solid rgba(255,255,255,.75)}
-.oyuncu.ev{background:radial-gradient(circle at 35% 30%,#4ade80,#15803d)}
-.oyuncu.dep{background:radial-gradient(circle at 35% 30%,#f87171,#b91c1c)}
-.oyuncu.kaleci{width:17px;height:17px;border-color:#fbbf24}
-.oyuncu .no{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:7px;
-            color:#fff;font-weight:800;text-shadow:0 1px 2px #000;font-family:monospace}
-.top{position:absolute;width:13px;height:13px;border-radius:50%;z-index:6;
-     background:radial-gradient(circle at 32% 28%,#fff,#cbd5e1 60%,#64748b);
-     box-shadow:0 2px 7px rgba(0,0,0,.75);transition:all .75s cubic-bezier(.3,-0.4,.5,1.3)}
-.top.vurus{animation:topDon .6s linear}
-@keyframes topDon{0%{transform:scale(1)}50%{transform:scale(1.5) rotate(180deg)}100%{transform:scale(1) rotate(360deg)}}
-.tabela{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:10;
-        background:rgba(6,14,10,.94);border:2px solid #1d6b38;border-radius:9px;
-        padding:6px 14px;display:flex;align-items:center;gap:11px;
-        box-shadow:0 4px 18px rgba(0,0,0,.65);backdrop-filter:blur(7px);max-width:94%}
-.tabela .tak{font-size:11px;font-weight:600;color:#e8eef7;white-space:nowrap;overflow:hidden;
-             text-overflow:ellipsis;max-width:105px}
-.tabela .sk{font-size:21px;font-weight:800;font-family:monospace;letter-spacing:1px;color:#fff;white-space:nowrap}
-.tabela .sk .e{color:#4ade80}.tabela .sk .d{color:#f87171}.tabela .sk .t{color:#64748b}
-.tabela .dk{background:#dc2626;color:#fff;font-size:11px;font-weight:800;padding:3px 8px;
-            border-radius:6px;font-family:monospace;min-width:36px;text-align:center}
-.tabela .dk.bekle{background:#475569}.tabela .dk.iy{background:#eab308;color:#000}
-.gol-patlama{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-             z-index:20;pointer-events:none;font-size:68px;font-weight:900;letter-spacing:5px;color:#fff;
-             text-shadow:0 0 30px #22c55e,0 6px 24px rgba(0,0,0,.9);animation:patlama 1.7s ease-out forwards;
-             font-family:monospace}
-@keyframes patlama{0%{transform:scale(.3);opacity:0}18%{transform:scale(1.18);opacity:1}
-  32%{transform:scale(1)}75%{opacity:1}100%{transform:scale(1.5);opacity:0}}
-.saha-akis{max-height:150px;overflow-y:auto;padding:8px 10px;background:#0a0e14}
-.saha-akis .olay{display:flex;align-items:center;gap:9px;padding:6px 10px;background:#0d1117;border-radius:6px;
-                 margin-bottom:4px;border-left:3px solid var(--cizgi2);font-size:12px;animation:kay .3s ease-out}
-.saha-akis .olay.gol{border-left-color:var(--yesil);background:linear-gradient(90deg,rgba(34,197,94,.13),rgba(34,197,94,.03))}
-.saha-akis .olay.gol-d{border-left-color:var(--kirmizi);background:linear-gradient(90deg,rgba(239,68,68,.13),rgba(239,68,68,.03))}
-.saha-akis .olay.olay-b{border-left-color:var(--sari)}
-.saha-akis .olay .d{color:var(--sari);font-weight:700;min-width:30px;font-family:monospace;font-size:11.5px}
-.saha-akis .olay .m{flex:1}
-.saha-akis .olay .s{margin-left:auto;color:var(--yazi3);font-family:monospace;font-size:11.5px}
+          border-radius:7px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;
+          box-shadow:0 2px 8px rgba(34,197,94,.35);transition:all .18s}
+.saha-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(34,197,94,.5)}
 
+/* SAHA — 3D perspektif + cim + isik + golge */
+.saha{position:relative;overflow:hidden;height:330px;
+      background:
+        /* Ust isik kaynagi (spot) */
+        radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,255,255,.16), transparent 55%),
+        /* Alt vinyet (golge) */
+        radial-gradient(ellipse 130% 100% at 50% 115%, rgba(0,0,0,.5), transparent 60%),
+        /* Cim seritleri (boyler) */
+        repeating-linear-gradient(90deg,#125a2c 0 7%, #0f5228 0 7%, #0d4823 7% 14%);
+      border-top:2px solid #1d6b38;border-bottom:2px solid #1d6b38;
+      box-shadow:
+        inset 0 0 110px rgba(0,0,0,.62),
+        inset 0 22px 45px rgba(0,0,0,.35),
+        inset 0 -18px 36px rgba(0,0,0,.4)}
+/* Perspektif: uzak kenar (ust) hafif daraltilmis hissi */
+.saha::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05) 0%, transparent 22%),
+    linear-gradient(0deg, rgba(0,0,0,.28) 0%, transparent 30%);
+}
+/* Tribun kenari (ust) */
+.saha::after{content:'';position:absolute;top:0;left:0;right:0;height:7px;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.55), transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.06)}
+
+/* SAHA CIZGILERI */
+.cizgi{position:absolute;background:rgba(255,255,255,.5);pointer-events:none;
+       box-shadow:0 0 3px rgba(255,255,255,.25);z-index:1}
+.cizgi.orta-dikey{left:50%;top:0;bottom:0;width:2px;transform:translateX(-1px)}
+.cizgi.orta-yuvarlak{left:50%;top:50%;width:100px;height:100px;border:2px solid rgba(255,255,255,.5);
+                     border-radius:50%;background:none;transform:translate(-50%,-50%);box-shadow:none}
+.cizgi.orta-nokta{left:50%;top:50%;width:7px;height:7px;border-radius:50%;transform:translate(-50%,-50%)}
+.cizgi.ceza-sol{left:0;top:50%;width:15%;height:54%;border:2px solid rgba(255,255,255,.5);
+                border-left:0;transform:translateY(-50%);background:none;box-shadow:none}
+.cizgi.ceza-sag{right:0;top:50%;width:15%;height:54%;border:2px solid rgba(255,255,255,.5);
+                border-right:0;transform:translateY(-50%);background:none;box-shadow:none}
+.cizgi.kale-sol{left:0;top:50%;width:5%;height:28%;border:2px solid rgba(255,255,255,.5);
+                border-left:0;transform:translateY(-50%);background:none;box-shadow:none}
+.cizgi.kale-sag{right:0;top:50%;width:5%;height:28%;border:2px solid rgba(255,255,255,.5);
+                border-right:0;transform:translateY(-50%);background:none;box-shadow:none}
+.cizgi.ust{left:0;right:0;top:11px;height:2px;border-radius:1px}
+.cizgi.alt{left:0;right:0;bottom:11px;height:2px;border-radius:1px}
+/* Penalti noktalari */
+.cizgi.pen-sol{left:10%;top:50%;width:5px;height:5px;border-radius:50%;transform:translateY(-50%)}
+.cizgi.pen-sag{right:10%;top:50%;width:5px;height:5px;border-radius:50%;transform:translateY(-50%)}
+
+/* KALELER (görsel) */
+.kale{position:absolute;top:50%;transform:translateY(-50%);width:16px;height:66px;z-index:2;
+      border:3px solid rgba(255,255,255,.85);border-radius:3px;
+      background:repeating-linear-gradient(0deg, rgba(255,255,255,.18) 0 3px, transparent 3px 6px),
+                 repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0 3px, transparent 3px 6px);
+      box-shadow:0 0 14px rgba(255,255,255,.25), inset 0 0 12px rgba(0,0,0,.5)}
+.kale.sol{left:-2px;border-left:0;border-radius:0 4px 4px 0}
+.kale.sag{right:-2px;border-right:0;border-radius:4px 0 0 4px}
+
+/* OYUNCULAR — gomlek formu */
+.oyuncu{position:absolute;width:17px;height:20px;z-index:4;
+        transition:all 1.05s cubic-bezier(.34,.08,.22,1);
+        filter:drop-shadow(0 3px 5px rgba(0,0,0,.75))}
+/* Gomlek govdesi */
+.oyuncu::before{content:'';position:absolute;left:2px;top:4px;width:13px;height:14px;
+                border-radius:3px 3px 4px 4px;background:var(--forma,#22c55e);
+                border:1.5px solid rgba(0,0,0,.35)}
+/* Kafa */
+.oyuncu::after{content:'';position:absolute;left:5.5px;top:-1px;width:6px;height:6px;
+               border-radius:50%;background:#e8b98a;border:1px solid rgba(0,0,0,.35)}
+/* Kollar */
+.oyuncu .kol{position:absolute;width:4px;height:9px;background:var(--forma,#22c55e);
+             border-radius:2px;border:1px solid rgba(0,0,0,.3);top:5px}
+.oyuncu .kol.l{left:-1px;transform:rotate(12deg)}
+.oyuncu .kol.r{right:-1px;transform:rotate(-12deg)}
+/* Ev takimi */
+.oyuncu.ev{--forma:#22c55e}
+.oyuncu.ev .no{background:#166534}
+/* Dep takimi */
+.oyuncu.dep{--forma:#ef4444}
+.oyuncu.dep .no{background:#991b1b}
+/* Kaleci */
+.oyuncu.kaleci{--forma:#eab308;width:18px;height:21px}
+.oyuncu.kaleci::before{background:linear-gradient(180deg,#facc15,#ca8a04)}
+.oyuncu.kaleci .kol{background:#facc15}
+.oyuncu.kaleci .no{background:#854d0e}
+/* Kollar (kaleci farkli) */
+.oyuncu.kaleci .kol{height:11px;top:4px}
+/* Numara */
+.oyuncu .no{position:absolute;left:50%;top:7px;transform:translateX(-50%);
+            font-size:7px;font-weight:900;color:#fff;font-family:'SF Mono',monospace;
+            padding:0 3px;border-radius:3px;line-height:1.15;z-index:2;
+            text-shadow:0 1px 1px rgba(0,0,0,.8)}
+
+/* TOP — gercek futbol topu */
+.top{position:absolute;width:14px;height:14px;border-radius:50%;z-index:6;
+     background:
+       radial-gradient(circle at 32% 28%, #ffffff 0 22%, #e8e8e8 23% 45%, #c8ccd0 46% 100%);
+     box-shadow:0 3px 8px rgba(0,0,0,.8), 0 0 14px rgba(255,255,255,.35);
+     transition:all .8s cubic-bezier(.28,-0.35,.5,1.25);
+     border:1px solid rgba(0,0,0,.25)}
+/* Top desenleri (siyah besgenler) */
+.top::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(18,18,18,.9) 0 2.2px, transparent 2.6px),
+    radial-gradient(circle at 22% 62%, rgba(18,18,18,.9) 0 2px, transparent 2.4px),
+    radial-gradient(circle at 78% 62%, rgba(18,18,18,.9) 0 2px, transparent 2.4px),
+    radial-gradient(circle at 50% 84%, rgba(18,18,18,.75) 0 1.6px, transparent 2px)}
+.top.vurus{animation:topDon .65s linear;
+           box-shadow:0 3px 8px rgba(0,0,0,.8), 0 0 26px rgba(34,197,94,.95)}
+@keyframes topDon{0%{transform:scale(1) rotate(0)}50%{transform:scale(1.55) rotate(200deg)}
+                  100%{transform:scale(1) rotate(400deg)}}
+
+/* SKOR TABELASI — skorboard */
+.tabela{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:10;
+        background:linear-gradient(180deg, rgba(6,14,10,.97), rgba(3,8,6,.97));
+        border:2px solid #1d6b38;border-radius:10px;padding:7px 15px;
+        display:flex;align-items:center;gap:12px;
+        box-shadow:0 8px 26px rgba(0,0,0,.75), 0 0 0 1px rgba(34,197,94,.12),
+                   inset 0 1px 0 rgba(255,255,255,.06);
+        backdrop-filter:blur(9px);max-width:95%}
+.tabela .tak{font-size:11.5px;font-weight:700;color:#e8eef7;white-space:nowrap;overflow:hidden;
+             text-overflow:ellipsis;max-width:108px;display:flex;align-items:center;gap:5px;
+             text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.tabela .tak img{width:17px;height:17px;object-fit:contain}
+.tabela .sk{font-size:23px;font-weight:900;font-family:'SF Mono',monospace;letter-spacing:1.5px;
+            color:#fff;white-space:nowrap;text-shadow:0 0 14px rgba(255,255,255,.35)}
+.tabela .sk .e{color:#4ade80}.tabela .sk .d{color:#f87171}.tabela .sk .t{color:#64748b}
+.tabela .dk{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff;font-size:11.5px;
+            font-weight:900;padding:4px 9px;border-radius:6px;font-family:'SF Mono',monospace;
+            min-width:40px;text-align:center;box-shadow:0 2px 8px rgba(220,38,38,.5)}
+.tabela .dk.bekle{background:linear-gradient(180deg,#64748b,#475569);box-shadow:none}
+.tabela .dk.iy{background:linear-gradient(180deg,#facc15,#ca8a04);color:#000;
+               box-shadow:0 2px 8px rgba(234,179,8,.5)}
+
+
+/* TAKIM PANOLARI */
+.takim-pano{position:absolute;top:44px;z-index:5;padding:4px 10px;border-radius:7px;
+            font-size:10.5px;font-weight:700;letter-spacing:.3px;
+            background:linear-gradient(135deg, rgba(6,14,10,.9), rgba(3,8,6,.85));
+            border:1px solid rgba(255,255,255,.1);color:#e8eef7;
+            box-shadow:0 3px 12px rgba(0,0,0,.6);backdrop-filter:blur(6px);
+            max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.takim-pano.sol{left:10px;border-left:3px solid var(--yesil)}
+.takim-pano.sag{right:10px;border-right:3px solid var(--kirmizi)}
+
+/* GOL PATLAMASI */
+.gol-patlama{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+             z-index:20;pointer-events:none;font-size:76px;font-weight:900;letter-spacing:7px;
+             color:#fff;text-shadow:0 0 40px #22c55e, 0 8px 30px rgba(0,0,0,.95),
+                                    0 0 80px rgba(34,197,94,.6);
+             animation:patlama 1.8s ease-out forwards;font-family:'SF Mono',monospace}
+@keyframes patlama{0%{transform:scale(.25) rotate(-8deg);opacity:0}
+  15%{transform:scale(1.22) rotate(3deg);opacity:1}
+  30%{transform:scale(1) rotate(0)}
+  70%{opacity:1}
+  100%{transform:scale(1.6);opacity:0}}
+
+/* MAC AKISI */
+.saha-akis{max-height:150px;overflow-y:auto;padding:9px 11px;
+           background:linear-gradient(180deg,#0a0e14,#0d1117)}
+.saha-akis .olay{display:flex;align-items:center;gap:9px;padding:7px 11px;background:#0d1117;
+                 border-radius:7px;margin-bottom:4px;border-left:3px solid var(--cizgi2);
+                 font-size:12px;animation:kay .3s ease-out;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.saha-akis .olay.gol{border-left-color:var(--yesil);
+                     background:linear-gradient(90deg,rgba(34,197,94,.14),rgba(34,197,94,.03))}
+.saha-akis .olay.gol-d{border-left-color:var(--kirmizi);
+                       background:linear-gradient(90deg,rgba(239,68,68,.14),rgba(239,68,68,.03))}
+.saha-akis .olay.olay-b{border-left-color:var(--sari)}
+.saha-akis .olay .d{color:var(--sari);font-weight:800;min-width:32px;
+                    font-family:'SF Mono',monospace;font-size:11.5px}
+.saha-akis .olay .m{flex:1}
+.saha-akis .olay .s{margin-left:auto;color:var(--yazi3);font-family:'SF Mono',monospace;
+                    font-size:11.5px;font-weight:700}
 
 /* ═══ GECMIS (son bakilan maclar) ═══ */
 .gecmis{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid var(--cizgi);
@@ -938,12 +1061,17 @@ function sahaBasla(ev, dep, oto){
     if(!kap) return;
     kap.innerHTML=OY.map((o,i)=>
       `<div class="oyuncu ${o.tak}${o.no==='GK'?' kaleci':''}" id="to${i}" style="left:${o.x}px;top:${o.y}px">`+
-      `<span class="no">${o.no}</span></div>`).join('');
+      `<span class="kol l"></span><span class="kol r"></span><span class="no">${o.no}</span></div>`).join('');
     const t=document.getElementById('tahmin-top');
     if(t){ t.style.left=(w/2-6)+'px'; t.style.top=(h/2-6)+'px'; }
   }
   kur();
   window.addEventListener('resize',()=>{ if(document.getElementById('tahmin-saha')) kur(); });
+
+  // Takim panolarini doldur
+  const pe = document.getElementById('pano-ev'), pd2 = document.getElementById('pano-dep');
+  if(pe) pe.textContent = ev;
+  if(pd2) pd2.textContent = dep;
 
   // ═══ GERCEK MAC AKISI MOTORU ═══
   let topSahip = -1;          // topu tutan oyuncu index
@@ -1141,8 +1269,15 @@ function analizHtml(d, ev, dep, lig){
       <div class="cizgi ceza-sag"></div>
       <div class="cizgi kale-sol"></div>
       <div class="cizgi kale-sag"></div>
+      <div class="cizgi pen-sol"></div>
+      <div class="cizgi pen-sag"></div>
       <div class="cizgi ust"></div>
       <div class="cizgi alt"></div>
+      <div class="kale sol"></div>
+      <div class="kale sag"></div>
+      <!-- Takim panolari -->
+      <div class="takim-pano sol" id="pano-ev"></div>
+      <div class="takim-pano sag" id="pano-dep"></div>
       <div class="tabela">
         <span class="tak">${ev}</span>
         <span class="sk"><span class="e" id="tahmin-se">0</span><span class="t">-</span><span class="d" id="tahmin-sd">0</span></span>
