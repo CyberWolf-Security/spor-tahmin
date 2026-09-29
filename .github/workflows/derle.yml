@@ -27,85 +27,75 @@ jobs:
         shell: bash
         run: ls -la dist/
 
-      # ═══ GERCEK WINDOWS TEST — EXE CALISTIR + EKRAN GORUNTUSU ═══
-      - name: EXE CALISTIR (arka planda)
+      # ═══ WINDOWS GERCEK TEST ═══
+      - name: EXE CALISTIR + HTTP TEST
         shell: powershell
         run: |
-          $p = Start-Process -FilePath "dist\SporTahmin.exe" -PassThru -WindowStyle Normal
+          $p = Start-Process -FilePath "dist\SporTahmin.exe" -PassThru
           Write-Host "PID: $($p.Id)"
-          # WebView2 penceresi acilana kadar bekle
-          Start-Sleep -Seconds 35
-          $p | Out-File -Encoding utf8 /tmp_pid.txt
-          Write-Host "=== PENCERE LISTESI ==="
-          Get-Process | Where-Object {$_.MainWindowTitle -ne ""} | Select-Object Id,ProcessName,MainWindowTitle | Format-Table -AutoSize
+          Start-Sleep -Seconds 40
+          $procs = Get-Process | Where-Object {$_.MainWindowTitle -ne ""}
+          Write-Host "=== PENCERELER ==="
+          foreach ($x in $procs) { Write-Host ("Pencere: " + $x.ProcessName + " | " + $x.MainWindowTitle) }
+          
+          Write-Host "=== HTTP TEST ==="
+          $ok = $false
+          for ($i=1; $i -le 10; $i++) {
+            try {
+              $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/" -TimeoutSec 8 -UseBasicParsing
+              Write-Host ("HTTP KOD: " + $r.StatusCode)
+              $ic = $r.Content
+              Write-Host ("UZUNLUK: " + $ic.Length)
+              Write-Host ("BASLIK_YENI: " + ($ic -match "Canl. Ma. Analiz"))
+              Write-Host ("MONTE_CARLO: " + ($ic -match "Monte Carlo"))
+              Write-Host ("YUKGUNCELLE: " + ($ic -match "yukGuncelle"))
+              Write-Host ("LIGDOLDUR: " + ($ic -match "ligDoldur"))
+              Write-Host ("HTML_KAPANIS: " + $ic.TrimEnd().EndsWith("</html>"))
+              $ok = $true
+              break
+            } catch {
+              Write-Host ("Deneme " + $i + " basarisiz, bekleniyor...")
+              Start-Sleep -Seconds 5
+            }
+          }
+          if (-not $ok) { Write-Host "HTTP ERISILEMEDI" }
 
-      - name: EKRAN GORUNTUSU AL (tam ekran)
+      - name: EKRAN GORUNTUSU (site acikken)
         shell: powershell
         run: |
-          Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+          Start-Sleep -Seconds 5
+          Add-Type -AssemblyName System.Windows.Forms
+          Add-Type -AssemblyName System.Drawing
           $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
           $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
           $g = [System.Drawing.Graphics]::FromImage($bmp)
           $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
-          $bmp.Save("$PWD\ekran_tam.png")
-          Write-Host "Tam ekran kaydedildi"
-          # Sadece pencere
-          $procs = Get-Process | Where-Object {$_.MainWindowTitle -ne "" -and $_.ProcessName -notlike "*powershell*"}
-          foreach ($p in $procs) {
-            Write-Host "Pencere: $($p.ProcessName) — $($p.MainWindowTitle)"
-          }
+          $bmp.Save("$PWD\ekran1.png")
+          Write-Host "Ekran goruntusu 1 kaydedildi"
 
-      - name: EKRAN GORUNTUSU + HTTP KONTROL
-        shell: powershell
+      - name: PYTHON ILE EKRAN GORUNTUSU (yedek)
         run: |
-          # Flask sunucusu ayakta mi?
-          try {
-            $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/" -TimeoutSec 10 -UseBasicParsing
-            Write-Host "HTTP KOD: $($r.StatusCode)"
-            $ic = $r.Content
-            Write-Host "=== BASLIK KONTROL ==="
-            if ($ic -match "Canlı Maç Analiz") { Write-Host "✅ BASLIK: Canlı Maç Analiz (YENI)" }
-            elseif ($ic -match "Monte Carlo") { Write-Host "❌ BASLIK: Monte Carlo (ESKI!)" }
-            else { Write-Host "? BASLIK bulunamadi" }
-            Write-Host "yukGuncelle: $($ic -match 'yukGuncelle')"
-            Write-Host "ligDoldur: $($ic -match 'ligDoldur')"
-            Write-Host "Monte Carlo: $($ic -match 'Monte Carlo')"
-            Write-Host "HTML kapanis: $($ic.TrimEnd().EndsWith('</html>'))"
-            Write-Host "ICERIK UZUNLUK: $($ic.Length)"
-          } catch {
-            Write-Host "❌ HTTP HATA: $_"
-          }
-          # Ikinci ekran goruntusu (site yuklendikten sonra)
-          Add-Type -AssemblyName System.Windows.Forms,System.Drawing
-          Start-Sleep -Seconds 3
-          $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
-          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
-          $g = [System.Drawing.Graphics]::FromImage($bmp)
-          $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
-          $bmp.Save("$PWD\ekran_icerik.png")
-          Write-Host "Icerik ekrani kaydedildi"
+          pip install pillow
+          python -c "from PIL import ImageGrab; ImageGrab.grab().save('ekran2.png'); print('Python ekran goruntusu kaydedildi')"
 
       - name: CANLI SAYFA KONTROL
         shell: powershell
         run: |
           try {
             $r = Invoke-WebRequest -Uri "http://127.0.0.1:8090/canli" -TimeoutSec 10 -UseBasicParsing
-            Write-Host "CANLI HTTP: $($r.StatusCode) | Uzunluk: $($r.Content.Length)"
-            Write-Host "ligDoldur: $($r.Content -match 'ligDoldur')"
-            Write-Host "saha: $($r.Content -match 'saha')"
-            Write-Host "momentum: $($r.Content -match 'mom')"
-          } catch { Write-Host "CANLI HATA: $_" }
+            Write-Host ("CANLI_HTTP: " + $r.StatusCode)
+            Write-Host ("CANLI_UZUNLUK: " + $r.Content.Length)
+            Write-Host ("LIGDOLDUR: " + ($r.Content -match "ligDoldur"))
+            Write-Host ("SAHA: " + ($r.Content -match "saha"))
+            Write-Host ("MOMENTUM: " + ($r.Content -match "mom"))
+          } catch { Write-Host "CANLI_HATA" }
 
-      - name: Ekran goruntulerini yukle
+      - name: Artifactlar
         uses: actions/upload-artifact@v4
         with:
-          name: EKRAN-GORUNTULERI
+          name: SONUC
           path: |
-            ekran_tam.png
-            ekran_icerik.png
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: SporTahmin
-          path: dist/SporTahmin.exe
+            ekran1.png
+            ekran2.png
+            dist/SporTahmin.exe
           if-no-files-found: warn
