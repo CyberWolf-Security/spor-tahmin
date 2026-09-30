@@ -1,6 +1,6 @@
 """Spor Tahmin - Flask (dunya capinda feed + canli serit)"""
 from flask import Flask, render_template, request, jsonify
-import json, os, sys, threading, webbrowser, time, socket
+import json, os, sys, threading, webbrowser, time, socket, urllib.request
 from datetime import datetime
 from tahmin import takim_gucu
 try:
@@ -135,6 +135,7 @@ def veri_al(force=False):
             _logla("TAM HAZIR: %d mac, %d lig" % (len(maclar), len(ligler)))
         except Exception as fe:
             _logla("FEED HATA (arsiv korundu): %s" % fe)
+            CACHE["feed_hata"] = str(fe)[:200]
             if not CACHE["zaman"]:
                 CACHE["zaman"] = datetime.now()
             CACHE["tam"] = True   # arsivle devam et
@@ -203,7 +204,44 @@ def api_durum():
     ligler.sort(key=lambda x: (-x["oynanmis"], x["ad"]))
     return jsonify({"hazir": True, "toplam": len(CACHE["maclar"]), "ligler": ligler,
                     "tam": CACHE.get("tam", False),
+                    "feed_hata": CACHE.get("feed_hata", ""),
                     "zaman": CACHE["zaman"].strftime("%H:%M") if CACHE["zaman"] else ""})
+
+@app.route("/api/test_feed")
+def api_test_feed():
+    """Feed erisim testi - kullanici hangi adimda takildigini gorur"""
+    import time as _t
+    sonuc = {"test": "feed erisim testi", "adimlar": []}
+    # 1) DNS
+    try:
+        t = _t.time()
+        import socket
+        ip = socket.gethostbyname("global.flashscore.ninja")
+        sonuc["adimlar"].append({"ad": "DNS cozumleme", "ok": True, "bilgi": ip, "sn": round(_t.time()-t, 2)})
+    except Exception as e:
+        sonuc["adimlar"].append({"ad": "DNS cozumleme", "ok": False, "bilgi": str(e)[:100]})
+        return jsonify(sonuc)
+    # 2) Baglanti + veri
+    for domain in ["global.flashscore.ninja", "www.flashscore.com"]:
+        try:
+            t = _t.time()
+            url = "https://%s/2/x/feed/f_1_0_3_en_1" % domain
+            istek = urllib.request.Request(url, headers={"x-fsign": "SW9D1eZo",
+                                                          "User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(istek, timeout=8) as r:
+                v = r.read()
+            sonuc["adimlar"].append({"ad": "Feed " + domain, "ok": True,
+                                      "bilgi": "%s bayt" % format(len(v), ","),
+                                      "sn": round(_t.time()-t, 2)})
+        except Exception as e:
+            sonuc["adimlar"].append({"ad": "Feed " + domain, "ok": False,
+                                      "bilgi": "%s: %s" % (type(e).__name__, str(e)[:80])})
+    # 3) Ozet
+    ok_sayisi = sum(1 for a in sonuc["adimlar"] if a.get("ok"))
+    sonuc["ozet"] = "%d/%d adim basarili" % (ok_sayisi, len(sonuc["adimlar"]))
+    sonuc["karar"] = ("Feed ERISILEBILIR - sorun baska yerde" if ok_sayisi >= 2
+                       else "FEED ENGELLI - internet/VPN/guvenlik duvari engelliyor")
+    return jsonify(sonuc)
 
 @app.route("/api/tumliglerde")
 def api_tumliglerde():
