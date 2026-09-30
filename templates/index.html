@@ -1048,122 +1048,6 @@ async function tahmin(ev, dep, lig, btn){
 }
 
 
-// ═══ MAC SAHA MOTORU (tahmin sonucu icinde) ═══
-let SAHA_ZAMAN=null, SAHA_TOP=null, SAHA_OYN=null;
-function sahaMotoru(ev, dep, olas){
-  sahaDurdur();
-  const saha = document.getElementById('tahmin-saha');
-  if(!saha) return;
-  const W = () => saha.clientWidth, H = () => saha.clientHeight;
-
-  let OYUNCULAR=[];
-  function kur(){
-    const w=W(), h=H();
-    OYUNCULAR=[];
-    const evY=[[0.06,0.5],[0.14,0.2],[0.14,0.4],[0.14,0.6],[0.14,0.8],
-               [0.28,0.25],[0.28,0.5],[0.28,0.75],[0.40,0.3],[0.40,0.5],[0.40,0.7]];
-    const depY=[[0.94,0.5],[0.86,0.2],[0.86,0.4],[0.86,0.6],[0.86,0.8],
-                [0.72,0.25],[0.72,0.5],[0.72,0.75],[0.60,0.3],[0.60,0.5],[0.60,0.7]];
-    evY.forEach((c,i)=>OYUNCULAR.push({x:c[0]*w,y:c[1]*h,tak:'ev',no:i===0?'GK':i}));
-    depY.forEach((c,i)=>OYUNCULAR.push({x:c[0]*w,y:c[1]*h,tak:'dep',no:i===0?'GK':i}));
-    const kap=document.getElementById('tahmin-oyuncular');
-    kap.innerHTML=OYUNCULAR.map((o,i)=>
-      `<div class="oyuncu ${o.tak}${o.no==='GK'?' kaleci':''}" id="to${i}" style="left:${o.x}px;top:${o.y}px">
-         <span class="no">${o.no}</span></div>`).join('');
-    const t=document.getElementById('tahmin-top');
-    if(t){ t.style.left=(w/2-6)+'px'; t.style.top=(h/2-6)+'px'; }
-  }
-  kur();
-  const boyut=()=>{ if(document.getElementById('tahmin-saha')) kur(); };
-  window.addEventListener('resize', boyut);
-
-  let tx=0.5, ty=0.5;
-  SAHA_TOP = setInterval(()=>{
-    if(!document.getElementById('tahmin-saha')){ clearInterval(SAHA_TOP); return; }
-    const w=W(), h=H();
-    tx=Math.max(0.06,Math.min(0.94, tx+(Math.random()-0.5)*0.22));
-    ty=Math.max(0.12,Math.min(0.88, ty+(Math.random()-0.5)*0.20));
-    const t=document.getElementById('tahmin-top');
-    if(t){ t.style.left=(tx*w-6)+'px'; t.style.top=(ty*h-6)+'px'; }
-    OYUNCULAR.map((o,i)=>({o,i,d:Math.hypot(o.x-tx*w,o.y-ty*h)})).sort((a,b)=>a.d-b.d).slice(0,3)
-      .forEach(({o,i})=>{
-        const el=document.getElementById('to'+i); if(!el) return;
-        const hx=Math.max(6,Math.min(w-24, tx*w+(o.tak==='ev'?-18:18)));
-        const hy=Math.max(30,Math.min(h-30, ty*h+(Math.random()-0.5)*24));
-        el.style.left=hx+'px'; el.style.top=hy+'px'; o.x=hx; o.y=hy;
-      });
-  }, 1600);
-
-  // Simulasyon: dakika + gol + olay
-  let dk=0, se=0, sd=0;
-  const eg=parseFloat(olas.ev_beklenen_gol)||1.3, dg=parseFloat(olas.dep_beklenen_gol)||1.1;
-  const olaylar=[];
-  for(let d=1;d<=90;d++){ if(Math.random()<eg/90) olaylar.push({dk:d,taraf:'ev',tip:'gol'}); }
-  for(let d=1;d<=90;d++){ if(Math.random()<dg/90) olaylar.push({dk:d,taraf:'dep',tip:'gol'}); }
-  const ekstra=[['Sarı kart','🟨'],['Korner','🚩'],['Şut','🎯'],['Ofsayt','🚫'],['Faul','⚡']];
-  for(let d=1;d<=90;d++){ if(Math.random()<0.09){
-    const e=ekstra[Math.floor(Math.random()*ekstra.length)];
-    olaylar.push({dk:d,taraf:Math.random()<.5?'ev':'dep',tip:e[0],ikon:e[1]});
-  }}
-  olaylar.sort((a,b)=>a.dk-b.dk);
-  let idx2=0;
-  const akis=document.getElementById('tahmin-akis');
-
-  SAHA_OYN = setInterval(()=>{
-    if(!document.getElementById('tahmin-saha')){ clearInterval(SAHA_OYN); return; }
-    dk++;
-    const dkb=document.getElementById('tahmin-dk');
-    if(dkb){
-      if(dk===45){ dkb.textContent='İY'; dkb.className='dk iy'; }
-      else if(dk>90){ dkb.textContent='MS'; dkb.className='dk bekle'; clearInterval(SAHA_OYN); return; }
-      else { dkb.textContent=dk+"'"; dkb.className='dk'; }
-    }
-    while(idx2<olaylar.length && olaylar[idx2].dk===dk){
-      const o=olaylar[idx2];
-      let metin='', ikon=o.ikon||'•';
-      if(o.tip==='gol'){
-        if(o.taraf==='ev'){ se++; const e=document.getElementById('tahmin-se'); if(e) e.textContent=se; }
-        else { sd++; const e=document.getElementById('tahmin-sd'); if(e) e.textContent=sd; }
-        const gk=document.getElementById('tahmin-gol');
-        if(gk){ const p=document.createElement('div'); p.className='gol-patlama'; p.textContent='GOL!';
-          p.style.color=o.taraf==='ev'?'#4ade80':'#f87171'; gk.appendChild(p); setTimeout(()=>p.remove(),1800); }
-        // Top kaleye girsin
-        const w2=W(), h2=H(); const t2=document.getElementById('tahmin-top');
-        if(t2){
-          t2.classList.add('vurus');
-          const kx = o.taraf==='ev' ? w2-22 : 22;
-          const ky = h2/2;
-          t2.style.left=(kx-6)+'px'; t2.style.top=(ky-6)+'px';
-          setTimeout(()=>t2.classList.remove('vurus'),700);
-        }
-        // Gol sonrasi: top orta yuvarlaktan yeniden baslasin
-        setTimeout(()=>{ try{ baslat(); }catch(e){} }, 1600);
-        ikon='⚽'; metin='GOL! '+(o.taraf==='ev'?ev:dep);
-      } else if(o.tip==='Şut'){ ikon='🎯'; metin=(o.taraf==='ev'?ev:dep)+' şut çekti'; }
-      else if(o.tip==='Korner'){ ikon='🚩'; metin=(o.taraf==='ev'?ev:dep)+' korner kazandı'; }
-      else if(o.tip==='Sarı kart'){ ikon='🟨'; metin=(o.taraf==='ev'?ev:dep)+' sarı kart gördü'; }
-      else { metin=(o.taraf==='ev'?ev:dep)+' — '+o.tip; }
-      if(akis){
-        const el=document.createElement('div');
-        el.className='olay'+(o.tip==='gol'?(o.taraf==='ev'?' gol':' gol-d'):(o.tip==='Sarı kart'?' olay-b':''));
-        el.innerHTML=`<span class="d">${o.dk}'</span><span class="i">${ikon}</span><span class="m">${metin}</span><span class="s">${se}-${sd}</span>`;
-        akis.insertBefore(el, akis.firstChild);
-        while(akis.children.length>40) akis.removeChild(akis.lastChild);
-      }
-      idx2++;
-    }
-  }, 500);
-}
-function analizKapat(){
-  sahaDurdur();
-  const a = document.querySelector('.analiz');
-  if(a){ a.remove(); }
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-function sahaDurdur(){
-  if(SAHA_TOP){ clearInterval(SAHA_TOP); SAHA_TOP=null; }
-  if(SAHA_OYN){ clearInterval(SAHA_OYN); SAHA_OYN=null; }
-}
 
 
 // ═══ MAC SAHA MOTORU ═══
@@ -1677,14 +1561,6 @@ async function yenile(){
   setTimeout(durumKontrol, 3000);
 }
 
-async function sonuclariYukle(){
-  // Ust seritteki canli sonuclar
-  try{
-    const r=await fetch('/api/durum'); const d=await r.json();
-    if(!d.ligler || !d.ligler.length) return;
-  }catch(e){}
-}
-
 // KAYAN SERITTEKI MACA TIKLA -> o maci ac (tahmin + simulasyon)
 async function canliMaciAc(ev, dep, lig, el){
   if(!ev || !dep) return;
@@ -1960,9 +1836,6 @@ function yukGuncelle(mesaj, alt, yuzde){
   try{ canliYukle(); setInterval(canliYukle, 30000); }catch(_){}
 })();
 
-function d_toplam(){
-  try { return document.getElementById('durum-yazi').textContent; } catch(e){ return ''; }
-}
 </script>
 <div class="ks-ipucu" id="ks-ipucu">
   <div><b>/</b> lig ara · <b>ESC</b> kapat · <b>?</b> bu yardım</div>
