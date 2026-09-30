@@ -65,6 +65,39 @@ def _logla(mesaj):
     except Exception:
         pass
 
+def _hizli_arsiv():
+    """Arsivi aninda yukle (SADECE yerel dosya, 0.1 sn) — feed'i BEKLEMEZ"""
+    try:
+        if CACHE["maclar"]:
+            return True
+        ars = arsiv_yukle()
+        if not ars:
+            _logla("_hizli_arsiv: arsiv bos!")
+            return False
+        for m in ars:
+            if not m.get("lig_adi"):
+                m["lig_adi"] = "Süper Lig (Arşiv)"
+                m["bayrak"] = "🇹🇷"
+            m["kaynak"] = "Arşiv"
+        try:
+            _logo_yukle(); lg0 = logo_sozluk()
+            for m in ars:
+                if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg0, m["ev"])
+                if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg0, m["dep"])
+        except Exception:
+            pass
+        CACHE["maclar"] = list(ars)
+        l0 = {}
+        for m in ars:
+            l0.setdefault(m["lig_adi"], []).append(m)
+        CACHE["ligler"] = l0
+        CACHE["zaman"] = datetime.now()
+        _logla("_hizli_arsiv OK: %d mac, %d lig" % (len(ars), len(l0)))
+        return True
+    except Exception as e:
+        _logla("_hizli_arsiv HATA: %s" % e)
+        return False
+
 def veri_al(force=False):
     if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 1200:
         return CACHE
@@ -73,30 +106,17 @@ def veri_al(force=False):
     CACHE["tam"] = False
     CACHE["hata"] = None
     try:
-        # 1) Takim arsivleri (yerel dosya - ANINDA)
-        ars = arsiv_yukle()
-        _logla("arsiv=%d mac (BASE_DIR=%s)" % (len(ars), BASE_DIR))
-        # Hemen erisilebilir yap (arayuz bos kalmasin)
-        if ars:
-            for m in ars:
-                if not m.get("lig_adi"):
-                    m["lig_adi"] = "Süper Lig (Arşiv)"; m["bayrak"] = "🇹🇷"
-                m["kaynak"] = "Arşiv"
-            _logo_yukle(); lg0 = logo_sozluk()
-            for m in ars:
-                if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg0, m["ev"])
-                if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg0, m["dep"])
-            CACHE["maclar"] = list(ars)
-            l0 = {}
-            for m in ars: l0.setdefault(m["lig_adi"], []).append(m)
-            CACHE["ligler"] = l0
-            _logla("ON HAZIR: %d mac, %d lig" % (len(ars), len(l0)))
-        # 2) Canli feed (yavas - 15 gun) — hata olsa bile arsiv kalir
+        # 0) Arsiv: zaten yuklu ise tekrar yukleme (hizli baslangic)
+        if not CACHE["maclar"]:
+            _hizli_arsiv()
+        _logla("arsiv=%d mac (BASE_DIR=%s)" % (len(CACHE["maclar"]), BASE_DIR))
+        # 1) Canli feed (yavas - 15 gun) — hata olsa bile arsiv kalir
         try:
             maclar = fsf.tum_gunler(gunler=(-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=False)
             _logla("feed=%d mac" % len(maclar))
             _logo_yukle()
             lg = logo_sozluk()
+            ars = CACHE["maclar"] if CACHE["maclar"] else []
             for m in ars:
                 if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg, m["ev"])
                 if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg, m["dep"])
@@ -106,6 +126,7 @@ def veri_al(force=False):
                 m["kaynak"] = "Arşiv"
             maclar += ars
             CACHE["maclar"] = maclar
+            CACHE["zaman"] = datetime.now()
             ligler = {}
             for m in maclar:
                 ligler.setdefault(m["lig_adi"], []).append(m)
@@ -114,6 +135,8 @@ def veri_al(force=False):
             _logla("TAM HAZIR: %d mac, %d lig" % (len(maclar), len(ligler)))
         except Exception as fe:
             _logla("FEED HATA (arsiv korundu): %s" % fe)
+            if not CACHE["zaman"]:
+                CACHE["zaman"] = datetime.now()
             CACHE["tam"] = True   # arsivle devam et
     except Exception as e:
         import traceback
@@ -147,10 +170,17 @@ def ana():
 @app.route("/api/durum")
 def api_durum():
     if not CACHE["maclar"]:
-        # Otomatik baslat (frontend bekliyorsa kendiliginden yuklensin)
+        # 1) ARSIVI SENKRON yukle (yerel dosya, ~0.1 sn) — arayuz ANINDA acilsin
+        _hizli_arsiv()
+    if not CACHE["maclar"]:
+        # arsiv de yoksa feed'i arka planda baslat
         if not CACHE["yukleniyor"]:
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
         return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
+    # 2) Feed daha once baslamadiysa arka planda baslat (arayuzu BLOKLAMAZ)
+    if not CACHE["tam"] and not CACHE["yukleniyor"] and CACHE.get("feed_basladi") != True:
+        CACHE["feed_basladi"] = True
+        threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
