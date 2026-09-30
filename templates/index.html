@@ -864,7 +864,7 @@ const ULKE_BAYRAK = {
   "NORTH MACEDONIA":"🇲🇰","MOLDOVA":"🇲🇩","LUXEMBOURG":"🇱🇺","FAROE ISLANDS":"🇫🇴",
   "KOSOVO":"🇽🇰","GIBRALTAR":"🇬🇮","ANDORRA":"🇦🇩","SAN MARINO":"🇸🇲","WALES":"🏴󠁧󠁢󠁷󠁬󠁳󠁿"
 };
-const ONEMLI_ULKELER = ["TURKEY","ENGLAND","SPAIN","GERMANY","ITALY","FRANCE","NETHERLANDS",
+const ONEMLI_ULKELER = ["TURKEY","DIGER","ENGLAND","SPAIN","GERMANY","ITALY","FRANCE","NETHERLANDS",
   "PORTUGAL","EUROPE","WORLD","BRAZIL","ARGENTINA","USA","MEXICO","BELGIUM","SCOTLAND"];
 
 const BAYRAK={"Süper Lig":"🇹🇷","Premier League":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","La Liga":"🇪🇸","Serie A":"🇮🇹",
@@ -942,7 +942,8 @@ function ligListesi(){
     const ls = ulkeler[u];
     const toplam = ls.reduce((s,l)=>s+(l.oynanmis||0),0);
     const bayrak = ULKE_BAYRAK[u] || "⚽";
-    const acik = ONEMLI_ULKELER.includes(u) && ONEMLI_ULKELER.indexOf(u) < 6;
+    // Hicbir ulke otomatik acilmasin - hepsi katlanir (tiklayinca acilir)
+    const acik = false;
     h += `<div class="ulke">
       <div class="ulke-bas${acik?' ok':''}" onclick="ulkeAc(this)">
         <span class="flag">${bayrak}</span>

@@ -177,10 +177,14 @@ def api_durum():
         if not CACHE["yukleniyor"]:
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
         return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
-    # 2) Feed daha once baslamadiysa arka planda baslat (arayuzu BLOKLAMAZ)
-    if not CACHE["tam"] and not CACHE["yukleniyor"] and CACHE.get("feed_basladi") != True:
-        CACHE["feed_basladi"] = True
-        threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
+    # 2) Feed arka planda baslat (arayuzu BLOKLAMAZ) — basarisizsa TEKRAR dene
+    if not CACHE["tam"] and not CACHE["yukleniyor"]:
+        son = CACHE.get("feed_deneme")
+        simdi = time.time()
+        # ilk deneme VEYA 60 saniye gectiyse tekrar dene
+        if son is None or (simdi - son) > 60:
+            CACHE["feed_deneme"] = simdi
+            threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])

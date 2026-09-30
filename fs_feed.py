@@ -60,7 +60,7 @@ ONEMLI = {
     "AUSTRALIA: A-League": ("A-Ligi","🇦🇺"),
 }
 
-def _get(url, timeout=30):
+def _get(url, timeout=6):  # 30 -> 6 sn (yavas agda takilmasin)
     return urllib.request.urlopen(urllib.request.Request(url, headers=HDR), timeout=timeout).read().decode("utf-8", errors="ignore")
 
 def _al(blok, kod):
@@ -136,10 +136,16 @@ def gun_maclari(gun=0, sadece_onemli=True):
 
 def tum_gunler(gunler=(-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=True, ilerleme=None):
     hepsi = []
+    hata_sayisi = 0
     for i, g in enumerate(gunler):
-        m = gun_maclari(g, sadece_onemli)
-        hepsi += m
-        if ilerleme: ilerleme(i+1, len(gunler), g, len(m))
+        try:
+            m = gun_maclari(g, sadece_onemli)
+            hepsi += m
+            if ilerleme: ilerleme(i+1, len(gunler), g, len(m))
+        except Exception as e:
+            hata_sayisi += 1
+            if ilerleme: ilerleme(i+1, len(gunler), g, 0)
+            continue                      # bu gunu atla, digerlerine devam
     gor = set(); tz = []
     for m in hepsi:
         k = (m["ev"], m["dep"], m["tarih"])
