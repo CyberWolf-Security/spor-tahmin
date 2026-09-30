@@ -37,6 +37,19 @@ VersionInfoCompany={#UygulamaYayinci}
 VersionInfoDescription={#UygulamaAdi} Kurulum
 VersionInfoProductName={#UygulamaAdi}
 VersionInfoProductVersion={#UygulamaSurum}
+; Eski surum varsa kaldir
+CloseApplications=yes
+RestartApplications=no
+; Eski dosyalari temizle
+Uninstallable=yes
+
+[InstallDelete]
+; Eski exe'leri ve dosyalari temizle (uzerine yaz)
+Type: files; Name: "{app}\{#UygulamaExe}"
+Type: filesandordirs; Name: "{app}\*"
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
 
 [Languages]
 Name: "turkce"; MessagesFile: "compiler:Languages\Turkish.isl"
