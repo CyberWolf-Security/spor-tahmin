@@ -1889,7 +1889,24 @@ function yukGuncelle(mesaj, alt, yuzde){
   const t0 = Date.now();
   yukGuncelle('Maç verileri çekiliyor…', 'Bağlanıyor…', 5);
   let hazir = false, deneme = 0;
-  while(!hazir && deneme < 90){          // 90 x 1sn = 90 sn max
+
+  // ═══ ILK KONTROL: sunucuya ulasabiliyor muyuz? ═══
+  try{
+    const t1 = await fetch('/api/durum', {cache:'no-store'});
+    const d0 = await t1.json();
+    window.__teshis = {
+      sunucu: 'OK (HTTP ' + t1.status + ')',
+      hazir: d0.hazir,
+      lig_sayisi: (d0.ligler ? d0.ligler.length : 'YOK'),
+      tam: d0.tam,
+      mac: d0.toplam,
+      feed_hata: d0.feed_hata || '(yok)'
+    };
+  }catch(e){
+    window.__teshis = { sunucu: 'HATA: ' + e.message };
+  }
+
+  while(!hazir && deneme < 90){
     await new Promise(r=>setTimeout(r,1000));
     const sn = Math.round((Date.now()-t0)/1000);
     const yz = Math.min(92, 5 + deneme*1.5);
@@ -1899,6 +1916,13 @@ function yukGuncelle(mesaj, alt, yuzde){
     else if(sn < 30){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · 15 günlük fikstür'; }
     else if(sn < 60){  bas='Dünya ligleri taranıyor…';       alt=sn+' saniye · internet yavaş olabilir'; }
     else{              bas='Neredeyse hazır…';               alt=sn+' saniye'; }
+    // Ekranda teshis bilgisini de goster
+    if(window.__teshis){
+      alt += ' | sunucu:' + window.__teshis.sunucu +
+             ' | lig:' + window.__teshis.lig_sayisi +
+             ' | mac:' + window.__teshis.mac +
+             ' | tam:' + window.__teshis.tam;
+    }
     yukGuncelle(bas, alt, yz);
     try{ hazir = await durumKontrol(); }catch(e){ hazir = false; }
     deneme++;
