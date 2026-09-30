@@ -829,8 +829,11 @@ header{
   <section id="icerik">
     <div class="yukleyici">
       <div class="halka"></div>
-      <p>Maç verileri çekiliyor…</p>
-      <small>13 lig · FlashScore · OpenLigaDB</small>
+      <p id="yuk-yazi">Maç verileri çekiliyor…</p>
+      <small id="yuk-alt">13 lig · FlashScore · OpenLigaDB</small>
+      <div style="max-width:260px;margin:10px auto 0;height:4px;background:var(--cizgi2);border-radius:3px;overflow:hidden">
+        <div id="yuk-ilr" style="height:100%;width:5%;background:linear-gradient(90deg,#22c55e,#06b6d4);transition:width .4s"></div>
+      </div>
     </div>
   </section>
 </main>
@@ -1900,7 +1903,25 @@ function yukGuncelle(mesaj, alt, yuzde){
     deneme++;
   }
   if(hazir){
-    yukGuncelle('Hazır!', (VERI && VERI.toplam ? VERI.toplam.toLocaleString('tr') + ' maç' : ''), 100);
+    // ═══ EKRANI ACIKCA DOLDUR (ligSec cagrilmamis olsa bile) ═══
+    try{
+      if(LIGLER && LIGLER.length){
+        if(!AKTIF){
+          await ligSec(LIGLER[0].ad);
+        } else {
+          const s = document.getElementById('icerik');
+          if(s) await ligSec(AKTIF);
+        }
+        document.getElementById('durum-yazi').textContent =
+          ((VERI.toplam||0)).toLocaleString('tr') + ' maç · ' + LIGLER.length + ' lig' + (VERI.tam ? '' : ' ⏳');
+      } else {
+        const s = document.getElementById('icerik');
+        if(s) s.innerHTML = '<div class="hata2">Lig listesi boş geldi. "↻ Yenile" butonuna basın.</div>';
+      }
+    }catch(e){
+      const s = document.getElementById('icerik');
+      if(s) s.innerHTML = '<div class="hata2">Arayüz hatası: ' + e.message + '<br>Ctrl+Shift+R ile yenileyin.</div>';
+    }
   } else {
     document.getElementById('icerik').innerHTML =
       '<div class="hata2">Veri çekilemedi (' + Math.round((Date.now()-t0)/1000) + ' sn).<br><br>' +
