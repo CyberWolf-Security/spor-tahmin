@@ -390,6 +390,15 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
              border-radius:2px;border:1px solid rgba(0,0,0,.3);top:5px}
 .oyuncu .kol.l{left:-1px;transform:rotate(12deg)}
 .oyuncu .kol.r{right:-1px;transform:rotate(-12deg)}
+/* Yere dusen golge */
+.oyuncu .golge{position:absolute;left:1px;bottom:-4px;width:15px;height:5px;border-radius:50%;
+               background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%);z-index:-1}
+/* Kose yaylari */
+.cizgi.kose{width:26px;height:26px;border:2px solid rgba(255,255,255,.5);border-radius:50%;background:none;box-shadow:none}
+.cizgi.kose.sol-ust{left:-13px;top:-13px}
+.cizgi.kose.sag-ust{right:-13px;top:-13px}
+.cizgi.kose.sol-alt{left:-13px;bottom:-13px}
+.cizgi.kose.sag-alt{right:-13px;bottom:-13px}
 /* Ev takimi */
 .oyuncu.ev{--forma:#22c55e}
 .oyuncu.ev .no{background:#166534}
@@ -1106,7 +1115,7 @@ function sahaBasla(ev, dep, oto){
     if(!kap) return;
     kap.innerHTML=OY.map((o,i)=>
       `<div class="oyuncu ${o.tak}${o.no==='GK'?' kaleci':''}" id="to${i}" style="left:${o.x}px;top:${o.y}px">`+
-      `<span class="kol l"></span><span class="kol r"></span><span class="no">${o.no}</span></div>`).join('');
+      `<span class="golge"></span><span class="kol l"></span><span class="kol r"></span><span class="no">${o.no}</span></div>`).join('');
     const t=document.getElementById('tahmin-top');
     if(t){ t.style.left=(w/2-6)+'px'; t.style.top=(h/2-6)+'px'; }
   }
@@ -1412,6 +1421,11 @@ function analizHtml(d, ev, dep, lig){
       <div class="cizgi pen-sag"></div>
       <div class="cizgi ust"></div>
       <div class="cizgi alt"></div>
+      <!-- Kose yaylari -->
+      <div class="cizgi kose sol-ust"></div>
+      <div class="cizgi kose sag-ust"></div>
+      <div class="cizgi kose sol-alt"></div>
+      <div class="cizgi kose sag-alt"></div>
       <div class="kale sol"></div>
       <div class="kale sag"></div>
       <!-- Takim panolari -->
