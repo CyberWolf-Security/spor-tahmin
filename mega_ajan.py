@@ -57,40 +57,98 @@ def takim_gucu(maclar, yari_omur=250, MIN_MAC=6):
     return out, {"lig_ev_ort":leo,"lig_dep_ort":ldo,"lig_ort":lo,"mac_sayisi":n}
 
 def beklenen_gol(ev, dep, guc, lig):
+    """Gelismis beklenen gol — ev avantaji + zaman agirligi + veri guveni"""
     g1=guc.get(ev); g2=guc.get(dep)
     if not g1 or not g2: return lig["lig_ev_ort"], lig["lig_dep_ort"]
-    e=g1["ev_huc"]*g2["dep_sav"]*lig["lig_ev_ort"]*0.99
-    d=g2["dep_huc"]*g1["ev_sav"]*lig["lig_dep_ort"]
-    return max(0.2,min(4.5,e)), max(0.2,min(4.5,d))
 
-def mega_simulasyon(ev, dep, guc, lig, n=1000000, tohum=None):
+    # 1) EV AVANTAJI (gercek futbol katsayisi: ~%15 hucum, ~%5 savunma)
+    EV_AVANTAJ_HUC = 1.13
+    EV_AVANTAJ_SAV = 0.94
+
+    # 2) VERI GUVENI: veri yoksa lig ortalamasina yaklas
+    mac1 = g1.get("mac_sayisi", 0) or 0
+    mac2 = g2.get("mac_sayisi", 0) or 0
+    guv = min(1.0, ((mac1 + mac2) / 2.0) / 10.0)   # 10 mac = tam guven
+    guv = 0.35 + 0.65 * guv                         # en az %35 guven
+
+    # 3) BEKLENEN GOL (ev avantaji dahil)
+    e = g1["ev_huc"] * g2["dep_sav"] * lig["lig_ev_ort"] * EV_AVANTAJ_HUC
+    d = g2["dep_huc"] * g1["ev_sav"] * lig["lig_dep_ort"] / EV_AVANTAJ_SAV
+
+    # 4) Lig ortalamasina dogru yumusat (az veri varsa)
+    leo, ldo = lig["lig_ev_ort"], lig["lig_dep_ort"]
+    e = leo + (e - leo) * guv
+    d = ldo + (d - ldo) * guv
+
+    return max(0.2, min(4.5, e)), max(0.2, min(4.5, d))
+
+def mega_simulasyon(ev, dep, guc, lig, n=10000000, tohum=None, elo=None):
+    """
+    ENSEMBLE simulasyon — Poisson + Elo birlesimi
+    elo verilirse: %60 Poisson + %40 Elo karisimi
+    """
     rng = np.random.default_rng(tohum)
     e_b, d_b = beklenen_gol(ev, dep, guc, lig)
+
+    # ═══ ELO KATMANI (varsa) ═══
+    if elo:
+        try:
+            import mega_elo as ELO_M
+            eo = ELO_M.elo_olasilik(ev, dep, elo)
+            # Elo olasiligi -> beklenen gol ayari
+            # Elo ev/dep dengesini Poisson'a yansit
+            p_ev_e = eo["ev"]/100.0; p_dep_e = eo["dep"]/100.0
+            # Poisson'dan gelen denge
+            tot_b = e_b + d_b
+            if (p_ev_e + p_dep_e) > 0:
+                # Elo'ya gore gol dagilimini ayarla (yumusak: %35 etki)
+                oran_e = p_ev_e / (p_ev_e + p_dep_e)
+                oran_p = e_b / (e_b + d_b) if (e_b+d_b) > 0 else 0.5
+                yeni_oran = 0.65 * oran_p + 0.35 * oran_e
+                e_b = tot_b * yeni_oran
+                d_b = tot_b * (1.0 - yeni_oran)
+        except Exception:
+            pass
+
     rho = -0.09
     a = rng.poisson(e_b, n).astype(np.int16)
     b = rng.poisson(d_b, n).astype(np.int16)
+
+    # ═══ DIXON-COLES DUZELTMESI (VEKTOREL — hizli) ═══
+    # Dusuk skorlu maclarda (0-0, 1-0, 0-1, 1-1) olasiligi duzelt
+    # Eski yontem: np.where + tek tek atama (10M'de ~40 sn!)
+    # Yeni: tum dizi uzerinde tek gecis (vektorel)
     maske = (a <= 1) & (b <= 1)
     if maske.any():
-        idx = np.where(maske)[0]; aa=a[idx]; bb=b[idx]
-        w = np.ones(len(idx))
-        w[(aa==0)&(bb==0)] = 1 - e_b*d_b*rho
-        w[(aa==0)&(bb==1)] = 1 + e_b*rho
-        w[(aa==1)&(bb==0)] = 1 + d_b*rho
-        w[(aa==1)&(bb==1)] = 1 - rho
-        w = np.clip(w, 0.05, 0.95)
-        rd = rng.random(len(idx)) > w
+        # Agirlik dizisi (tum n icin)
+        w = np.ones(n, dtype=np.float32)
+        m00 = maske & (a == 0) & (b == 0)
+        m01 = maske & (a == 0) & (b == 1)
+        m10 = maske & (a == 1) & (b == 0)
+        m11 = maske & (a == 1) & (b == 1)
+        w[m00] = 1.0 - e_b * d_b * rho
+        w[m01] = 1.0 + e_b * rho
+        w[m10] = 1.0 + d_b * rho
+        w[m11] = 1.0 - rho
+        np.clip(w, 0.05, 0.95, out=w)
+        # Reddetme: yalniz maskeli bolgede
+        rd = np.zeros(n, dtype=bool)
+        rd[maske] = rng.random(int(maske.sum())) > w[maske]
         if rd.any():
-            ri = idx[rd]
-            a[ri] = rng.poisson(e_b, len(ri)); b[ri] = rng.poisson(d_b, len(ri))
+            ri = np.where(rd)[0]
+            a[ri] = rng.poisson(e_b, len(ri))
+            b[ri] = rng.poisson(d_b, len(ri))
     tg = a + b
     ev_k=int((a>b).sum()); ber=int((a==b).sum()); dep_k=int((a<b).sum())
     kg_v=int(((a>0)&(b>0)).sum())
     kod = a.astype(np.int32)*10 + b.astype(np.int32)
+    ia = rng.binomial(np.maximum(a, 0), 0.45) if a.max()>0 else np.zeros(n,dtype=np.int16)
+    ib = rng.binomial(np.maximum(b, 0), 0.45) if b.max()>0 else np.zeros(n,dtype=np.int16)
+    del a, b            # bellek bosalt (10M'de onemli)
     bz, sy = np.unique(kod, return_counts=True)
+    del kod
     sr = np.argsort(-sy)[:8]
     en_skor=[{"skor":f"{int(bz[i])//10}-{int(bz[i])%10}","olasilik":round(100.0*int(sy[i])/n,1)} for i in sr]
-    ia = rng.binomial(a,0.45) if a.max()>0 else np.zeros(n,dtype=np.int16)
-    ib = rng.binomial(b,0.45) if b.max()>0 else np.zeros(n,dtype=np.int16)
     def yz(x): return round(100.0*x/n,1)
 
     # ═══ ARAYUZUN BEKLEDIGI EK ALANLAR ═══

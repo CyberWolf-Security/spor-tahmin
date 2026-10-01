@@ -19,7 +19,7 @@ except ImportError:
     _MEGA = None
 
 # Simulasyon sayisi (B secenegi: 1M = dogru sonuc)
-SIM = 1_000_000
+SIM = 10_000_000
 
 # Veri yetersiz maclar listeye DAHIL EDILMEZ (B secenegi)
 VERI_YOK_DAHIL = False

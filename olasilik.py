@@ -19,7 +19,7 @@ def beklenen_gol(ev, dep, guc, lig):
     d = g2["dep_huc"] * g1["ev_sav"] * lig["lig_dep_ort"]
     return max(0.2, min(5.0, e)), max(0.2, min(5.0, d))
 
-def tum_olasiliklar(ev, dep, guc, lig, n=50000):
+def tum_olasiliklar(ev, dep, guc, lig, n=10000000):
     """Butun olasiliklari hesapla (Monte Carlo + Poisson)"""
     if ev not in guc or dep not in guc: return None
     e_b, d_b = beklenen_gol(ev, dep, guc, lig)
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     m = flashscore.maclari_cek()
     oyn = [{"ev":x["ev"],"dep":x["dep"],"ev_gol":x["ev_gol"],"dep_gol":x["dep_gol"]} for x in m if x["oynandi"]]
     guc, lig = tg(oyn)
-    o = tum_olasiliklar("Galatasaray","Fenerbahçe", guc, lig, 20000)
+    o = tum_olasiliklar("Galatasaray","Fenerbahçe", guc, lig, 10000000)
     print("=== TUM OLASILIKLAR ===")
     print(f"1X2: {o['ev_kazanma']} / {o['beraberlik']} / {o['dep_kazanma']}")
     print(f"Alt/Ust 2.5: {o['alt_25']} / {o['ust_25']}")

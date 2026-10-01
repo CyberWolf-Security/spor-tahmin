@@ -17,6 +17,7 @@ import hazir_tahmin as HT
 app = Flask(__name__)
 BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
 CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False, "canli": [], "canli_zaman": None, "tam": False}
+_ELO_CACHE = {}                  # Elo rating onbellegi (her tahminde yeniden hesaplamayalim)
 _FEED_KILIT = threading.Lock()   # ayni anda tek feed cekimi
 
 def arsiv_yukle():
@@ -210,8 +211,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "16.5",
-        "derleme": "16.5",
+        "surum": "16.6",
+        "derleme": "16.6",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -628,15 +629,35 @@ def api_tahmin():
                 return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
             if dep not in gm:
                 return jsonify({"hata": f"{dep} — bu lig kayitlarinda yok"})
-            o = MEGA.mega_simulasyon(ev, dep, gm, lm, 1000000)
+            # ═══ ELO RATING HESAPLA (ONBELLEKLI — hizli) ═══
+            elo = None
+            try:
+                import mega_elo as ELO_M
+                _ars_ver = CACHE.get("zaman")
+                if _ELO_CACHE.get("ver") != _ars_ver or not _ELO_CACHE.get("elo"):
+                    _ELO_CACHE["elo"] = ELO_M.elo_hesapla(oyn)
+                    _ELO_CACHE["ver"] = _ars_ver
+                elo = _ELO_CACHE["elo"]
+            except Exception:
+                elo = None
+            o = MEGA.mega_simulasyon(ev, dep, gm, lm, 10000000, elo=elo)
             if not o:
                 return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
             # ═══ EKSIK ALANLARI TAMAMLA (arayuz bekliyor!) ═══
             if not o.get("beklenen_skor"):
                 o["beklenen_skor"] = "%s-%s" % (o.get("ev_beklenen_gol"), o.get("dep_beklenen_gol"))
+            # Elo bilgisini de gonder (arayuz gosterebilir)
+            if elo:
+                try:
+                    import mega_elo as ELO_M2
+                    o["elo"] = ELO_M2.elo_olasilik(ev, dep, elo)
+                    o["elo_ev"] = round(elo.get(ev, 1500.0), 1)
+                    o["elo_dep"] = round(elo.get(dep, 1500.0), 1)
+                except Exception:
+                    pass
             o["ajan"] = MKARAR.karar_motoru(o, ev, dep, gm, oyn)
             o["kullanilan_mac"] = len(oyn)
-            o["motor"] = "mega-v6"
+            o["motor"] = "mega-v7-ensemble" if elo else "mega-v6"
             return jsonify(o)
         # Yedek: eski motor
         guc, lig_ort = takim_gucu(oyn)
@@ -644,7 +665,7 @@ def api_tahmin():
             return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
         if dep not in guc:
             return jsonify({"hata": f"{dep} — bu lig kayitlarinda yok"})
-        o = tum_olasiliklar(ev, dep, guc, lig_ort, 30000)
+        o = tum_olasiliklar(ev, dep, guc, lig_ort, 10000000)
         if not o:
             return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
         o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)
