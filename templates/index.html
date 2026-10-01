@@ -682,9 +682,9 @@ header{
 /* Canlı nokta: nabız + parlama */
 .nokta, .canli-nokta{
   box-shadow:0 0 8px var(--yesil), 0 0 16px rgba(34,197,94,.5);
-  animation:nabiz 1.6s ease-in-out infinite;
+  animation:nabizBuyuk 1.6s ease-in-out infinite;
 }
-@keyframes nabiz{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+@keyframes nabizBuyuk{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
 
 /* Arama kutusu: focus'ta parlama */
 #lig-ara{
@@ -1012,6 +1012,61 @@ async function durumKontrol(){
 let LIG_FILTRE='';
 function ligAra(v){ LIG_FILTRE=(v||'').toLowerCase(); ligListesi(); }
 
+// ═══════════════ GELISMIS ARAMA: lig + takim ═══════════════
+let ARA_ZAMAN = null;
+function aramaGirdi(v){
+  const q = (v || '').trim();
+  ligListesi();                       // lig filtresi (aninda)
+  if(ARA_ZAMAN) clearTimeout(ARA_ZAMAN);
+  const kutu = document.getElementById('ara-sonuc');
+  if(q.length < 2){ if(kutu){ kutu.innerHTML=''; kutu.style.display='none'; } return; }
+  ARA_ZAMAN = setTimeout(()=>takimAra(q), 350);
+}
+
+async function takimAra(q){
+  const kutu = document.getElementById('ara-sonuc');
+  if(!kutu) return;
+  kutu.style.display = 'block';
+  kutu.innerHTML = '<div style="padding:10px;color:var(--yazi3);font-size:12px">🔍 Aranıyor: '+q+'…</div>';
+  try{
+    const r = await fetch('/api/ara?q='+encodeURIComponent(q));
+    const d = await r.json();
+    let h = '';
+    if(d.ligler && d.ligler.length){
+      h += '<div class="ara-bas">📋 LİGLER ('+d.lig_sayisi+')</div>';
+      h += d.ligler.slice(0,12).map(l=>
+        `<div class="ara-lig" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}');araKapat()">
+           <span class="flag">${l.bayrak||'⚽'}</span>
+           <span class="ad">${l.ad}</span>
+           <span class="say">${l.mac}</span>
+         </div>`).join('');
+    }
+    if(d.maclar && d.maclar.length){
+      h += '<div class="ara-bas">⚽ MAÇLAR ('+d.mac_sayisi+')</div>';
+      h += d.maclar.slice(0,20).map(m=>{
+        const sk = m.oynandi ? ` <b style="color:var(--yesil)">${m.ev_gol}-${m.dep_gol}</b>` : '';
+        const t = m.oynandi ? (m.tarih||'') : ((m.tarih||'')+' '+(m.saat||''));
+        return `<div class="ara-mac" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${(m.lig||'').replace(/'/g,"\\'")}',this);araKapat()">
+          <span class="t1">${m.ev}</span>${sk}<span class="t2">${m.dep}</span>
+          <span class="meta">${t} · ${(m.lig||'').split('—').pop().trim()}</span>
+        </div>`;
+      }).join('');
+    }
+    if(!h){
+      h = '<div style="padding:12px;color:var(--yazi3);font-size:12px">"'+q+'" için sonuç bulunamadı</div>';
+    }
+    kutu.innerHTML = h;
+  }catch(e){
+    kutu.innerHTML = '<div style="padding:10px;color:#f87171;font-size:12px">Arama hatası: '+e.message+'</div>';
+  }
+}
+
+function araKapat(){
+  const k = document.getElementById('ara-sonuc');
+  if(k){ k.innerHTML=''; k.style.display='none'; }
+  const g = document.getElementById('lig-ara'); if(g) g.value='';
+}
+
 // ═══════════════ HAZIR TAHMINLER PANELI ═══════════════
 let HZ_SAYAC = null;
 function hazirAc(){
@@ -1111,66 +1166,6 @@ function ligListesi(){
   const ara=(document.getElementById('lig-ara')?.value||'').toLowerCase();
   const kap = document.getElementById('ligler');
   if(!kap) return;
-  // Takim aramasi: 2+ harf, 350ms bekle (yazarken cok istek atmasin)
-  if(ARA_ZAMAN) clearTimeout(ARA_ZAMAN);
-  const kutu = document.getElementById('ara-sonuc');
-  if(q.length < 2){ if(kutu){ kutu.innerHTML=''; kutu.style.display='none'; } return; }
-  ARA_ZAMAN = setTimeout(()=>takimAra(q), 350);
-}
-
-async function takimAra(q){
-  const kutu = document.getElementById('ara-sonuc');
-  if(!kutu) return;
-  kutu.style.display = 'block';
-  kutu.innerHTML = '<div style="padding:10px;color:var(--yazi3);font-size:12px">🔍 Aranıyor: '+q+'…</div>';
-  try{
-    const r = await fetch('/api/ara?q='+encodeURIComponent(q));
-    const d = await r.json();
-    let h = '';
-
-    // LIG SONUCLARI
-    if(d.ligler && d.ligler.length){
-      h += '<div class="ara-bas">📋 LİGLER ('+d.lig_sayisi+')</div>';
-      h += d.ligler.slice(0,12).map(l=>
-        `<div class="ara-lig" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}');araKapat()">
-           <span class="flag">${l.bayrak||'⚽'}</span>
-           <span class="ad">${l.ad}</span>
-           <span class="say">${l.mac}</span>
-         </div>`).join('');
-    }
-
-    // MAC SONUCLARI
-    if(d.maclar && d.maclar.length){
-      h += '<div class="ara-bas">⚽ MAÇLAR ('+d.mac_sayisi+')</div>';
-      h += d.maclar.slice(0,20).map(m=>{
-        const sk = m.oynandi ? ` <b style="color:var(--yesil)">${m.ev_gol}-${m.dep_gol}</b>` : '';
-        const t = m.oynandi ? (m.tarih||'') : ((m.tarih||'')+' '+(m.saat||''));
-        return `<div class="ara-mac" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${m.lig.replace(/'/g,"\\'")}',this);araKapat()">
-          <span class="t1">${m.ev}</span>${sk}<span class="t2">${m.dep}</span>
-          <span class="meta">${t} · ${(m.lig||'').split('—').pop().trim()}</span>
-        </div>`;
-      }).join('');
-    }
-
-    if(!h){
-      h = '<div style="padding:12px;color:var(--yazi3);font-size:12px">"' + q + '" için sonuç bulunamadı</div>';
-    }
-    kutu.innerHTML = h;
-  }catch(e){
-    kutu.innerHTML = '<div style="padding:10px;color:#f87171;font-size:12px">Arama hatası: '+e.message+'</div>';
-  }
-}
-
-function araKapat(){
-  const k = document.getElementById('ara-sonuc');
-  if(k){ k.innerHTML=''; k.style.display='none'; }
-  const g = document.getElementById('lig-ara'); if(g) g.value='';
-}
-
-function ligListesi(){
-  const ara=(document.getElementById('lig-ara')?.value||'').toLowerCase();
-  const kap = document.getElementById('ligler');
-  if(!kap) return;
 
   // Arama varsa: DÜZ liste (hızlı bulma)
   if(ara){
@@ -1258,7 +1253,7 @@ function ciz(ad, d){
           <span class="vs">VS</span>
           <span class="takim dep">${m.dep_logo?`<img class="logo" src="${m.dep_logo}" onerror="this.style.display='none'">`:''}${m.dep}</span>
         </div>
-        <button class="btn-tahmin" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${ad.replace(/'/g,"\\'")}',this)">Tahmin Et</button>
+        <button class="btn-tahmin" data-ev="${esc(m.ev)}" data-dep="${esc(m.dep)}" data-lig="${esc(ad)}" onclick="tahminBtn(this)">Tahmin Et</button>
       </div>`;
     });
     h+=`</div>`;
@@ -1294,6 +1289,22 @@ function analizKapat(){
     if(AKTIF){ ligSec(AKTIF); }
     window.scrollTo({top:0, behavior:'smooth'});
   }catch(e){ console.error('analizKapat:', e); }
+}
+
+// ═══ HTML ATTRIBUTE GUVENLI KACIS (tirnak sorunu cozer) ═══
+function esc(s){
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Buton tiklayinca data attribute'lardan oku (guvenli)
+function tahminBtn(el){
+  if(!el) return;
+  const ev = el.getAttribute('data-ev') || '';
+  const dep = el.getAttribute('data-dep') || '';
+  const lig = el.getAttribute('data-lig') || '';
+  tahmin(ev, dep, lig, el);
 }
 
 async function tahmin(ev, dep, lig, btn){
@@ -1751,7 +1762,7 @@ function analizHtml(d, ev, dep, lig){
     // Form
     if(d.ajan.form_ev && d.ajan.form_dep){
       const fe=d.ajan.form_ev, fd=d.ajan.form_dep;
-      const formRenk=(d)=>d.dizi.map(x=>x==='G'?'<b class="g">G</b>':x==='M'?'<b class="m">M</b>':'<b class="b">B</b>').join('');
+      const formRenk=(f)=>(f && f.dizi ? f.dizi : []).map(x=>x==='G'?'<b class="g">G</b>':x==='M'?'<b class="m">M</b>':'<b class="b">B</b>').join('');
       h+=`<div class="form-sat">`+
          `<div class="form-takim"><span>${ev}</span><span class="fdizi">${formRenk(fe)}</span>`+
          `<span class="fort">${(fe.puan_ort||0).toFixed(1)} p/m · ${(fe.atilan||0).toFixed(1)}-${(fe.yenilen||0).toFixed(1)}</span></div>`+
@@ -1814,24 +1825,28 @@ function analizHtml(d, ev, dep, lig){
     <div class="cip2">İY 1.5 Üst <b>%${d.iy_15_ust}</b></div>
   </div></div>`;
 
-  // Toplam gol dagilim
-  h+=`<div class="blk"><h3>Toplam Gol Dağılımı</h3><div class="dagilim">`;
-  const anahtar=Object.keys(d.toplam_gol).map(Number).sort((a,b)=>a-b);
-  const max=Math.max(...anahtar.map(k=>d.toplam_gol[k]));
-  anahtar.forEach(k=>{
-    const y=d.toplam_gol[k];
-    h+=`<div class="sutun"><div class="yuz">${y}%</div>
-        <div class="cubuk" style="height:${Math.max(3,y/max*58)}px"></div>
-        <div class="gol">${k}</div></div>`;
-  });
-  h+=`</div></div>`;
+  // Toplam gol dagilim (KORUMALI — alan gelmezse atla)
+  if(d.toplam_gol && Object.keys(d.toplam_gol).length){
+    h+=`<div class="blk"><h3>Toplam Gol Dağılımı</h3><div class="dagilim">`;
+    const anahtar=Object.keys(d.toplam_gol).map(Number).sort((a,b)=>a-b);
+    const max=Math.max(...anahtar.map(k=>d.toplam_gol[k])) || 1;
+    anahtar.forEach(k=>{
+      const y=d.toplam_gol[k];
+      h+=`<div class="sutun"><div class="yuz">${y}%</div>
+          <div class="cubuk" style="height:${Math.max(3,y/max*58)}px"></div>
+          <div class="gol">${k}</div></div>`;
+    });
+    h+=`</div></div>`;
+  }
 
-  // En olasi skorlar
-  h+=`<div class="blk"><h3>En Olası Skorlar</h3><div class="skorlar">`;
-  d.skorlar.slice(0,12).forEach(([sk,p],i)=>{
-    h+=`<div class="skor ${i===0?'lider':''}"><span class="s">${sk}</span><span class="y">%${p}</span></div>`;
-  });
-  h+=`</div></div>`;
+  // En olasi skorlar (KORUMALI)
+  if(d.skorlar && d.skorlar.length){
+    h+=`<div class="blk"><h3>En Olası Skorlar</h3><div class="skorlar">`;
+    d.skorlar.slice(0,12).forEach(([sk,p],i)=>{
+      h+=`<div class="skor ${i===0?'lider':''}"><span class="s">${sk}</span><span class="y">%${p}</span></div>`;
+    });
+    h+=`</div></div>`;
+  }
 
   h+=`<div class="blk" style="color:var(--yazi3);font-size:11.5px">
     Beklenen skor: <b style="color:var(--yazi2)">${d.beklenen_skor}</b> · Ev ${d.ev_beklenen_gol} gol / Dep ${d.dep_beklenen_gol} gol

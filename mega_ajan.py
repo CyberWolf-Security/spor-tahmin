@@ -92,11 +92,26 @@ def mega_simulasyon(ev, dep, guc, lig, n=1000000, tohum=None):
     ia = rng.binomial(a,0.45) if a.max()>0 else np.zeros(n,dtype=np.int16)
     ib = rng.binomial(b,0.45) if b.max()>0 else np.zeros(n,dtype=np.int16)
     def yz(x): return round(100.0*x/n,1)
+
+    # ═══ ARAYUZUN BEKLEDIGI EK ALANLAR ═══
+    # Toplam gol dagilimi {0: %, 1: %, ...}
+    tg_deger, tg_sayi = np.unique(tg, return_counts=True)
+    toplam_gol = {int(k): round(100.0*int(v)/n, 1) for k, v in zip(tg_deger, tg_sayi)}
+    # Skor listesi (olasiliga gore sirali) [[skor, %], ...]
+    skorlar = [[f"{int(bz[i])//10}-{int(bz[i])%10}", round(100.0*int(sy[i])/n, 1)] for i in np.argsort(-sy)]
+    # Tek/Cift
+    tek_gol = yz(int((tg % 2 == 1).sum()))
+    cift_gol = yz(int((tg % 2 == 0).sum()))
+    # Ilk yari 1.5 ust
+    iy_tg = ia + ib
+    iy_15_ust = yz(int((iy_tg > 1).sum()))
+
     return {
         "ev_kazanma":yz(ev_k),"beraberlik":yz(ber),"dep_kazanma":yz(dep_k),
         "1X":yz(ev_k+ber),"12":yz(ev_k+dep_k),"X2":yz(ber+dep_k),
         "ev_beklenen_gol":round(e_b,2),"dep_beklenen_gol":round(d_b,2),
         "toplam_beklenen":round(e_b+d_b,2),
+        "beklenen_skor":f"{round(e_b,2)}-{round(d_b,2)}",
         "kg_var":yz(kg_v),"kg_yok":yz(n-kg_v),
         "ust_05":yz(int((tg>0).sum())),"alt_05":yz(int((tg<=0).sum())),
         "ust_15":yz(int((tg>1).sum())),"alt_15":yz(int((tg<=1).sum())),
@@ -104,7 +119,11 @@ def mega_simulasyon(ev, dep, guc, lig, n=1000000, tohum=None):
         "ust_35":yz(int((tg>3).sum())),"alt_35":yz(int((tg<=3).sum())),
         "ust_45":yz(int((tg>4).sum())),"alt_45":yz(int((tg<=4).sum())),
         "iy_ev":yz(int((ia>ib).sum())),"iy_ber":yz(int((ia==ib).sum())),"iy_dep":yz(int((ia<ib).sum())),
-        "iy_05_ust":yz(int((tg>0).sum())),
+        "iy_05_ust":yz(int((iy_tg>0).sum())),
+        "iy_15_ust":iy_15_ust,
+        "tek_gol":tek_gol,"cift_gol":cift_gol,
+        "toplam_gol":toplam_gol,
+        "skorlar":skorlar,
         "en_skorlar":en_skor,"simulasyon":n,
     }
 

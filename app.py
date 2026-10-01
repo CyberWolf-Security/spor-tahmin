@@ -179,8 +179,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "16.1",
-        "derleme": "16.1",
+        "surum": "16.2",
+        "derleme": "16.2",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -600,6 +600,9 @@ def api_tahmin():
             o = MEGA.mega_simulasyon(ev, dep, gm, lm, 1000000)
             if not o:
                 return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
+            # ═══ EKSIK ALANLARI TAMAMLA (arayuz bekliyor!) ═══
+            if not o.get("beklenen_skor"):
+                o["beklenen_skor"] = "%s-%s" % (o.get("ev_beklenen_gol"), o.get("dep_beklenen_gol"))
             o["ajan"] = MKARAR.karar_motoru(o, ev, dep, gm, oyn)
             o["kullanilan_mac"] = len(oyn)
             o["motor"] = "mega-v6"

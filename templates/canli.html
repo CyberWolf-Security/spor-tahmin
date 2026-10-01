@@ -440,9 +440,9 @@ async function rakipOtomatik(){
           (d.tarih ? ' <span style="color:#64748b">· '+d.tarih+(d.saat?' '+d.saat:'')+'</span>' : '') +
           (d.oynanmis ? ' <span style="color:#f59e0b">(oynanmış maç)</span>' : '');
       }
-      // Saha takim adlarini guncelle
-      const evT = document.getElementById('saha-ev');
-      const depT = document.getElementById('saha-dep');
+      // Saha takim adlarini guncelle (DOGRU ID: ev-ad / dep-ad)
+      const evT = document.getElementById('ev-ad');
+      const depT = document.getElementById('dep-ad');
       if(evT) evT.textContent = d.ev;
       if(depT) depT.textContent = d.dep;
     } else {

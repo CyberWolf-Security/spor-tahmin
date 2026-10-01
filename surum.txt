@@ -1,8 +1,8 @@
 # PyInstaller surum bilgisi — Windows dosya ozelliklerinde gorunur
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(16, 1, 0, 0),
-    prodvers=(16, 1, 0, 0),
+    filevers=(16, 2, 0, 0),
+    prodvers=(16, 2, 0, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -16,12 +16,12 @@ VSVersionInfo(
         '040904B0',
         [StringStruct('CompanyName', 'CyberWolfSec'),
          StringStruct('FileDescription', 'Spor Tahmin - Mac Analiz ve Tahmin'),
-         StringStruct('FileVersion', '16.1.0.0'),
+         StringStruct('FileVersion', '16.2.0.0'),
          StringStruct('InternalName', 'SporTahmin'),
          StringStruct('LegalCopyright', 'Copyright (C) 2026 CyberWolfSec'),
          StringStruct('OriginalFilename', 'SporTahmin.exe'),
          StringStruct('ProductName', 'Spor Tahmin'),
-         StringStruct('ProductVersion', '16.1.0.0')])
+         StringStruct('ProductVersion', '16.2.0.0')])
     ]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]
