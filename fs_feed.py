@@ -98,7 +98,27 @@ def parse(icerik, sadece_onemli=True):
                 ab = _al(b, "AB")
                 durum = int(ab) if ab and ab.isdigit() else 1
                 ac = _al(b, "AC")
-                dakika = int(ac) if ac and ac.isdigit() else None
+                dakika_feed = int(ac) if ac and ac.isdigit() else None
+                # ═══ DAKIKA: feed'in AC alani GUNCELLENMIYOR!
+                # Gercek dakikayi mac baslama zamanindan (AD) HESAPLA
+                dakika = None
+                ad_ham = _al(b, "AD")
+                if durum == 2 and ad_ham and ad_ham.isdigit():
+                    try:
+                        gecen = (time.time() - int(ad_ham)) / 60.0
+                        # Devre arasi/uzatma icin sinirla
+                        if gecen < 0:
+                            gecen = 0
+                        d = int(gecen)
+                        if d > 45 and d < 60:
+                            d = 45        # devre arasi
+                        elif d >= 60:
+                            d = min(d - 15, 90)   # 2. yari (15 dk ara cikarilir)
+                        dakika = d
+                    except Exception:
+                        dakika = dakika_feed
+                elif dakika_feed is not None:
+                    dakika = dakika_feed
 
                 ag = _al(b, "AG"); ah = _al(b, "AH")
                 eg = int(ag) if ag and ag.isdigit() else None
