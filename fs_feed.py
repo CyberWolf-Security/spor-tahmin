@@ -154,9 +154,20 @@ def tum_gunler(gunler=(-3,-2,-1,0,1,2,3,4,5,6,7), sadece_onemli=True, ilerleme=N
     return tz
 
 def canli_maclar():
+    """Canli maclar — 3 gunu PARALEL cek (hizli)"""
+    from concurrent.futures import ThreadPoolExecutor
+    gunler = (-1, 0, 1)
+
+    def _cek(g):
+        try:
+            return [m for m in gun_maclari(g, False) if m["canli"]]
+        except Exception:
+            return []
+
     hepsi = []
-    for g in (-1, 0, 1):
-        hepsi += [m for m in gun_maclari(g, False) if m["canli"]]
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        for r in ex.map(_cek, gunler):
+            hepsi += r
     return hepsi
 
 if __name__ == "__main__":

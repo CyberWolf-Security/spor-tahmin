@@ -155,7 +155,8 @@ def veri_al(force=False):
     return CACHE
 
 def canli_al():
-    if CACHE["canli_zaman"] and (datetime.now()-CACHE["canli_zaman"]).seconds < 25:
+    # 8 saniyede bir tazele (onceki 25 sn cok yavasti)
+    if CACHE["canli_zaman"] and (datetime.now()-CACHE["canli_zaman"]).seconds < 8:
         return CACHE["canli"]
     try:
         CACHE["canli"] = fsf.canli_maclar()
@@ -178,8 +179,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "16.0",
-        "derleme": "16.0",
+        "surum": "16.1",
+        "derleme": "16.1",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
