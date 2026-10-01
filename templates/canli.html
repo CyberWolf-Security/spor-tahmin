@@ -322,9 +322,11 @@ select:focus{
     <label>LİG</label>
     <select id="lig" onchange="takimYukle()"><option value="">-- lig seç --</option></select>
     <div class="grid2">
-      <div><label>EV SAHİBİ</label><select id="ev"></select></div>
-      <div><label>DEPLASMAN</label><select id="dep"></select></div>
+      <div><label>EV SAHİBİ</label><select id="ev" onchange="rakipOtomatik()"></select></div>
+      <div><label>DEPLASMAN <small style="color:#64748b;font-weight:400">(otomatik gelir)</small></label>
+        <select id="dep"></select></div>
     </div>
+    <div id="rakip-bilgi" style="margin:8px 0;font-size:13px;min-height:18px"></div>
     <button class="btn" id="btn" onclick="basla()">▶ SİMÜLASYONU BAŞLAT</button>
   </div>
 
@@ -359,6 +361,44 @@ async function takimYukle(){
   const r=await fetch('/api/takimlar/'+encodeURIComponent(lig)); const t=await r.json();
   const o='<option value="">-- seç --</option>'+t.map(x=>`<option>${x}</option>`).join('');
   e.innerHTML=o; d.innerHTML=o;
+}
+
+// ═══ EV SAHIBI SECILINCE RAKIBI OTOMATIK GETIR ═══
+async function rakipOtomatik(){
+  const lig = document.getElementById('lig').value;
+  const ev  = document.getElementById('ev').value;
+  const dep = document.getElementById('dep');
+  const bilgi = document.getElementById('rakip-bilgi');
+  if(!ev){ if(bilgi) bilgi.innerHTML=''; return; }
+
+  if(bilgi) bilgi.innerHTML='<span style="color:#94a3b8">🔍 Rakip aranıyor…</span>';
+  try{
+    const r = await fetch('/api/rakip?takim='+encodeURIComponent(ev)+'&lig='+encodeURIComponent(lig));
+    const d = await r.json();
+    if(d.bulundu){
+      // Deplasman kutusuna rakibi yaz
+      dep.value = d.dep;
+      // Bilgi goster
+      const t = d.taraf==='ev'
+        ? `<b>${d.ev}</b> vs <b>${d.dep}</b>`
+        : `<b>${d.ev}</b> vs <b>${d.dep}</b>`;
+      if(bilgi){
+        bilgi.innerHTML = '✅ Rakip otomatik bulundu: ' + t +
+          (d.tarih ? ' <span style="color:#64748b">· '+d.tarih+(d.saat?' '+d.saat:'')+'</span>' : '') +
+          (d.oynanmis ? ' <span style="color:#f59e0b">(oynanmış maç)</span>' : '');
+      }
+      // Saha takim adlarini guncelle
+      const evT = document.getElementById('saha-ev');
+      const depT = document.getElementById('saha-dep');
+      if(evT) evT.textContent = d.ev;
+      if(depT) depT.textContent = d.dep;
+    } else {
+      dep.value = '';
+      if(bilgi) bilgi.innerHTML = '⚠️ Bu takım için maç bulunamadı — deplasmanı elle seçin';
+    }
+  }catch(e){
+    if(bilgi) bilgi.innerHTML = '⚠️ Rakip bulunamadı: '+e.message;
+  }
 }
 
 function durdur(){

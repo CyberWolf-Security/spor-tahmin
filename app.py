@@ -177,8 +177,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "17.0",
-        "derleme": "17.0",
+        "surum": "18.0",
+        "derleme": "18.0",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -294,6 +294,61 @@ def api_test_feed():
     sonuc["karar"] = ("Feed + PARSE calisiyor" if ok_sayisi == len(sonuc["adimlar"])
                        else "SORUN VAR - yukaridaki basarisiz adima bak")
     return jsonify(sonuc)
+
+@app.route("/api/rakip")
+def api_rakip():
+    """Ev sahibi takim verilince O HAFTAKI rakibini bul (tum liglerde ara)"""
+    takim = request.args.get("takim", "").strip()
+    lig = request.args.get("lig", "").strip()
+    if not takim:
+        return jsonify({"bulundu": False, "hata": "Takim belirtilmedi"})
+
+    takim_l = takim.lower()
+    adaylar = []
+
+    # 1) Once verilen ligde ara
+    ligler = []
+    if lig and lig in CACHE["ligler"]:
+        ligler.append((lig, CACHE["ligler"][lig]))
+    # 2) Sonra tum liglerde
+    for ad, ms in CACHE["ligler"].items():
+        if ad != lig:
+            ligler.append((ad, ms))
+
+    for ad, ms in ligler:
+        # Gelecek maclar (tarih sirali)
+        gelecek = [m for m in ms if not m["oynandi"] and m.get("tarih")]
+        gelecek.sort(key=lambda x: (x.get("tarih") or "", x.get("saat") or ""))
+        for m in gelecek:
+            ev = (m.get("ev") or "").lower()
+            dep = (m.get("dep") or "").lower()
+            if ev == takim_l:
+                return jsonify({"bulundu": True, "ev": m["ev"], "dep": m["dep"],
+                                "lig": ad, "tarih": m.get("tarih"), "saat": m.get("saat"),
+                                "ev_logo": m.get("ev_logo"), "dep_logo": m.get("dep_logo"),
+                                "taraf": "ev"})
+            if dep == takim_l:
+                return jsonify({"bulundu": True, "ev": m["ev"], "dep": m["dep"],
+                                "lig": ad, "tarih": m.get("tarih"), "saat": m.get("saat"),
+                                "ev_logo": m.get("ev_logo"), "dep_logo": m.get("dep_logo"),
+                                "taraf": "dep"})
+
+    # 3) Oynanmis (arsiv) maclara bak
+    for ad, ms in ligler:
+        oyn = [m for m in ms if m["oynandi"]]
+        oyn.sort(key=lambda x: x.get("tarih") or "", reverse=True)
+        for m in oyn:
+            ev = (m.get("ev") or "").lower()
+            dep = (m.get("dep") or "").lower()
+            if ev == takim_l or dep == takim_l:
+                return jsonify({"bulundu": True, "ev": m["ev"], "dep": m["dep"],
+                                "lig": ad, "tarih": m.get("tarih"), "saat": m.get("saat"),
+                                "ev_logo": m.get("ev_logo"), "dep_logo": m.get("dep_logo"),
+                                "taraf": "ev" if ev == takim_l else "dep",
+                                "oynanmis": True})
+
+    return jsonify({"bulundu": False, "hata": "Bu takim icin mac bulunamadi"})
+
 
 @app.route("/api/tumliglerde")
 def api_tumliglerde():
