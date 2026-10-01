@@ -178,13 +178,22 @@ def api_durum():
         if not CACHE["yukleniyor"]:
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
         return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
+
+    # ═══ TAKILMA KORUMASI: yukleniyor 90 sn'den fazla True kaldiysa ZORLA sifirla ═══
+    bas = CACHE.get("yuk_baslangic")
+    if CACHE["yukleniyor"] and bas and (time.time() - bas) > 90:
+        _logla("TAKILMA: yukleniyor 90 sn+ True -> sifirlandi")
+        CACHE["yukleniyor"] = False
+        CACHE["feed_deneme"] = None
+
     # 2) Feed arka planda baslat (arayuzu BLOKLAMAZ) — basarisizsa TEKRAR dene
     if not CACHE["tam"] and not CACHE["yukleniyor"]:
         son = CACHE.get("feed_deneme")
         simdi = time.time()
-        # ilk deneme VEYA 60 saniye gectiyse tekrar dene
-        if son is None or (simdi - son) > 60:
+        # ilk deneme VEYA 45 saniye gectiyse tekrar dene
+        if son is None or (simdi - son) > 45:
             CACHE["feed_deneme"] = simdi
+            CACHE["yuk_baslangic"] = simdi
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
