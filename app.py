@@ -16,6 +16,7 @@ import fs_feed as fsf
 app = Flask(__name__)
 BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
 CACHE = {"maclar": [], "zaman": None, "ligler": {}, "yukleniyor": False, "canli": [], "canli_zaman": None, "tam": False}
+_FEED_KILIT = threading.Lock()   # ayni anda tek feed cekimi
 
 def arsiv_yukle():
     """Onceden cekilmis takim arsivleri (veri havuzu)"""
@@ -101,11 +102,15 @@ def _hizli_arsiv():
 def veri_al(force=False):
     if not force and CACHE["maclar"] and CACHE["zaman"] and (datetime.now()-CACHE["zaman"]).seconds < 1200:
         return CACHE
-    if CACHE["yukleniyor"]: return CACHE
-    CACHE["yukleniyor"] = True
-    CACHE["tam"] = False
-    CACHE["hata"] = None
+    # ═══ KILIT: ayni anda TEK feed cekimi (cift thread engeli) ═══
+    if not _FEED_KILIT.acquire(blocking=False):
+        _logla("veri_al: zaten calisiyor, atlandi")
+        return CACHE
     try:
+        if CACHE["tam"] and CACHE["maclar"]:
+            return CACHE
+        CACHE["yukleniyor"] = True
+        CACHE["hata"] = None
         # 0) Arsiv: zaten yuklu ise tekrar yukleme (hizli baslangic)
         if not CACHE["maclar"]:
             _hizli_arsiv()
@@ -145,8 +150,7 @@ def veri_al(force=False):
         CACHE["hata"] = str(e)
     finally:
         CACHE["yukleniyor"] = False
-        if not CACHE["maclar"]:
-            _logla("UYARI: maclar bos kaldi!")
+        _FEED_KILIT.release()
     return CACHE
 
 def canli_al():
@@ -173,8 +177,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "12.0",
-        "derleme": "12.0",
+        "surum": "13.0",
+        "derleme": "13.0",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
