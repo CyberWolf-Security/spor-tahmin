@@ -885,8 +885,13 @@ async function durumKontrol(){
         `${(d.toplam||0).toLocaleString('tr')} maç · ${yeniSayi} lig` + (d.tam ? '' : ' ⏳');
       if(yeniSayi !== SON_LIG_SAYISI){
         SON_LIG_SAYISI = yeniSayi;
-        try{ ligListesi(); }catch(_){}
-        if(!AKTIF && yeniSayi){ try{ ligSec(d.ligler[0].ad); }catch(_){} }
+        // ═══ HATA YUTMA YOK — hata olursa ekranda GORUNSUN ═══
+        ligListesi();
+        if(!AKTIF){
+          // ONCELIK: Türkiye ligi -> arsiv -> ilk lig
+          const tr = d.ligler.find(l => (l.ulke||"").toUpperCase().includes("TURK") || (l.ad||"").includes("Süper Lig"));
+          await ligSec((tr || d.ligler[0]).ad);
+        }
       }
       return true;
     }
@@ -894,6 +899,7 @@ async function durumKontrol(){
     return false;
   }catch(e){
     // Sunucuya ulasilamadi — pencereyi DONdurma!
+    console.error('durumKontrol HATA:', e);
     document.getElementById('durum-yazi').textContent = 'Sunucu bekleniyor… (' + e.message + ')';
     return false;
   }
