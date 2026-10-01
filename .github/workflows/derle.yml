@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -235,3 +237,27 @@ jobs:
             dist/SporTahmin.exe
             kurulum_cikti/SporTahmin_Kurulum.exe
           if-no-files-found: warn
+
+      # ═══ OTOMATIK RELEASE ═══
+      # Surum numarasini app.py'den oku, release olustur + exe'leri ekle
+      - name: Surum numarasi al
+        id: surum
+        shell: bash
+        run: |
+          S=$(grep -oP '"surum":\s*"\K[0-9.]+' app.py | head -1)
+          echo "surum=$S" >> $GITHUB_OUTPUT
+          echo "SURUM_BULUNDU=$S"
+
+      - name: Release olustur ve yukle
+        if: steps.surum.outputs.surum != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.surum.outputs.surum }}
+          name: Spor Tahmin v${{ steps.surum.outputs.surum }}
+          body: |
+            Spor Tahmin v${{ steps.surum.outputs.surum }}
+            Otomatik derleme — GitHub Actions
+          files: |
+            dist/SporTahmin.exe
+            kurulum_cikti/SporTahmin_Kurulum.exe
+          fail_on_unmatched_files: false
