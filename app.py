@@ -168,6 +168,26 @@ def _lig_oynanmis(lig):
 def ana():
     return render_template("index.html")
 
+@app.route("/api/surum")
+def api_surum():
+    """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
+    import os as _os
+    return jsonify({
+        "surum": "11.0",
+        "derleme": "11.0",
+        "ozellik_takilma_korumasi": True,
+        "ozellik_feed_tekrar_deneme": True,
+        "ozellik_hizli_arsiv": True,
+        "dosya": _os.path.abspath(__file__),
+        "calisma_dizini": _os.getcwd(),
+        "tam": CACHE.get("tam"),
+        "mac": len(CACHE.get("maclar", [])),
+        "yukleniyor": CACHE.get("yukleniyor"),
+        "feed_deneme": CACHE.get("feed_deneme"),
+        "yuk_baslangic": CACHE.get("yuk_baslangic")
+    })
+
+
 @app.route("/api/durum")
 def api_durum():
     # ═══ ACILIS: arsiv ANINDA + feed PARALEL (0 saniye bekleme) ═══
