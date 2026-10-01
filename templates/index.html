@@ -1036,10 +1036,24 @@ function ciz(ad, d){
   s.innerHTML=h;
 }
 
+// ═══ ANALIZ KAPAT (ESC ve ← Geri butonu) ═══
+function analizKapat(){
+  try{
+    sahaDurdur();
+    const a = document.querySelector('.analiz');
+    if(a){ a.remove(); }
+    // Maç listesine don
+    if(AKTIF){ ligSec(AKTIF); }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }catch(e){ console.error('analizKapat:', e); }
+}
+
 async function tahmin(ev, dep, lig, btn){
   const s=document.getElementById('icerik');
   const eski=document.getElementById('analiz-kutu'); if(eski) eski.remove();
-  btn.disabled=true; btn.textContent='⏳';
+  // btn gelmezse element olayindan al (guvenli)
+  if(!btn && window.event && window.event.target) btn = window.event.target;
+  if(btn && btn.disabled !== undefined){ btn.disabled=true; btn.textContent='⏳'; }
   const yuk=document.createElement('div');
   yuk.id='analiz-kutu';
   yuk.innerHTML='<div class="yukleyici"><div class="halka"></div><p>30.000 maç simüle ediliyor…</p><small>'+ev+' — '+dep+'</small></div>';
@@ -1050,7 +1064,7 @@ async function tahmin(ev, dep, lig, btn){
     const r=await fetch('/api/tahmin',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ev,dep,lig}), signal:knt.signal});
     clearTimeout(zl);
-    if(!r.ok){ yuk.innerHTML=`<div class="hata2">Sunucu hatası (${r.status}) — tekrar deneyin</div>`; btn.disabled=false; btn.textContent='Tahmin Et'; return; }
+    if(!r.ok){ yuk.innerHTML=`<div class="hata2">Sunucu hatası (${r.status}) — tekrar deneyin</div>`; if(btn){btn.disabled=false; btn.textContent='Tahmin Et';} return; }
     const d=await r.json();
     if(d.hata){ yuk.innerHTML=`<div class="hata2">${d.hata}</div>`; }
     else {
@@ -1062,7 +1076,7 @@ async function tahmin(ev, dep, lig, btn){
     const m = e.name==='AbortError' ? 'İstek zaman aşımına uğradı (45sn) — tekrar deneyin' : 'Bağlantı hatası: '+e.message;
     yuk.innerHTML=`<div class="hata2">${m}</div>`;
   }
-  btn.disabled=false; btn.textContent='Tahmin Et';
+  if(btn){ btn.disabled=false; btn.textContent='Tahmin Et'; }
 }
 
 
