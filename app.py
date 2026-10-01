@@ -170,31 +170,24 @@ def ana():
 
 @app.route("/api/durum")
 def api_durum():
+    # ═══ ACILIS: arsiv ANINDA + feed PARALEL (0 saniye bekleme) ═══
     if not CACHE["maclar"]:
-        # 1) ARSIVI SENKRON yukle (yerel dosya, ~0.1 sn) — arayuz ANINDA acilsin
-        _hizli_arsiv()
-    if not CACHE["maclar"]:
-        # arsiv de yoksa feed'i arka planda baslat
-        if not CACHE["yukleniyor"]:
-            threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
-        return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
-
-    # ═══ TAKILMA KORUMASI: yukleniyor 90 sn'den fazla True kaldiysa ZORLA sifirla ═══
+        _hizli_arsiv()          # 0.07 sn
+    # Feed: takilma korumasi + hemen baslat
     bas = CACHE.get("yuk_baslangic")
-    if CACHE["yukleniyor"] and bas and (time.time() - bas) > 90:
-        _logla("TAKILMA: yukleniyor 90 sn+ True -> sifirlandi")
+    if CACHE["yukleniyor"] and bas and (time.time() - bas) > 25:
+        _logla("TAKILMA: 25 sn+ -> sifirlandi")
         CACHE["yukleniyor"] = False
         CACHE["feed_deneme"] = None
-
-    # 2) Feed arka planda baslat (arayuzu BLOKLAMAZ) — basarisizsa TEKRAR dene
     if not CACHE["tam"] and not CACHE["yukleniyor"]:
         son = CACHE.get("feed_deneme")
         simdi = time.time()
-        # ilk deneme VEYA 45 saniye gectiyse tekrar dene
-        if son is None or (simdi - son) > 45:
+        if son is None or (simdi - son) > 10:     # sadece 10 sn bekle
             CACHE["feed_deneme"] = simdi
             CACHE["yuk_baslangic"] = simdi
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()
+    if not CACHE["maclar"]:
+        return jsonify({"hazir": False, "yukleniyor": True, "tam": False})
     ligler = []
     for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
         oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
