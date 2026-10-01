@@ -210,8 +210,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "16.4",
-        "derleme": "16.4",
+        "surum": "16.5",
+        "derleme": "16.5",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
