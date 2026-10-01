@@ -1485,48 +1485,53 @@ function sahaBasla(ev, dep, oto){
   const ajan = olas.ajan || {};
   const evO = parseFloat(olas.ev_kazanma)||33, berO = parseFloat(olas.beraberlik)||33, depO = parseFloat(olas.dep_kazanma)||33;
 
-  // 1) AJANIN OLASILIGINA GORE KAZANANI CEK
-  const zar = Math.random() * 100;
-  let hedef;                                  // 'ev' | 'ber' | 'dep'
-  if(zar < evO) hedef = 'ev';
-  else if(zar < evO + berO) hedef = 'ber';
-  else hedef = 'dep';
+  // 1) SONUCU TABLO ILE TUTARLI YAP (her basista AYNI sonuç!)
+  //    En olasi sonucu sec → skor tablosuyla ayni
+  let hedef;
+  if(evO >= berO && evO >= depO) hedef = 'ev';
+  else if(depO >= evO && depO >= berO) hedef = 'dep';
+  else hedef = 'ber';
 
   // 2) O SONUCA UYGUN SKOR URET (beklenen gol tabanli)
   let eg = parseFloat(olas.ev_beklenen_gol)||1.3;
   let dg = parseFloat(olas.dep_beklenen_gol)||1.1;
 
-  // Poisson ile dogal gol sayilari
+  // Poisson ile dogal gol sayilari — SABIT tohum (her basista ayni skor)
   function poisson(l){
     let L=Math.exp(-l), k=0, p=1;
     do { k++; p *= Math.random(); } while(p > L && k < 12);
     return k-1;
   }
-  let se = Math.max(0, poisson(Math.max(0.2, eg)));
-  let sd = Math.max(0, poisson(Math.max(0.2, dg)));
+  let se = Math.max(0, Math.round(eg));
+  let sd = Math.max(0, Math.round(dg));
 
   // 3) HEDEF SONUCA GORE DUZELT (tutarlilik garantisi)
   if(hedef === 'ev' && se <= sd){
-    se = sd + 1 + (Math.random()<0.45 ? 1 : 0);     // ev kazansin
+    se = sd + 1;                                     // ev kazansin
   } else if(hedef === 'dep' && sd <= se){
-    sd = se + 1 + (Math.random()<0.45 ? 1 : 0);     // dep kazansin
+    sd = se + 1;                                     // dep kazansin
   } else if(hedef === 'ber' && se !== sd){
-    const ort = Math.max(se, sd);
-    se = sd = Math.max(0, ort - (Math.random()<0.5?1:0));
+    se = sd = Math.min(se, sd);                      // berabere
   }
 
-  // 4) Gol dakikalarini uret (oyun akisi icin)
+  // 4) Gol dakikalarini uret — SABIT (her basista ayni mac akisi)
+  //    Deterministik: skor + takim adindan tohum uret
+  let tohum = 0;
+  const anahtar = (ev+'|'+dep);
+  for(let i=0;i<anahtar.length;i++) tohum = (tohum*31 + anahtar.charCodeAt(i)) % 2147483647;
+  function rast(){ tohum = (tohum * 1103515245 + 12345) % 2147483647; return Math.abs(tohum) / 2147483647; }
+
   const olaylar=[];
   const golDk = (n) => {
-    const ds=[]; for(let i=0;i<n;i++) ds.push(1+Math.floor(Math.random()*90));
+    const ds=[]; for(let i=0;i<n;i++) ds.push(1+Math.floor(rast()*88));
     return ds.sort((a,b)=>a-b);
   };
   golDk(se).forEach(d=>olaylar.push({dk:d,taraf:'ev',tip:'gol'}));
   golDk(sd).forEach(d=>olaylar.push({dk:d,taraf:'dep',tip:'gol'}));
   const ek=[['Sarı kart','🟨'],['Korner','🚩'],['Şut','🎯'],['Ofsayt','🚫'],['Faul','⚡']];
-  for(let d=1;d<=90;d++){ if(Math.random()<0.09){
-    const e=ek[Math.floor(Math.random()*ek.length)];
-    olaylar.push({dk:d,taraf:Math.random()<.5?'ev':'dep',tip:e[0],ikon:e[1]}); }}
+  for(let d=1;d<=90;d++){ if(rast()<0.07){
+    const e=ek[Math.floor(rast()*ek.length)];
+    olaylar.push({dk:d,taraf:rast()<.5?'ev':'dep',tip:e[0],ikon:e[1]}); }}
   olaylar.sort((a,b)=>a.dk-b.dk);
 
   let dk=0, i2=0;   // se/sd yukarida tanimli — tekrar tanimlama (SyntaxError olur)

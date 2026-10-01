@@ -429,12 +429,20 @@ async function rakipOtomatik(){
     const r = await fetch('/api/rakip?takim='+encodeURIComponent(ev)+'&lig='+encodeURIComponent(lig));
     const d = await r.json();
     if(d.bulundu){
-      // Deplasman kutusuna rakibi yaz
-      dep.value = d.dep;
+      // ═══ EV/DEPLASMAN ROLLERINI DUZELT ═══
+      // Kullanici "ev sahibi" kutusuna takim yazdi ama o takim
+      // macta DEPLASMAN olabilir -> o zaman yerlerini degistir
+      const evKutu = document.getElementById('ev');
+      if(d.taraf === 'dep'){
+        // Kullanicinin sectigi takim deplasman -> ev sahibini gercek ev yap
+        if(evKutu){ evKutu.value = d.ev; }
+        dep.value = d.dep;
+      } else {
+        // Takim gercekten ev sahibi
+        dep.value = d.dep;
+      }
       // Bilgi goster
-      const t = d.taraf==='ev'
-        ? `<b>${d.ev}</b> vs <b>${d.dep}</b>`
-        : `<b>${d.ev}</b> vs <b>${d.dep}</b>`;
+      const t = `<b>${d.ev}</b> vs <b>${d.dep}</b>`;
       if(bilgi){
         bilgi.innerHTML = '✅ Rakip otomatik bulundu: ' + t +
           (d.tarih ? ' <span style="color:#64748b">· '+d.tarih+(d.saat?' '+d.saat:'')+'</span>' : '') +

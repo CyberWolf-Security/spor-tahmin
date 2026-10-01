@@ -76,11 +76,31 @@ def _hizli_arsiv():
         if not ars:
             _logla("_hizli_arsiv: arsiv bos!")
             return False
+        # ═══ ARŞİV TEMİZLİĞİ: sadece HATALI kayitlari ayikla ═══
+        # (arsiv dosyasinda lig alani yok — dosya "Süper Lig arsivi")
+        # Yanlis eslesme ornegi: "Konyaspor vs Filistin" (milli takim, ligde olamaz)
+        MILLI_TAKIMLAR = ("filistin", "palestine", "israil", "israel", "almanya", "germany",
+                          "fransa", "france", "italya", "italy", "ispanya", "spain",
+                          "brezilya", "brazil", "arjantin", "argentina", "ingiltere", "england")
+        temiz = []
+        atilan = 0
         for m in ars:
+            ev_l = (m.get("ev") or "").lower()
+            dep_l = (m.get("dep") or "").lower()
+            # Iki taraf da milli takim ya da biri milli takim + oynanmamis -> supheli
+            if not m.get("oynandi"):
+                if any(x in ev_l for x in MILLI_TAKIMLAR) or any(x in dep_l for x in MILLI_TAKIMLAR):
+                    atilan += 1
+                    continue
             if not m.get("lig_adi"):
                 m["lig_adi"] = "Süper Lig (Arşiv)"
+            if not m.get("bayrak"):
                 m["bayrak"] = "🇹🇷"
             m["kaynak"] = "Arşiv"
+            temiz.append(m)
+        if atilan:
+            _logla("_hizli_arsiv: %d supheli kayit atlandi" % atilan)
+        ars = temiz
         try:
             _logo_yukle(); lg0 = logo_sozluk()
             for m in ars:
@@ -123,14 +143,25 @@ def veri_al(force=False):
             _logo_yukle()
             lg = logo_sozluk()
             ars = CACHE["maclar"] if CACHE["maclar"] else []
+            temiz2 = []
+            MILLI2 = ("filistin", "palestine", "israil", "israel", "almanya", "germany",
+                      "fransa", "france", "italya", "italy", "ispanya", "spain",
+                      "brezilya", "brazil", "arjantin", "argentina", "ingiltere", "england")
             for m in ars:
                 if not m.get("ev_logo"): m["ev_logo"] = _logo_bul(lg, m["ev"])
                 if not m.get("dep_logo"): m["dep_logo"] = _logo_bul(lg, m["dep"])
+                # supheli kayit (milli takim + oynanmamis) -> atla
+                if not m.get("oynandi"):
+                    evl = (m.get("ev") or "").lower(); depl = (m.get("dep") or "").lower()
+                    if any(x in evl for x in MILLI2) or any(x in depl for x in MILLI2):
+                        continue
                 if not m.get("lig_adi"):
                     m["lig_adi"] = "Süper Lig (Arşiv)"
+                if not m.get("bayrak"):
                     m["bayrak"] = "🇹🇷"
                 m["kaynak"] = "Arşiv"
-            maclar += ars
+                temiz2.append(m)
+            maclar += temiz2
             CACHE["maclar"] = maclar
             CACHE["zaman"] = datetime.now()
             ligler = {}
@@ -179,8 +210,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "16.3",
-        "derleme": "16.3",
+        "surum": "16.4",
+        "derleme": "16.4",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
