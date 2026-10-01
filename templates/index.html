@@ -1851,6 +1851,20 @@ function yukGuncelle(mesaj, alt, yuzde){
       '4) "↻ Yenile" butonuna basın<br><br>' +
       '<small>Log: %USERPROFILE%\\SporTahmin_log.txt</small></div>';
   }
+  // ═══ OTOMATIK YENILEME: feed gelene kadar her 3 sn kontrol et ═══
+  // (Yenile butonuna basmaya gerek kalmasin)
+  let otoSayac = 0;
+  const OTO = setInterval(async function(){
+    otoSayac++;
+    try{
+      const d = await durumKontrol();
+      // Feed geldiyse (tam=true) dur
+      if(VERI && VERI.tam){ clearInterval(OTO); try{ canliYukle(); }catch(_){} return; }
+      // 40 denemede (2 dk) dur
+      if(otoSayac >= 40){ clearInterval(OTO); }
+    }catch(e){}
+  }, 3000);
+
   try{ canliYukle(); setInterval(canliYukle, 30000); }catch(_){}
 })();
 
