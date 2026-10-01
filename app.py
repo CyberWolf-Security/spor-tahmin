@@ -173,8 +173,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "11.6",
-        "derleme": "11.6",
+        "surum": "12.0",
+        "derleme": "12.0",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -202,7 +202,7 @@ def api_durum():
     if not CACHE["tam"] and not CACHE["yukleniyor"]:
         son = CACHE.get("feed_deneme")
         simdi = time.time()
-        if son is None or (simdi - son) > 10:     # sadece 10 sn bekle
+        if son is None or (simdi - son) > 3:      # 3 sn'de bir dene (hizli)
             CACHE["feed_deneme"] = simdi
             CACHE["yuk_baslangic"] = simdi
             threading.Thread(target=veri_al, kwargs={"force": True}, daemon=True).start()

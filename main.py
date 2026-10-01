@@ -16,6 +16,22 @@ os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])) if not hasattr(sys,"_MEIP
 
 from app import app
 
+# ═══ AÇILIŞTA OTOMATİK: arşiv ANINDA + feed PARALEL (arayüzü bekleme!) ═══
+def _acilis_baslat():
+    import threading, time
+    def isle():
+        time.sleep(0.5)
+        try:
+            app_module = __import__("app")
+            app_module._hizli_arsiv()                    # 0.07 sn — arşiv
+            app_module.CACHE["feed_deneme"] = None       # temiz başlangıç
+            app_module.CACHE["yukleniyor"] = False
+            app_module.veri_al(force=True)               # feed (arka planda)
+        except Exception:
+            pass
+    threading.Thread(target=isle, daemon=True).start()
+_acilis_baslat()
+
 PORT = 8090
 
 def port_bos(p):
