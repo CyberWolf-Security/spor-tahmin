@@ -729,6 +729,22 @@ header{
 }
 
 
+/* ═══ ARAMA SONUC PANELI ═══ */
+.ara-bas{padding:7px 11px;font-size:10px;font-weight:800;letter-spacing:.5px;
+         color:var(--yesil);background:rgba(34,197,94,.07);border-bottom:1px solid var(--cizgi2)}
+.ara-lig{display:flex;align-items:center;gap:8px;padding:8px 11px;cursor:pointer;
+         font-size:12px;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s}
+.ara-lig:hover{background:rgba(34,197,94,.1);border-left:2px solid var(--yesil)}
+.ara-lig .flag{font-size:14px}
+.ara-lig .ad{flex:1;color:var(--yazi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ara-lig .say{font-size:10px;color:var(--yazi3);font-family:'SF Mono',monospace}
+.ara-mac{display:flex;align-items:center;gap:6px;padding:8px 11px;cursor:pointer;
+         font-size:11.5px;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;flex-wrap:wrap}
+.ara-mac:hover{background:rgba(59,130,246,.1);border-left:2px solid var(--mavi)}
+.ara-mac .t1{font-weight:600;color:var(--yazi)}
+.ara-mac .t2{font-weight:600;color:var(--yazi)}
+.ara-mac .meta{width:100%;font-size:9.5px;color:var(--yazi3);margin-top:1px}
+
 /* ═══ ULKE GRUPLARI (katlanir) ═══ */
 .ulke{border-bottom:1px solid rgba(255,255,255,.04)}
 .ulke-bas{display:flex;align-items:center;gap:8px;padding:9px 11px;cursor:pointer;
@@ -782,6 +798,51 @@ header{
              padding:1px 6px;border-radius:8px;font-weight:800;letter-spacing:.3px;
              margin-left:6px;vertical-align:middle}
 
+/* ═══ HAZIR TAHMINLER PANELI ═══ */
+#hazir-panel{position:fixed;inset:0;z-index:900;background:rgba(4,8,14,.97);
+  display:none;flex-direction:column;backdrop-filter:blur(6px)}
+#hazir-panel.acik{display:flex}
+.hz-bas{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;
+  border-bottom:1px solid var(--cizgi2);background:linear-gradient(180deg,#0d1420,#0a0e14)}
+.hz-bas h2{margin:0;font-size:16px;color:var(--yesil);font-weight:700}
+.hz-bas .meta{font-size:10.5px;color:var(--yazi3);margin-top:2px}
+.hz-kapat{background:#1e293b;border:0;color:#fff;padding:7px 14px;border-radius:7px;
+  cursor:pointer;font-size:12px;font-weight:600}
+.hz-kapat:hover{background:#334155}
+.hz-govde{flex:1;overflow-y:auto;padding:12px 16px}
+.hz-yuk{padding:40px;text-align:center;color:var(--yazi3)}
+.hz-yuk .halka{margin:0 auto 12px}
+.hz-bar{max-width:340px;height:5px;background:var(--cizgi2);border-radius:3px;margin:14px auto 0;overflow:hidden}
+.hz-bar i{display:block;height:100%;background:linear-gradient(90deg,#0891b2,#22c55e);
+  border-radius:3px;transition:width .3s}
+.hz-ulke{margin-bottom:10px;border:1px solid var(--cizgi2);border-radius:9px;overflow:hidden;background:#0b1119}
+.hz-ulke-bas{display:flex;align-items:center;gap:9px;padding:11px 14px;cursor:pointer;
+  background:linear-gradient(180deg,#111a26,#0d1420);font-weight:700;font-size:13px}
+.hz-ulke-bas:hover{background:#131d2b}
+.hz-ulke-bas .say{font-size:10px;color:var(--yazi3);margin-left:auto;
+  background:#1e293b;padding:2px 8px;border-radius:9px}
+.hz-ligler{display:none;padding:6px 8px 8px}
+.hz-ligler.acik{display:block}
+.hz-lig{margin:6px 0 10px}
+.hz-lig-ad{font-size:11px;color:var(--mavi);font-weight:700;padding:5px 7px;
+  border-bottom:1px solid var(--cizgi);margin-bottom:5px}
+.hz-mac{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:7px;
+  cursor:pointer;transition:all .12s;border-left:2px solid transparent;font-size:12px}
+.hz-mac:hover{background:rgba(34,197,94,.09);border-left-color:var(--yesil)}
+.hz-mac .tak{flex:1;min-width:0}
+.hz-mac .ev,.hz-mac .dp{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hz-mac .tahmin{min-width:74px;text-align:center;font-size:10.5px;font-weight:800;
+  padding:4px 7px;border-radius:6px;white-space:nowrap}
+.hz-mac .tahmin.t1{background:rgba(34,197,94,.18);color:#4ade80}
+.hz-mac .tahmin.tX{background:rgba(234,179,8,.18);color:#facc15}
+.hz-mac .tahmin.t2{background:rgba(239,68,68,.18);color:#f87171}
+.hz-mac .yuzde{font-family:'SF Mono',monospace;font-size:13px;font-weight:800;
+  min-width:46px;text-align:right;color:var(--yesil)}
+.hz-mac .det{font-size:9.5px;color:var(--yazi3);min-width:70px;text-align:right}
+.hz-guven{display:inline-block;font-size:8.5px;padding:1px 5px;border-radius:5px;font-weight:700}
+.hz-guven.YUKSEK{background:rgba(34,197,94,.2);color:#4ade80}
+.hz-guven.ORTA{background:rgba(59,130,246,.2);color:#60a5fa}
+.hz-guven.DUSUK{background:rgba(148,163,184,.16);color:#94a3b8}
 </style>
 </head>
 <body>
@@ -810,6 +871,9 @@ header{
     <a href="/canli" onclick="this.innerHTML='⏳ Açılıyor…'" style="background:linear-gradient(135deg,#7c3aed,#a855f7);border:0;color:#fff;
        padding:6px 13px;border-radius:7px;font-size:11.5px;cursor:pointer;text-decoration:none;
        font-weight:600">⚡ Canlı Simülasyon</a>
+    <button onclick="hazirAc()" style="background:linear-gradient(135deg,#0891b2,#06b6d4);border:0;color:#fff;
+       padding:6px 13px;border-radius:7px;font-size:11.5px;cursor:pointer;
+       font-weight:600">🎯 Hazır Tahminler</button>
     <button class="btn-yenile" onclick="yenile()">↻ Yenile</button>
   </div>
 </header>
@@ -823,16 +887,34 @@ header{
   </div>
 </div>
 
+<div id="hazir-panel">
+  <div class="hz-bas">
+    <div>
+      <h2>🎯 HAZIR TAHMİNLER</h2>
+      <div class="meta" id="hz-meta">Yükleniyor…</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="hz-kapat" onclick="hazirYenile()">↻ Yenile</button>
+      <button class="hz-kapat" onclick="hazirKapat()">✕ Kapat</button>
+    </div>
+  </div>
+  <div class="hz-govde" id="hz-govde">
+    <div class="hz-yuk"><div class="halka"></div><p>Yükleniyor…</p></div>
+  </div>
+</div>
+
 <div class="gecmis yok" id="gecmis"></div>
 
 <main>
   <aside>
     <div class="bolum-bas">Ligler <span id="lig-sayac" style="float:right;font-size:10px;color:var(--yazi3);font-weight:400">—</span></div>
     <div style="padding:8px 10px 4px">
-      <input id="lig-ara" type="text" placeholder="Lig ara…" oninput="ligListesi()"
+      <input id="lig-ara" type="text" placeholder="Lig veya takım ara…" oninput="aramaGirdi(this.value)"
              style="width:100%;padding:7px 10px;background:#0d1117;border:1px solid var(--cizgi2);
                     border-radius:7px;color:var(--yazi);font-size:12px;font-family:inherit;outline:none">
     </div>
+    <div id="ara-sonuc" style="display:none;max-height:420px;overflow-y:auto;
+         border-bottom:1px solid var(--cizgi2);background:#0a0e14"></div>
     <div id="ligler"><div style="padding:14px;color:var(--yazi3);font-size:12px">Yükleniyor…</div></div>
   </aside>
   <section id="icerik">
@@ -928,6 +1010,162 @@ async function durumKontrol(){
 
 let LIG_FILTRE='';
 function ligAra(v){ LIG_FILTRE=(v||'').toLowerCase(); ligListesi(); }
+
+// ═══════════════ HAZIR TAHMINLER PANELI ═══════════════
+let HZ_SAYAC = null;
+function hazirAc(){
+  document.getElementById('hazir-panel').classList.add('acik');
+  hazirYukle();
+}
+function hazirKapat(){
+  document.getElementById('hazir-panel').classList.remove('acik');
+  if(HZ_SAYAC){ clearInterval(HZ_SAYAC); HZ_SAYAC = null; }
+}
+async function hazirYenile(){
+  try{ await fetch('/api/hazir/yenile', {method:'POST'}); }catch(e){}
+  hazirYukle();
+}
+async function hazirYukle(){
+  const govde = document.getElementById('hz-govde');
+  const meta = document.getElementById('hz-meta');
+  try{
+    const r = await fetch('/api/hazir', {cache:'no-store'});
+    const d = await r.json();
+
+    if(!d.hazir){
+      const yuzde = d.toplam ? Math.round(100*d.ilerleme/d.toplam) : 0;
+      govde.innerHTML =
+        '<div class="hz-yuk">' +
+        '<div class="halka"></div>' +
+        '<p style="font-size:14px;color:var(--yazi2)">🤖 Ajan maçları tahmin ediyor…</p>' +
+        '<p style="font-size:11px;margin-top:6px">' +
+          (d.toplam ? (d.ilerleme.toLocaleString('tr') + ' / ' + d.toplam.toLocaleString('tr') + ' maç') : 'Hazırlanıyor…') +
+          (d.hata ? '<br><span style="color:#f87171">Hata: '+d.hata+'</span>' : '') +
+        '</p>' +
+        '<div class="hz-bar"><i style="width:'+yuzde+'%"></i></div>' +
+        '<p style="font-size:10px;margin-top:10px;color:var(--yazi3)">İlk hazırlık birkaç dakika sürebilir</p>' +
+        '</div>';
+      meta.textContent = d.toplam ? (yuzde + '% tamamlandı') : 'Hazırlanıyor…';
+      if(!HZ_SAYAC){
+        HZ_SAYAC = setInterval(async ()=>{
+          const rr = await fetch('/api/hazir/durum').then(x=>x.json()).catch(()=>({}));
+          if(rr.calisiyor){ hazirYukle(); }
+          else { clearInterval(HZ_SAYAC); HZ_SAYAC=null; hazirYukle(); }
+        }, 3000);
+      }
+      return;
+    }
+
+    if(HZ_SAYAC){ clearInterval(HZ_SAYAC); HZ_SAYAC=null; }
+    const gruplar = d.gruplar || [];
+    meta.textContent = (d.mac_sayisi||0).toLocaleString('tr') + ' maç · ' +
+                       gruplar.length + ' ülke · ' +
+                       (d.sim||0).toLocaleString('tr') + ' simülasyon';
+
+    if(!gruplar.length){
+      govde.innerHTML = '<div class="hz-yuk"><p>Henüz hazır tahmin yok.</p></div>';
+      return;
+    }
+
+    let h = '';
+    gruplar.forEach((g, gi)=>{
+      h += '<div class="hz-ulke">' +
+        '<div class="hz-ulke-bas" onclick="hzToggle('+gi+')">' +
+          '<span>'+ (ULKE_BAYRAK[g.ulke]||'⚽') +'</span>' +
+          '<span>'+ g.ulke +'</span>' +
+          '<span class="say">'+ g.toplam +' maç</span>' +
+        '</div>' +
+        '<div class="hz-ligler'+(gi===0?' acik':'')+'" id="hz-g'+gi+'">';
+      g.ligler.forEach(l=>{
+        h += '<div class="hz-lig"><div class="hz-lig-ad">'+ l.lig +' ('+ l.adet +')</div>';
+        l.maclar.forEach(m=>{
+          const sinif = m.tahmin==='1' ? 't1' : (m.tahmin==='X' ? 'tX' : 't2');
+          h += '<div class="hz-mac" onclick="tahmin(\''+
+                 m.ev.replace(/'/g,"\\'")+'\',\''+m.dep.replace(/'/g,"\\'")+'\',\''+
+                 (m.lig||'').replace(/'/g,"\\'")+'\',this);hazirKapat()">' +
+            '<div class="tak"><span class="ev">'+ m.ev +'</span>' +
+            '<span class="dp">'+ m.dep +'</span></div>' +
+            '<span class="tahmin '+sinif+'">'+ m.tahmin_metin +'</span>' +
+            '<span class="yuzde">%'+ m.olasilik.toFixed(0) +'</span>' +
+            '<span class="det">'+ (m.beklenen_skor||'') +
+              ' <span class="hz-guven '+(m.guven||'DUSUK')+'">'+
+              ({YUKSEK:'YÜKSEK',ORTA:'ORTA',DUSUK:'DÜŞÜK'}[m.guven]||'') +'</span></span>' +
+          '</div>';
+        });
+        h += '</div>';
+      });
+      h += '</div></div>';
+    });
+    govde.innerHTML = h;
+  }catch(e){
+    govde.innerHTML = '<div class="hz-yuk"><p style="color:#f87171">Hata: '+ e.message +'</p></div>';
+  }
+}
+function hzToggle(i){
+  const el = document.getElementById('hz-g'+i);
+  if(el) el.classList.toggle('acik');
+}
+
+function ligListesi(){
+  const ara=(document.getElementById('lig-ara')?.value||'').toLowerCase();
+  const kap = document.getElementById('ligler');
+  if(!kap) return;
+  // Takim aramasi: 2+ harf, 350ms bekle (yazarken cok istek atmasin)
+  if(ARA_ZAMAN) clearTimeout(ARA_ZAMAN);
+  const kutu = document.getElementById('ara-sonuc');
+  if(q.length < 2){ if(kutu){ kutu.innerHTML=''; kutu.style.display='none'; } return; }
+  ARA_ZAMAN = setTimeout(()=>takimAra(q), 350);
+}
+
+async function takimAra(q){
+  const kutu = document.getElementById('ara-sonuc');
+  if(!kutu) return;
+  kutu.style.display = 'block';
+  kutu.innerHTML = '<div style="padding:10px;color:var(--yazi3);font-size:12px">🔍 Aranıyor: '+q+'…</div>';
+  try{
+    const r = await fetch('/api/ara?q='+encodeURIComponent(q));
+    const d = await r.json();
+    let h = '';
+
+    // LIG SONUCLARI
+    if(d.ligler && d.ligler.length){
+      h += '<div class="ara-bas">📋 LİGLER ('+d.lig_sayisi+')</div>';
+      h += d.ligler.slice(0,12).map(l=>
+        `<div class="ara-lig" onclick="ligSec('${l.ad.replace(/'/g,"\\'")}');araKapat()">
+           <span class="flag">${l.bayrak||'⚽'}</span>
+           <span class="ad">${l.ad}</span>
+           <span class="say">${l.mac}</span>
+         </div>`).join('');
+    }
+
+    // MAC SONUCLARI
+    if(d.maclar && d.maclar.length){
+      h += '<div class="ara-bas">⚽ MAÇLAR ('+d.mac_sayisi+')</div>';
+      h += d.maclar.slice(0,20).map(m=>{
+        const sk = m.oynandi ? ` <b style="color:var(--yesil)">${m.ev_gol}-${m.dep_gol}</b>` : '';
+        const t = m.oynandi ? (m.tarih||'') : ((m.tarih||'')+' '+(m.saat||''));
+        return `<div class="ara-mac" onclick="tahmin('${m.ev.replace(/'/g,"\\'")}','${m.dep.replace(/'/g,"\\'")}','${m.lig.replace(/'/g,"\\'")}',this);araKapat()">
+          <span class="t1">${m.ev}</span>${sk}<span class="t2">${m.dep}</span>
+          <span class="meta">${t} · ${(m.lig||'').split('—').pop().trim()}</span>
+        </div>`;
+      }).join('');
+    }
+
+    if(!h){
+      h = '<div style="padding:12px;color:var(--yazi3);font-size:12px">"' + q + '" için sonuç bulunamadı</div>';
+    }
+    kutu.innerHTML = h;
+  }catch(e){
+    kutu.innerHTML = '<div style="padding:10px;color:#f87171;font-size:12px">Arama hatası: '+e.message+'</div>';
+  }
+}
+
+function araKapat(){
+  const k = document.getElementById('ara-sonuc');
+  if(k){ k.innerHTML=''; k.style.display='none'; }
+  const g = document.getElementById('lig-ara'); if(g) g.value='';
+}
+
 function ligListesi(){
   const ara=(document.getElementById('lig-ara')?.value||'').toLowerCase();
   const kap = document.getElementById('ligler');

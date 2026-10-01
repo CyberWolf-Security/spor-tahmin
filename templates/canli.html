@@ -756,7 +756,7 @@ async function kayanYukle(){
       return;
     }
     const html = d.map(m=>`<span class="km">
-      <span class="dk">${m.dakika||'?'}'</span>
+      <span class="dk">${m.dakika||'?'}</span>
       <span>${m.ev}</span><span class="sk">${m.ev_gol}-${m.dep_gol}</span><span>${m.dep}</span>
       <span class="lg">${m.lig||''}</span></span>`).join('');
     // Kesintisiz akis icin 2 kez yaz

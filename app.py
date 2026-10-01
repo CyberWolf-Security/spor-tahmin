@@ -12,6 +12,7 @@ except ImportError:
 from olasilik import tum_olasiliklar
 from ajan3 import akilli_ajan
 import fs_feed as fsf
+import hazir_tahmin as HT
 
 app = Flask(__name__)
 BASE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
@@ -177,8 +178,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "19.0",
-        "derleme": "19.0",
+        "surum": "16.0",
+        "derleme": "16.0",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -348,6 +349,144 @@ def api_rakip():
                                 "oynanmis": True})
 
     return jsonify({"bulundu": False, "hata": "Bu takim icin mac bulunamadi"})
+
+
+# ═══════════════ HAZIR TAHMINLER ═══════════════
+def _guc_lig_hesapla():
+    """Her lig icin takim guclerini hesapla"""
+    import mega_ajan as mega
+    lig_gruplari = {}
+    for m in CACHE["maclar"]:
+        la = m.get("lig_adi") or "DIGER"
+        lig_gruplari.setdefault(la, []).append(m)
+    guc_lig = {}
+    for la, ms in lig_gruplari.items():
+        try:
+            guc_lig[la] = mega.takim_gucu(ms)
+        except Exception:
+            guc_lig[la] = ({}, {})
+    return guc_lig
+
+
+@app.route("/api/hazir")
+def api_hazir():
+    """Hazir tahminler (ulke -> lig -> maclar)"""
+    import mega_ajan as mega
+    # Veri yoksa uretime basla
+    v = HT.yukle()
+    if not HT.DURUM["calisiyor"]:
+        if not v:
+            # Ilk kez: arka planda uret
+            if CACHE["maclar"]:
+                HT.uretim_baslat(CACHE["maclar"], _guc_lig_hesapla(), mega)
+        else:
+            # Eski veri: 6 saatten eskiyse yenile
+            HT.uretim_baslat(CACHE["maclar"], _guc_lig_hesapla(), mega)
+
+    if not v:
+        return jsonify({
+            "hazir": False,
+            "calisiyor": HT.DURUM["calisiyor"],
+            "ilerleme": HT.DURUM["ilerleme"],
+            "toplam": HT.DURUM["toplam"],
+            "hata": HT.DURUM["hata"],
+            "mesaj": "Tahminler hazırlanıyor…"
+        })
+
+    return jsonify({
+        "hazir": True,
+        "bitti": v.get("bitti"),
+        "sim": v.get("sim"),
+        "mac_sayisi": v.get("mac_sayisi"),
+        "gruplar": v.get("gruplar", []),
+        "calisiyor": HT.DURUM["calisiyor"],
+        "ilerleme": HT.DURUM["ilerleme"],
+        "toplam": HT.DURUM["toplam"],
+    })
+
+
+@app.route("/api/hazir/yenile", methods=["POST"])
+def api_hazir_yenile():
+    """Zorla yeniden uret"""
+    import mega_ajan as mega
+    ok = HT.uretim_baslat(CACHE["maclar"], _guc_lig_hesapla(), mega, zorla=True)
+    return jsonify({"basladi": ok, "calisiyor": HT.DURUM["calisiyor"]})
+
+
+@app.route("/api/hazir/durum")
+def api_hazir_durum():
+    """Uretim ilerlemesi"""
+    return jsonify({
+        "calisiyor": HT.DURUM["calisiyor"],
+        "ilerleme": HT.DURUM["ilerleme"],
+        "toplam": HT.DURUM["toplam"],
+        "hata": HT.DURUM["hata"],
+        "bitti": HT.DURUM["bitti"],
+    })
+
+
+@app.route("/api/ara")
+def api_ara():
+    """Lig VEYA takim adi ara"""
+    q = request.args.get("q", "").strip().lower()
+    if not q or len(q) < 2:
+        return jsonify({"bulundu": False, "ligler": [], "maclar": []})
+
+    # 1) Lig adi eslesmesi
+    lig_sonuc = []
+    for l in _lig_listesi():
+        if q in l["ad"].lower():
+            lig_sonuc.append(l)
+
+    # 2) Takim adi eslesmesi -> o takimin maclarini bul
+    mac_sonuc = []
+    gorulen = set()
+    for ad, ms in CACHE["ligler"].items():
+        for m in ms:
+            ev = (m.get("ev") or "").lower()
+            dep = (m.get("dep") or "").lower()
+            if q in ev or q in dep:
+                k = (m.get("ev"), m.get("dep"), m.get("tarih"), m.get("saat"))
+                if k in gorulen:
+                    continue
+                gorulen.add(k)
+                mac_sonuc.append({
+                    "ev": m.get("ev"), "dep": m.get("dep"),
+                    "ev_gol": m.get("ev_gol"), "dep_gol": m.get("dep_gol"),
+                    "tarih": m.get("tarih"), "saat": m.get("saat"),
+                    "lig": ad, "oynandi": m.get("oynandi"),
+                    "ev_logo": m.get("ev_logo"), "dep_logo": m.get("dep_logo"),
+                    "bayrak": m.get("bayrak", "⚽")
+                })
+    # Gelecek maclar once
+    mac_sonuc.sort(key=lambda x: (x.get("oynandi") is True, x.get("tarih") or "", x.get("saat") or ""))
+
+    return jsonify({
+        "bulundu": bool(lig_sonuc or mac_sonuc),
+        "q": q,
+        "ligler": lig_sonuc[:40],
+        "maclar": mac_sonuc[:60],
+        "lig_sayisi": len(lig_sonuc),
+        "mac_sayisi": len(mac_sonuc)
+    })
+
+
+def _lig_listesi():
+    """Lig listesi (api_durum ile ayni format)"""
+    out = []
+    for ad, ms in sorted(CACHE["ligler"].items(), key=lambda x: str(x[0])):
+        oyn = len([m for m in ms if m["oynandi"] and m["ev_gol"] is not None])
+        gelecek = len([m for m in ms if not m["oynandi"] and m.get("tarih")])
+        bayrak = next((m["bayrak"] for m in ms if m.get("bayrak")), "⚽")
+        if "—" in ad:
+            ulke = ad.split("—")[0].strip()
+        elif " - " in ad:
+            ulke = ad.split(" - ")[0].strip()
+        else:
+            ulke = "DIGER"
+        out.append({"ad": ad, "mac": len(ms), "oynanmis": oyn, "gelecek": gelecek,
+                    "bayrak": bayrak, "ulke": ulke})
+    return out
 
 
 @app.route("/api/tumliglerde")
