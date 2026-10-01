@@ -221,18 +221,52 @@ def ulke_lig_grupla(tahminler):
             ulke, lig = "DIGER", lig_adi
         gruplar[ulke][lig].append(t)
 
-    # Sirala: mac sayisina gore
+    # ═══ SIRALAMA: POPULER LIGLER USTTE ═══
+    # Oncelik listesi (kucuk numara = daha ustte)
+    def _oncelik(ulke, lig):
+        u = (ulke or "").upper(); l = (lig or "").lower()
+        lu = (lig or "").upper()
+        # 1) Turkiye (arsiv dahil)
+        if "TURKEY" in u or "TÜRK" in u or "SÜPER LİG" in lu or "1. LİG" in lu:
+            return 1
+        if "arşiv" in l or "arsiv" in l:
+            return 1
+        # 2) Avrupa kupalari
+        if any(x in l for x in ["champions league", "europa league", "conference league", "şampiyonlar"]):
+            return 2
+        # 3) Buyuk 5 lig
+        if any(x in l for x in ["premier league", "la liga", "laliga", "serie a", "bundesliga"]) and "women" not in l:
+            if "premier league" in l and u not in ("ENGLAND",): return 6
+            if "championship" in l or "league one" in l or "league two" in l: return 7
+            if "serie b" in l or "bundesliga 2" in l or "2. bundesliga" in l: return 7
+            return 3
+        if "ligue 1" in l and "women" not in l: return 3
+        # 4) Milli maclar
+        if any(x in l for x in ["nations league", "uluslar", "world cup", "dünya kupası", "euro ", "friendly international"]):
+            return 4
+        # 5) Populer diger Avrupa
+        if any(x in l for x in ["eredivisie", "primeira", "pro league", "premiership", "super lig", "eliteserien"]):
+            return 5
+        # 6) Arap ligleri
+        if any(x in u for x in ["SAUDI", "QATAR", "UAE", "KUWAIT", "EGYPT", "MOROCCO", "TUNISIA", "ALGERIA", "IRAQ", "JORDAN", "LEBANON"]):
+            return 6
+        # 7) Diger
+        return 9
+
     out = []
     for ulke, ligler in gruplar.items():
         lig_listesi = []
         toplam = 0
         for lig, ms in ligler.items():
             ms.sort(key=lambda x: (x.get("tarih") or "", x.get("saat") or ""))
-            lig_listesi.append({"lig": lig, "maclar": ms, "adet": len(ms)})
+            lig_listesi.append({"lig": lig, "maclar": ms, "adet": len(ms),
+                                "oncelik": _oncelik(ulke, lig)})
             toplam += len(ms)
-        lig_listesi.sort(key=lambda x: -x["adet"])
+        # Once oncelik, sonra mac sayisi
+        lig_listesi.sort(key=lambda x: (x["oncelik"], -x["adet"]))
         out.append({"ulke": ulke, "ligler": lig_listesi, "toplam": toplam})
-    out.sort(key=lambda x: -x["toplam"])
+    # Ulkeleri de en iyi onceligine gore sirala
+    out.sort(key=lambda g: (min((l["oncelik"] for l in g["ligler"]), default=9), -g["toplam"]))
     return out
 
 
