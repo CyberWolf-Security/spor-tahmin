@@ -173,8 +173,8 @@ def api_surum():
     """Surum damgasi - hangi exe calisiyor kesin tespit icin"""
     import os as _os
     return jsonify({
-        "surum": "11.0",
-        "derleme": "11.0",
+        "surum": "11.6",
+        "derleme": "11.6",
         "ozellik_takilma_korumasi": True,
         "ozellik_feed_tekrar_deneme": True,
         "ozellik_hizli_arsiv": True,
@@ -258,11 +258,37 @@ def api_test_feed():
         except Exception as e:
             sonuc["adimlar"].append({"ad": "Feed " + domain, "ok": False,
                                       "bilgi": "%s: %s" % (type(e).__name__, str(e)[:80])})
-    # 3) Ozet
+    # 3) PARSE TESTI (KRITIK: feed -> mac listesi)
+    try:
+        t = _t.time()
+        ham = ""
+        try:
+            ham = fsf.feed_cek(0)
+        except Exception:
+            ham = ""
+        maclar = fsf.parse(ham, False) if ham else []
+        sonuc["adimlar"].append({"ad": "PARSE (feed -> mac listesi)", "ok": len(maclar) > 0,
+                                  "bilgi": "%d mac" % len(maclar), "sn": round(_t.time()-t, 2)})
+        sonuc["mac_ornek"] = [{k: m.get(k) for k in ("ev", "dep", "tarih", "saat", "lig_adi")} for m in maclar[:3]]
+    except Exception as e:
+        sonuc["adimlar"].append({"ad": "PARSE (feed -> mac listesi)", "ok": False,
+                                  "bilgi": "%s: %s" % (type(e).__name__, str(e)[:80])})
+
+    # 4) Cok gunlu cekim (asil kullanim)
+    try:
+        t = _t.time()
+        tum = fsf.tum_gunler(gunler=(-1, 0, 1), sadece_onemli=False)
+        sonuc["adimlar"].append({"ad": "3 gunluk cekim (asil kullanim)", "ok": len(tum) > 0,
+                                  "bilgi": "%d mac" % len(tum), "sn": round(_t.time()-t, 2)})
+    except Exception as e:
+        sonuc["adimlar"].append({"ad": "3 gunluk cekim (asil kullanim)", "ok": False,
+                                  "bilgi": "%s: %s" % (type(e).__name__, str(e)[:80])})
+
+    # 5) Ozet
     ok_sayisi = sum(1 for a in sonuc["adimlar"] if a.get("ok"))
     sonuc["ozet"] = "%d/%d adim basarili" % (ok_sayisi, len(sonuc["adimlar"]))
-    sonuc["karar"] = ("Feed ERISILEBILIR - sorun baska yerde" if ok_sayisi >= 2
-                       else "FEED ENGELLI - internet/VPN/guvenlik duvari engelliyor")
+    sonuc["karar"] = ("Feed + PARSE calisiyor" if ok_sayisi == len(sonuc["adimlar"])
+                       else "SORUN VAR - yukaridaki basarisiz adima bak")
     return jsonify(sonuc)
 
 @app.route("/api/tumliglerde")
