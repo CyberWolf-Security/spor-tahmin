@@ -839,6 +839,23 @@ header{
 </main>
 
 <script>
+// ═══ GLOBAL HATA YAKALAYICI — JS cokerse EKRANDA goster ═══
+window.onerror = function(mesaj, kaynak, satir, kolon, hata){
+  try{
+    var k = document.getElementById('js-hata');
+    if(!k){
+      k = document.createElement('div');
+      k.id = 'js-hata';
+      k.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9999;' +
+        'background:#7f1d1d;color:#fff;padding:10px;font-size:12px;' +
+        'font-family:monospace;white-space:pre-wrap;max-height:40%;overflow:auto';
+      document.body.appendChild(k);
+    }
+    k.textContent = 'JAVASCRIPT HATASI:\n' + mesaj + '\nSatir: ' + satir + ':' + kolon +
+                    '\nKaynak: ' + (kaynak || '').split('/').pop();
+  }catch(_){}
+  return false;
+};
 let LIGLER=[], AKTIF=null, VERI={}, TAM_YUKLENDI=false;
 
 // ═══ ULKE BAYRAKLARI ═══
@@ -885,13 +902,8 @@ async function durumKontrol(){
         `${(d.toplam||0).toLocaleString('tr')} maç · ${yeniSayi} lig` + (d.tam ? '' : ' ⏳');
       if(yeniSayi !== SON_LIG_SAYISI){
         SON_LIG_SAYISI = yeniSayi;
-        // ═══ HATA YUTMA YOK — hata olursa ekranda GORUNSUN ═══
+        // Sadece LISTEYI ciz — ligSec'i BURADA cagirma (dongu sonunda cagriliyor)
         ligListesi();
-        if(!AKTIF){
-          // ONCELIK: Türkiye ligi -> arsiv -> ilk lig
-          const tr = d.ligler.find(l => (l.ulke||"").toUpperCase().includes("TURK") || (l.ad||"").includes("Süper Lig"));
-          await ligSec((tr || d.ligler[0]).ad);
-        }
       }
       return true;
     }
@@ -1244,7 +1256,7 @@ function sahaBasla(ev, dep, oto){
     olaylar.push({dk:d,taraf:Math.random()<.5?'ev':'dep',tip:e[0],ikon:e[1]}); }}
   olaylar.sort((a,b)=>a.dk-b.dk);
 
-  let dk=0, se=0, sd=0, i2=0;
+  let dk=0, i2=0;   // se/sd yukarida tanimli — tekrar tanimlama (SyntaxError olur)
   const akis=document.getElementById('tahmin-akis');
   if(akis) akis.innerHTML='';
 
@@ -1292,7 +1304,7 @@ function sahaBasla(ev, dep, oto){
           const el3=document.createElement('div');
           el3.className='olay';
           el3.style.borderLeftColor='var(--mavi)';
-          el3.innerHTML='<span class="d">90'</span><span>🏁</span><span class="m">MAÇ SONU — '+ev+' '+se+' - '+sd+' '+dep+'</span><span class="s"></span>';
+          el3.innerHTML='<span class="d">90&#39;</span><span>🏁</span><span class="m">MAÇ SONU — '+ev+' '+se+' - '+sd+' '+dep+'</span><span class="s"></span>';
           ak3.insertBefore(el3, ak3.firstChild);
         }
         return;
