@@ -69,8 +69,8 @@ def main():
 
     try:
         import webview
-        webview.create_window("Spor Tahmin", url, width=1280, height=860,
-                              min_size=(900, 600), background_color="#0d1117")
+        webview.create_window("Spor Tahmin", url, width=1100, height=720,
+                              min_size=(820, 560), background_color="#0d1117")
         webview.start()
     except Exception as e:
         # WebView2 yoksa tarayiciya dus
