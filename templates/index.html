@@ -31,8 +31,6 @@ header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px soli
 #durum{margin-left:auto;display:flex;align-items:center;gap:11px;font-size:12px;color:var(--yazi2);
        flex-shrink:0;white-space:nowrap}
 .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:16.5px;letter-spacing:-.3px}
-.logo .simge{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--yesil),var(--turkuaz));
-             display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 10px rgba(34,197,94,.28)}
 .marka-simge{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
              background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(6,182,212,.1));
              border:1px solid rgba(34,197,94,.28);flex-shrink:0}
@@ -48,6 +46,19 @@ header{background:linear-gradient(180deg,#131a24,#0f151e);border-bottom:1px soli
 .btn-yenile{background:var(--bg3);border:1px solid var(--cizgi2);color:var(--yazi2);padding:6px 13px;
             border-radius:7px;font-size:11.5px;cursor:pointer;font-family:inherit;transition:.15s}
 .btn-yenile:hover{background:var(--cizgi);color:var(--yazi)}
+
+/* ═══ SAAT (logo yaninda) ═══ */
+.saat-kap{display:flex;flex-direction:column;align-items:flex-end;line-height:1.12;
+          margin-left:9px;padding-left:13px;
+          border-left:1px solid var(--cizgi2);
+          background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(6,182,212,.05));
+          border-radius:0 8px 8px 0;padding:3px 10px 3px 13px;transition:.2s}
+#saat-yazi{font-family:'SF Mono','Consolas','Segoe UI Mono',monospace;font-size:14.5px;font-weight:700;
+           color:var(--yesil);letter-spacing:.8px;
+           text-shadow:0 0 12px rgba(34,197,94,.4)}
+#saat-tarih{font-size:8.5px;color:var(--yazi3);letter-spacing:.8px;text-transform:uppercase;font-weight:600;
+            margin-top:-1px}
+@media (max-width:1180px){ #saat-tarih{display:none} }
 
 /* ═══ IZLENEN MACLAR ═══ */
 .takip{background:var(--bg2);border-bottom:1px solid var(--cizgi);padding:11px 22px;
@@ -534,11 +545,11 @@ section::-webkit-scrollbar-thumb{background:var(--cizgi2);border-radius:5px}
 .kars .bar{height:6px;border-radius:3px;background:var(--cizgi);overflow:hidden;margin-top:4px}
 .kars .bar div{height:100%;background:linear-gradient(90deg,var(--yesil),var(--turkuaz))}
 /* ═══ YAZDIRMA ═══ */
-.yazdir-btn{position:absolute;top:12px;right:14px;background:#1a2332;border:1px solid var(--cizgi2);color:var(--yazi2);padding:6px 11px;
+.kopyala-btn{position:absolute;top:12px;right:14px;background:#1a2332;border:1px solid var(--cizgi2);color:var(--yazi2);padding:6px 11px;
             border-radius:7px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
-.yazdir-btn:hover{border-color:var(--mavi);color:var(--yazi)}
+.kopyala-btn:hover{border-color:var(--mavi);color:var(--yazi)}
 @media print{
-  header,.takip,aside,.btn-yenile,.yazdir-btn,.saha-btn,.btn{display:none!important}
+  header,.takip,aside,.btn-yenile,.kopyala-btn,.saha-btn,.btn{display:none!important}
   main{grid-template-columns:1fr!important}
   body{background:#fff;color:#000}
   .analiz{break-inside:avoid}
@@ -578,7 +589,7 @@ header{
 }
 
 /* Butonlar: gradient + golge + basma animasyonu */
-.btn, .btn-yenile, .saha-btn, .yazdir-btn, .tahmin-btn{
+.btn, .btn-yenile, .saha-btn, .kopyala-btn, .tahmin-btn{
   position:relative;
   box-shadow:var(--golge-2);
   transition:all .18s cubic-bezier(.4,0,.2,1);
@@ -602,7 +613,7 @@ header{
   color:#fff!important;
   box-shadow:var(--golge-mavi);
 }
-.yazdir-btn:hover{box-shadow:var(--golge-mavi);transform:translateY(-1px)}
+.kopyala-btn:hover{box-shadow:var(--golge-mavi);transform:translateY(-1px)}
 
 /* Maç satırları: hover'da yükselme + golge */
 .mac-satir{
@@ -882,6 +893,10 @@ header{
       <span class="m-ust">SPOR<span class="m-vurgu">TAHMİN</span></span>
       <span class="m-alt">Canlı Maç Analiz Motoru</span>
     </div>
+    <span id="saat-kap" class="saat-kap">
+      <span id="saat-yazi">--:--:--</span>
+      <span id="saat-tarih"></span>
+    </span>
   </div>
   <div id="durum">
     <span><span class="nokta"></span> <span id="durum-yazi">Veri hazırlanıyor…</span></span>
@@ -1649,7 +1664,7 @@ function analizHtml(d, ev, dep, lig){
       <div class="alt">${lig} · ${d.kullanilan_mac} maç verisi${d.simulasyon ? ' · '+d.simulasyon.toLocaleString('tr')+' simülasyon' : ''}</div>
       <div style="display:flex;gap:7px;position:absolute;top:12px;right:14px">
         <button class="geri-analiz" onclick="analizKapat()" title="Maç listesine dön">← Geri</button>
-        <button class="yazdir-btn" onclick="yazdir()" title="Tahmini yazdır/kaydet">🖨 Yazdır</button>
+        <button class="kopyala-btn" onclick="kopyala()" title="Tahmini kopyala">📋 Kopyala</button>
       </div>
     </div>`;
   h += karsilastirHtml(d, ev, dep);
@@ -2071,9 +2086,33 @@ function karsilastirHtml(d, ev, dep){
   </div>`;
 }
 
+// ═══ SAAT ═══
+const GUNLER = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const AYLAR  = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+function saatGuncelle(){
+  const s = document.getElementById('saat-yazi');
+  const t = document.getElementById('saat-tarih');
+  if(!s) return;
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  const ss = String(d.getSeconds()).padStart(2,'0');
+  s.textContent = hh + ':' + mm + ':' + ss;
+  if(t) t.textContent = GUNLER[d.getDay()] + ', ' + d.getDate() + ' ' + AYLAR[d.getMonth()];
+}
+saatGuncelle();
+setInterval(saatGuncelle, 1000);
+
 // ═══ YAZDIRMA / KAYDETME ═══
-function yazdir(){
-  window.print();
+function kopyala(){
+  try{
+    const kap = document.getElementById('analiz-kutu');
+    const t = kap ? kap.innerText.replace(/\n{3,}/g,'\n\n').trim() : '';
+    navigator.clipboard.writeText(t).then(()=>{
+      const b = document.querySelector('.kopyala-btn');
+      if(b){ const eski=b.textContent; b.textContent='✅ Kopyalandı'; setTimeout(()=>b.textContent=eski, 1600); }
+    }).catch(()=>{ alert('Kopyalanamadı'); });
+  }catch(_){}
 }
 function tahminKaydet(ev, dep, lig, d){
   const k = {ev, dep, lig, t: new Date().toISOString(), d: {
