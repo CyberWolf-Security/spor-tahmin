@@ -1346,7 +1346,7 @@ async function tahmin(ev, dep, lig, btn){
   if(btn && btn.disabled !== undefined){ btn.disabled=true; btn.textContent='⏳'; }
   const yuk=document.createElement('div');
   yuk.id='analiz-kutu';
-  yuk.innerHTML='<div class="yukleyici"><div class="halka"></div><p>10.000.000 maç simüle ediliyor…</p><small>'+ev+' — '+dep+'</small></div>';
+  yuk.innerHTML='<div class="yukleyici"><div class="halka"></div><p>1.000.000 maç simüle ediliyor…</p><small>'+ev+' — '+dep+'</small></div>';
   s.insertBefore(yuk, s.firstChild);
   try{
     const knt = new AbortController();
@@ -1523,7 +1523,7 @@ function sahaBasla(ev, dep, oto){
   else if(depO >= evO && depO >= berO) hedef = 'dep';
   else hedef = 'ber';
 
-  // 2) SKOR: "En Olasi Skorlar" tablosundan AL (ayni 10M simulasyon!)
+  // 2) SKOR: "En Olasi Skorlar" tablosundan AL (ayni 1M simulasyon!)
   //    Boylece saha ile tablo ASLA celismez
   let se = null, sd = null;
   const skList = (olas.skorlar && olas.skorlar.length) ? olas.skorlar : [];
@@ -1572,17 +1572,17 @@ function sahaBasla(ev, dep, oto){
   const akis=document.getElementById('tahmin-akis');
   if(akis) akis.innerHTML='';
 
-  // Simulasyon sayaci (10.000.000 mac kosuyor gibi)
+  // Simulasyon sayaci (1.000.000 mac kosuyor gibi)
   let simSayi = 0;
   // Durum sifirla (tekrar oynatma icin)
   const sdReset = document.getElementById('sim-durum');
   if(sdReset){ sdReset.textContent='● CANLI'; sdReset.style.color='var(--yesil)'; }
   const simKap = document.getElementById('sim-sayac');
   const simDurum = document.getElementById('sim-durum');
-  const SIM_MAX = 10000000;
-  if(simKap){ simKap.textContent = '· 10.000.000 simülasyon'; }
+  const SIM_MAX = 1000000;
+  if(simKap){ simKap.textContent = '· 1.000.000 simülasyon'; }
   const SIM_ZAMAN = setInterval(()=>{
-    simSayi += 320000;
+    simSayi += 3200;
     if(simSayi >= SIM_MAX){
       simSayi = SIM_MAX;
       if(simDurum){ simDurum.textContent = '✓ TAMAMLANDI'; simDurum.style.color='var(--mavi)'; }
@@ -1669,7 +1669,7 @@ function analizHtml(d, ev, dep, lig){
     </div>`;
   h += karsilastirHtml(d, ev, dep);
 
-  // ═══ EN OLASI SKORLAR (10M simulasyondan) ═══
+  // ═══ EN OLASI SKORLAR (1M simulasyondan) ═══
   if(d.en_skorlar && d.en_skorlar.length){
     const mx = d.en_skorlar[0].olasilik || 1;
     h += '<div class="blok skor-blok">' +

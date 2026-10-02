@@ -306,7 +306,7 @@ if __name__ == "__main__":
     ars = json.load(open("/tmp/spor/veri/arsiv_superlig.json", encoding="utf-8"))["maclar"]
     oyn = [m for m in ars if m["oynandi"] and m["ev_gol"] is not None]
     guc, lig = takim_gucu(oyn)
-    a = akilli_ajan(tum_olasiliklar("Galatasaray","Fenerbahçe",guc,lig,20000), guc, "Galatasaray","Fenerbahçe", oyn)
+    a = akilli_ajan(tum_olasiliklar("Galatasaray","Fenerbahçe",guc,lig,1000000), guc, "Galatasaray","Fenerbahçe", oyn)
     print("GENEL:", a["genel"])
     print("GUVEN SKORU:", a["guven_skoru"])
     print("KONSENSUS:", a["konsensus"])

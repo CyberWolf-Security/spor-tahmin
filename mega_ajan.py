@@ -82,7 +82,7 @@ def beklenen_gol(ev, dep, guc, lig):
 
     return max(0.2, min(4.5, e)), max(0.2, min(4.5, d))
 
-def mega_simulasyon(ev, dep, guc, lig, n=10000000, tohum=None, elo=None):
+def mega_simulasyon(ev, dep, guc, lig, n=1000000, tohum=None, elo=None):
     """
     ENSEMBLE simulasyon — Poisson + Elo birlesimi
     elo verilirse: %60 Poisson + %40 Elo karisimi

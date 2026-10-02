@@ -640,7 +640,7 @@ def api_tahmin():
                 elo = _ELO_CACHE["elo"]
             except Exception:
                 elo = None
-            o = MEGA.mega_simulasyon(ev, dep, gm, lm, 10000000, elo=elo)
+            o = MEGA.mega_simulasyon(ev, dep, gm, lm, 1000000, elo=elo)
             if not o:
                 return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
             # ═══ EKSIK ALANLARI TAMAMLA (arayuz bekliyor!) ═══
@@ -665,7 +665,7 @@ def api_tahmin():
             return jsonify({"hata": f"{ev} — bu lig kayitlarinda yok"})
         if dep not in guc:
             return jsonify({"hata": f"{dep} — bu lig kayitlarinda yok"})
-        o = tum_olasiliklar(ev, dep, guc, lig_ort, 10000000)
+        o = tum_olasiliklar(ev, dep, guc, lig_ort, 1000000)
         if not o:
             return jsonify({"hata": "Hesaplama yapilamadi, farkli takim deneyin"})
         o["ajan"] = akilli_ajan(o, guc, ev, dep, oyn)

@@ -216,7 +216,7 @@ if __name__ == "__main__":
         # Ornek mac
         import random
         m = random.choice([x for x in ms if x["oynandi"]])
-        o = tum_olasiliklar(m["ev"], m["dep"], guc, lig, 10000)
+        o = tum_olasiliklar(m["ev"], m["dep"], guc, lig, 1000000)
         a = gelismis_ajan(o, guc, m["ev"], m["dep"], oyn)
         print(f"\n=== {m['ev']} vs {m['dep']} ===")
         print("GENEL:", a["genel"])
