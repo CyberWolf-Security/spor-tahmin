@@ -59,7 +59,7 @@ Name: "masaustu"; Description: "Masaüstü kısayolu oluştur"; GroupDescription
 Name: "baslatmenu"; Description: "Başlat menüsüne ekle"; GroupDescription: "Kısayollar:"; Flags: checkedonce
 
 [Files]
-Source: "dist\{#UygulamaExe}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\SporTahmin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "KULLANIM.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]

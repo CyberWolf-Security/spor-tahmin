@@ -23,17 +23,17 @@ jobs:
           pip install flask pywebview pyinstaller numpy
 
       - name: Derle
-        run: pyinstaller --onefile --noconsole --name SporTahmin --version-file surum.txt --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --hidden-import=numpy --hidden-import=mega_ajan --hidden-import=mega_karar --collect-all webview --collect-all numpy main.py
+        run: pyinstaller --onedir --noconsole --name SporTahmin --version-file surum.txt --add-data "templates;templates" --add-data "veri;veri" --hidden-import=flask --hidden-import=jinja2 --hidden-import=werkzeug --hidden-import=webview --hidden-import=numpy --hidden-import=mega_ajan --hidden-import=mega_karar --collect-all webview --collect-all numpy main.py
 
       - name: Exe boyut
         shell: bash
-        run: ls -la dist/
+        run: ls -la dist/SporTahmin/
 
       # ═══ WINDOWS GERCEK TEST ═══
       - name: EXE CALISTIR + HTTP TEST
         shell: powershell
         run: |
-          $p = Start-Process -FilePath "dist\SporTahmin.exe" -PassThru
+          $p = Start-Process -FilePath "dist\SporTahmin\SporTahmin.exe" -PassThru
           Write-Host "PID: $($p.Id)"
           Start-Sleep -Seconds 45
           $procs = Get-Process | Where-Object {$_.MainWindowTitle -ne ""}
@@ -189,7 +189,7 @@ jobs:
       - name: SURUM KONTROL
         shell: powershell
         run: |
-          $e = "dist\SporTahmin.exe"
+          $e = "dist\SporTahmin\SporTahmin.exe"
           if (Test-Path $e) {
             $v = (Get-Item $e).VersionInfo
             Write-Host ("EXE_SURUM: " + $v.FileVersion)
@@ -234,7 +234,7 @@ jobs:
             t30_saniye.png
             t45_saniye.png
             t60_saniye.png
-            dist/SporTahmin.exe
+            dist/SporTahmin/SporTahmin.exe
             kurulum_cikti/SporTahmin_Kurulum.exe
           if-no-files-found: warn
 
@@ -258,6 +258,6 @@ jobs:
             Spor Tahmin v${{ steps.surum.outputs.surum }}
             Otomatik derleme — GitHub Actions
           files: |
-            dist/SporTahmin.exe
+            dist/SporTahmin/SporTahmin.exe
             kurulum_cikti/SporTahmin_Kurulum.exe
           fail_on_unmatched_files: false
