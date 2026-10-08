@@ -1,31 +1,186 @@
-# Spor Maç Tahmin
+# ⚽ Spor Tahmin — Maç Analiz ve Tahmin Programı
 
-Canlı veri çeken, Monte Carlo simülasyonu ile maç tahmini yapan program.
+**CyberWolfSec** tarafından geliştirilen, tamamen **yerel çalışan** (internet bağlantısı gerektirmeyen tahmin motoru) futbol maç analiz ve tahmin programı.
 
-## Özellikler
+![Sürüm](https://img.shields.io/badge/sürüm-16.8-blue)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Lisans](https://img.shields.io/badge/lisans-MIT-green)
 
-- **Canlı veri** — FlashScore (Süper Lig, anahtarsız) + OpenLigaDB (Avrupa)
-- **Monte Carlo simülasyon** — 10.000 maç tekrarı
-- **Tahminler**: Kazanan olasılığı, beklenen skor, en olası skorlar, üst/alt, karşılıklı gol
-- **Canlı animasyon** — maç dakika dakika akar
-- **Puan tablosu**
+---
 
-## Çalıştırma (kaynak)
+## 📌 Nedir?
 
-```bash
-pip install flask requests
-python app.py
+**Spor Tahmin**, futbol maçlarını istatistiksel modellerle analiz eden ve sonuç tahmini üreten bir masaüstü programıdır.
+
+- 🖥️ Windows'ta tek kurulumla çalışır (kurulum sihirbazı dahil)
+- 🔌 **Tamamen yerel** — maç tahmini için internet gerekmez
+- 📊 **1.000.000 (1 milyon) maç simülasyonu** ile olasılık hesabı
+- 🌍 **32 lig, 757 maç, 21 ülke** veri havuzu
+- ⚡ Hızlı: 1M simülasyon saniyeler içinde tamamlanır
+
+---
+
+## 🎯 Ne Yapar?
+
+| Özellik | Açıklama |
+|---|---|
+| **1X2 Tahmini** | Ev kazanır / Beraberlik / Deplasman kazanır olasılıkları |
+| **Skor Tahmini** | En olası skorlar (örn. 1-1 %11.6, 2-1 %9.5) |
+| **Beklenen Gol** | Ev ve deplasman için beklenen gol sayısı |
+| **Alt/Üst 2.5** | 2.5 gol üstü/altı olasılığı |
+| **Karşılıklı Gol (KG)** | İki takımın da gol atma olasılığı |
+| **Güven Seviyesi** | Veri yeterliliğine göre YÜKSEK / ORTA / DÜŞÜK |
+| **Canlı Şerit** | O an oynanan maçlar (skor + dakika) |
+| **Son Aramalar** | Daha önce baktığın maçlar (tek tıkla geri dön) |
+
+---
+
+## 🧠 Nasıl Çalışır? (Algoritma)
+
+Program üç katmanlı bir **ensemble (topluluk)** modeli kullanır:
+
+### 1. Poisson Dağılımı (Dixon-Coles düzeltmeli)
+Her takımın hücum/savunma gücü hesaplanır, beklenen gol sayısı çıkarılır. Poisson dağılımı ile skor olasılıkları üretilir.
+
+### 2. Elo Rating Sistemi
+Satranç kökenli, futbola uyarlanmış rating:
+- Başlangıç: **1500 puan**
+- K katsayısı: **24** (gol farkına göre ağırlıklı)
+- Ev sahibi avantajı: **+65 puan bonus**
+
+### 3. Form + Zaman Ağırlığı
+- Maçlar **tarih sıralı** işlenir (veri sızıntısı yok)
+- **Yarı ömür 250 maç** — yeni maçlar daha ağır
+- Az veri durumunda **lig ortalamasına regresyon** (güvenilirlik katsayısı)
+
+### Ensemble Birleştirme
+```
+Nihai Olasılık = %65 × Poisson  +  %35 × Elo/Form
 ```
 
-Tarayıcı: http://127.0.0.1:8090
+### Ek Faktörler
+- **H2H (Head-to-Head):** Geçmiş karşılaşmaların etkisi
+- **Dinlenme Günü:** Yorgunluk/kondisyon analizi
+- **Beraberlik Karar Motoru:** Beraberlik oranını kalibre eder (model ~%23, gerçek ~%27)
 
-## Windows EXE
+### Simülasyon
+Her maç için **1.000.000 kez** Monte Carlo simülasyonu çalıştırılır → olasılıklar ve skor dağılımı bu simülasyondan üretilir.
 
-GitHub Actions otomatik derler → Actions sekmesi → Artifacts → SporTahmin.exe
+---
 
-## Veri Kaynakları
+## 🌍 Veri Havuzu
 
-| Kaynak | Lig | Anahtar |
-|---|---|---|
-| FlashScore | Süper Lig (171 maç) | Gerekmez |
-| OpenLigaDB | Bundesliga, UCL, DFB | Gerekmez |
+**32 lig, 757 maç, 21 ülke** — popüler ligler önceliklidir:
+
+- 🇹🇷 Türkiye (Süper Lig)
+- 🏴 England (Premier League)
+- 🇪🇸 İspanya (La Liga)
+- 🇮🇹 İtalya (Serie A)
+- 🇩🇪 Almanya (Bundesliga)
+- 🇫🇷 Fransa (Ligue 1)
+- 🇧🇷 Brezilya, 🇦🇷 Arjantin
+- 🇵🇹 Portekiz, 🇳🇱 Hollanda
+- 🌍 Arap ligleri (Suudi, Katar, BAE, Mısır, Fas, Tunus, Cezayir, Irak, Ürdün, Lübnan)
+- 👩 Kadın ligleri
+- 🏆 Uluslararası turnuvalar (UEFA, WORLD)
+
+---
+
+## 💻 Kurulum
+
+### Windows
+1. `SporTahmin_Kurulum.exe` dosyasını indir
+2. Çalıştır → kurulum sihirbazı açılır
+3. "İleri" → "Kur" → "Bitir"
+4. Masaüstündeki **Spor Tahmin** kısayolundan aç
+
+**Not:** Program imzasızdır — Windows SmartScreen uyarı verebilir. "Daha fazla bilgi" → "Yine de çalıştır" ile geçilir.
+
+### Sistem Gereksinimleri
+- Windows 10/11 (64-bit)
+- 2 GB RAM (önerilen 4 GB)
+- 200 MB disk alanı
+- İnternet **gerekmez** (tahmin için)
+
+---
+
+## 🚀 Kullanım
+
+1. Programı aç → ana ekran gelir
+2. **Takım seç** (ev + deplasman)
+3. **Tahmin Et** butonuna bas
+4. Sonuçlar:
+   - 1X2 olasılıkları (yeşil = en olası)
+   - En olası skorlar tablosu
+   - Beklenen gol, alt/üst 2.5, KG
+   - Güven seviyesi
+
+**Canlı sekmesi:** O an oynanan maçların canlı skoru.
+
+**Kopyala:** Sonucu panoya kopyalar (paylaşmak için).
+
+---
+
+## 🛠️ Teknik Detaylar
+
+| | |
+|---|---|
+| **Dil** | Python 3.12 |
+| **Arayüz** | Flask (WSGI) + pywebview (gömülü tarayıcı) |
+| **Hesaplama** | NumPy (vektörel Poisson) |
+| **Paketleme** | PyInstaller `--onedir` (antivirüs uyumlu) |
+| **Kurulum** | Inno Setup |
+| **Sürümleme** | 16.8.0.0 |
+
+### Dosya Yapısı
+```
+├── main.py            # Giriş noktası (Flask + pywebview başlatır)
+├── app.py             # Flask uygulaması, API endpoint'leri
+├── mega_ajan.py       # Poisson + takım gücü + beklenen gol
+├── mega_elo.py        # Elo rating + ensemble
+├── mega_karar.py      # Beraberlik odaklı karar motoru
+├── olasilik.py        # Tüm olasılık hesapları
+├── hazir_tahmin.py    # Hazır tahmin üretimi (1M sim)
+├── fs_feed.py         # Canlı skor feed'i
+├── templates/
+│   ├── index.html     # Ana arayüz
+│   └── canli.html     # Canlı şerit
+└── veri/
+    ├── hazir_tahminler.json   # 757 maç tahmini
+    ├── arsiv_superlig.json    # Süper Lig arşivi
+    └── takim_web.json         # Takım bilgileri
+```
+
+---
+
+## 🔄 Otomatik Derleme (CI/CD)
+
+Program **GitHub Actions** ile otomatik derlenir:
+
+1. `main` branch'ine push yapılır
+2. GitHub Actions (windows-latest) tetiklenir
+3. PyInstaller `--onedir` ile derlenir
+4. Inno Setup ile kurulum paketi oluşturulur
+5. **Otomatik release** yayınlanır
+
+**Son sürümü indir:**
+→ [Releases](../../releases/latest) → `SporTahmin_Kurulum.exe`
+
+---
+
+## ⚠️ Yasal Uyarı
+
+Bu program **istatistiksel analiz** amaçlıdır. Tahminler **kesin değildir** — futbol doğası gereği belirsizlik içerir. Hiçbir tahmin %100 doğru olamaz. Program **bahis tavsiyesi vermez**; çıktılar yalnızca istatistiksel olasılıklardır.
+
+---
+
+## 🏢 Geliştirici
+
+**CyberWolfSec** — Profesyonel Siber Güvenlik Hizmetleri
+🌐 [cyberwolfsec.com](https://cyberwolfsec.com)
+
+---
+
+## 📄 Lisans
+
+MIT License — Copyright (c) 2026 CyberWolfSec
