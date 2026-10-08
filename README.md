@@ -10,9 +10,11 @@
 
 ## 🎬 Tanıtım Videosu
 
-Programın tanıtım videosunu izleyin (2:21):
+Programın tanıtım videosunu YouTube'da izleyin (2:21):
 
-[![Tanıtım Videosu](https://img.shields.io/badge/▶_Tanıtım_Videosu-izle-red?style=for-the-badge)](https://github.com/CyberWolf-Security/spor-tahmin/releases/download/v16.8/tanitim_video.mp4)
+[![Tanıtım Videosu](https://img.youtube.com/vi/VWmg89twHFk/maxresdefault.jpg)](https://www.youtube.com/watch?v=VWmg89twHFk)
+
+▶️ **YouTube'da izle:** https://www.youtube.com/watch?v=VWmg89twHFk
 
 **İçerik:** Program tanıtımı • Algoritma detayları (Poisson, Elo, Ensemble) • Özellikler • Veri havuzu • Kurulum
 
