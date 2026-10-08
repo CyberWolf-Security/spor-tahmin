@@ -30,6 +30,20 @@ Programın tanıtım videosunu izleyin (2:21):
 
 ---
 
+
+## 📸 Ekran Görüntüleri
+
+### Ana Sayfa — Takım Seçimi ve Tahmin Arayüzü
+![Ana Sayfa](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/01-ana-sayfa.png)
+
+### Canlı Şerit — O An Oynanan Maçlar
+![Canlı Şerit](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/02-canli-serit.png)
+
+### İstatistik Paneli
+![İstatistik](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/03-istatistik.png)
+
+---
+
 ## 🎯 Ne Yapar?
 
 | Özellik | Açıklama |
