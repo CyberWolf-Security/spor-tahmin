@@ -8,6 +8,16 @@
 
 ---
 
+## 🎬 Tanıtım Videosu
+
+Programın tanıtım videosunu izleyin (2:21):
+
+[![Tanıtım Videosu](https://img.shields.io/badge/▶_Tanıtım_Videosu-izle-red?style=for-the-badge)](https://github.com/CyberWolf-Security/spor-tahmin/releases/download/v16.8/tanitim_video.mp4)
+
+**İçerik:** Program tanıtımı • Algoritma detayları (Poisson, Elo, Ensemble) • Özellikler • Veri havuzu • Kurulum
+
+---
+
 ## 📌 Nedir?
 
 **Spor Tahmin**, futbol maçlarını istatistiksel modellerle analiz eden ve sonuç tahmini üreten bir masaüstü programıdır.
