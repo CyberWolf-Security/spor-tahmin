@@ -31,16 +31,30 @@ Programın tanıtım videosunu izleyin (2:21):
 ---
 
 
-## 📸 Ekran Görüntüleri
+## 📸 Ekran Goruntuleri
 
-### Ana Sayfa — Takım Seçimi ve Tahmin Arayüzü
-![Ana Sayfa](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/01-ana-sayfa.png)
-
-### Canlı Şerit — O An Oynanan Maçlar
-![Canlı Şerit](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/02-canli-serit.png)
-
-### İstatistik Paneli
-![İstatistik](https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/03-istatistik.png)
+<table>
+<tr>
+<td width="50%"><b>Ana Sayfa - Takim Secimi</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/01-ana-sayfa.png"></td>
+<td width="50%"><b>Canli Serit</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/02-canli-serit.png"></td>
+</tr>
+<tr>
+<td><b>Laptop Gorunumu (1280x800)</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/03-ana-laptop.png"></td>
+<td><b>Tablet Gorunumu (1024x768)</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/04-ana-tablet.png"></td>
+</tr>
+<tr>
+<td><b>Full HD Gorunum (1920x1080)</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/05-ana-fhd.png"></td>
+<td><b>Canli - Laptop</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/06-canli-laptop.png"></td>
+</tr>
+<tr>
+<td><b>Canli - Full HD</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/07-canli-fhd.png"></td>
+<td><b>Mobil Gorunum (480px)</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/08-mobil.png"></td>
+</tr>
+<tr>
+<td><b>Ana Sayfa - Tam Sayfa</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/09-ana-tam-sayfa.png"></td>
+<td><b>Canli - Tam Sayfa</b><br><img src="https://raw.githubusercontent.com/CyberWolf-Security/spor-tahmin/main/ekran-goruntuleri/10-canli-tam-sayfa.png"></td>
+</tr>
+</table>
 
 ---
 
